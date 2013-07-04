@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Built-By: tishan
+Tool: Bnd-1.43.0
+Bundle-Name: org.wso2.stratos.cep.styles
+Created-By: Apache Maven Bundle Plugin
+Bundle-Vendor: WSO2 Inc
+Fragment-Host: org.wso2.carbon.ui
+Build-Jdk: 1.6.0_43
+Bundle-Version: 2.1.0
+Bnd-LastModified: 1369292762553
+Bundle-ManifestVersion: 2
+Bundle-Description: WSO2 Complex Event Processor
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Bundle-DocURL: http://wso2.com
+Carbon-Component: UIBundle
+Bundle-SymbolicName: org.wso2.stratos.cep.styles
+

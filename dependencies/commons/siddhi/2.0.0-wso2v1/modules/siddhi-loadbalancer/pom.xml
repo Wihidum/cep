@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>siddhi</artifactId>
+        <groupId>org.wso2.siddhi</groupId>
+        <version>2.0.0-wso2v1</version>
+        <relativePath>../../pom.xml</relativePath>
+
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>siddhi-loadbalancer</groupId>
+    <artifactId>siddhi-loadbalancer</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-query</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <!-- dependencies from org.wso2.carbon -->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.core</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.brokermanager.admin</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+
+	<repositories>
+       <!-- wso2 nexus repository -->
+	   <repository>
+	       <id>wso2</id>
+	       <name>WSO2 Repository</name>
+	       <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+	       <releases>
+		   <enabled>true</enabled>
+		   <updatePolicy>daily</updatePolicy>
+		   <checksumPolicy>ignore</checksumPolicy>
+	       </releases>
+	   </repository>
+	</repositories>
+</project>

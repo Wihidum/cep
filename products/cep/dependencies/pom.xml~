@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.cep</groupId>
+        <artifactId>cep-parent</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+
+    <groupId>org.wso2.cep</groupId>
+    <artifactId>dependencies</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>WSO2 Carbon - Patch releases - Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+    <modules>
+
+        <module>../../../dependencies/commons/siddhi/2.0.0-wso2v1</module>
+    
+        <module>../../../service-stubs/org.wso2.carbon.output.transport.adaptor.manager.stub</module>
+        <module>../../../service-stubs/org.wso2.carbon.input.transport.adaptor.manager.stub</module>
+        <module>../../../service-stubs/org.wso2.carbon.event.builder.stub</module>
+        <module>../../../service-stubs/org.wso2.carbon.event.formatter.stub</module>
+        <module>../../../service-stubs/org.wso2.carbon.event.tracer.stub</module>
+        <module>../../../service-stubs/org.wso2.carbon.event.processor.stub</module>
+        
+        <module>../../../components/input-transport-adaptor</module>
+        <module>../../../components/output-transport-adaptor</module>
+        <module>../../../components/event-builder</module>
+        <module>../../../components/event-processor</module>
+        <module>../../../components/event-formatter</module>
+        <module>../../../components/event-tracer</module>
+
+        <module>../../../features/input-transport-adaptor</module>
+        <module>../../../features/output-transport-adaptor</module>
+        <module>../../../features/event-builder</module>
+        <module>../../../features/event-formatter</module>
+        <module>../../../features/event-processor</module>
+        <module>../../../features/event-tracer</module>
+        <!-- Start of Data-bridge -->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.persistence.cassandra</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.core</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.commons.thrift</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.agent.thrift</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.receiver.thrift</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.test.thrift</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.streamdefn.cassandra</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.datasink.cassandra</module>-->
+        <!--<module>../../../components/data-bridge/org.wso2.carbon.databridge.receiver.restapi</module>-->
+        <!-- End of Data-bridge -->
+
+        <!--&lt;!&ndash; Start of CEP&ndash;&gt;-->
+        <!--<module>../../../components/broker-manager/org.wso2.carbon.brokermanager.ui</module>-->
+        <!--<module>../../../components/broker-manager/org.wso2.carbon.brokermanager.admin</module>-->
+        <!--<module>../../../components/broker/org.wso2.carbon.broker.core</module>-->
+        <!--<module>../../../components/cep-statistics/org.wso2.carbon.cep.statistics.ui</module>-->
+        <!--<module>../../../components/cep/org.wso2.carbon.cep.core</module>-->
+        <!--<module>../../../components/cep/org.wso2.carbon.cep.admin</module>-->
+        <!--<module>../../../components/cep/org.wso2.carbon.cep.ui</module>-->
+        <!--&lt;!&ndash; End of CEP &ndash;&gt;-->
+    </modules>
+
+
+</project>
