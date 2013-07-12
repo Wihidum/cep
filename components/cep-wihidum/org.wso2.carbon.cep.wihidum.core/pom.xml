@@ -3,10 +3,47 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.wso2.carbon</groupId>
   <artifactId>org.wso2.carbon.cep.wihidum.core</artifactId>
-  <packaging>jar</packaging>
+
   <version>1.0.0</version>
   <name>org.wso2.carbon.cep.wihidum.core</name>
   <url>http://maven.apache.org</url>
+  <packaging>bundle</packaging>
+
+    <build>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+
+
+                        <Export-Package>!org.wso2.carbon.cep.wihidum.core.*</Export-Package>
+
+                        <Import-Package>org.osgi.framework, *;resolution:=optional</Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -14,5 +51,29 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>com.hazelcast</groupId>
+          <artifactId>hazelcast</artifactId>
+          <version>2.2</version>
+      </dependency>
+      <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.brokermanager.admin</artifactId>
+          <version>4.0.0</version>
+          <scope>provided</scope>
+      </dependency>
   </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <name>WSO2 Maven2 Snapshot Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/snapshots/maven2/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
