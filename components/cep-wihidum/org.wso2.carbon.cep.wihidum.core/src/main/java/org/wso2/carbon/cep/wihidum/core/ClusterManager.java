@@ -19,7 +19,7 @@ public class ClusterManager {
     private static final Log log = LogFactory.getLog(ClusterManager.class);
 
     private ClusterManager() {
-
+        hazelcastInstance = Hazelcast.newHazelcastInstance(new Config().setInstanceName(UUID.randomUUID().toString()));
     }
 
 
@@ -33,7 +33,6 @@ public class ClusterManager {
     }
 
     public void initiate() {
-        hazelcastInstance = Hazelcast.newHazelcastInstance(new Config().setInstanceName(UUID.randomUUID().toString()));
         Cluster cluster = hazelcastInstance.getCluster();
         Member localMember = cluster.getLocalMember();
         Set<Member> memberList = cluster.getMembers();
