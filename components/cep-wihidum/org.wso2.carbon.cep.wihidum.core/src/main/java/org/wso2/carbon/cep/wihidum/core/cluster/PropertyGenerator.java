@@ -1,5 +1,7 @@
-package org.wso2.carbon.cep.wihidum.core;
+package org.wso2.carbon.cep.wihidum.core.cluster;
 
+
+import org.wso2.carbon.cep.wihidum.core.cluster.Constants;
 
 import java.net.InetSocketAddress;
 

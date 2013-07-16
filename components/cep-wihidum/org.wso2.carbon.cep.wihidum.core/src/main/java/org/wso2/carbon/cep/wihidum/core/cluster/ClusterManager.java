@@ -1,4 +1,4 @@
-package org.wso2.carbon.cep.wihidum.core;
+package org.wso2.carbon.cep.wihidum.core.cluster;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.core.*;
@@ -7,6 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.brokermanager.admin.internal.BrokerManagerAdminService;
 import org.wso2.carbon.brokermanager.admin.internal.BrokerProperty;
 import org.wso2.carbon.brokermanager.admin.internal.exception.BrokerManagerAdminServiceException;
+import org.wso2.carbon.cep.wihidum.core.cluster.Constants;
+import org.wso2.carbon.cep.wihidum.core.cluster.PropertyGenerator;
 
 import java.util.Set;
 import java.util.UUID;

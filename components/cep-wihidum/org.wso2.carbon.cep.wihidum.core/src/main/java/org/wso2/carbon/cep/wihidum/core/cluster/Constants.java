@@ -1,4 +1,4 @@
-package org.wso2.carbon.cep.wihidum.core;
+package org.wso2.carbon.cep.wihidum.core.cluster;
 
 public class Constants {
     public static final int BASIC_PROPERTIES = 4;
