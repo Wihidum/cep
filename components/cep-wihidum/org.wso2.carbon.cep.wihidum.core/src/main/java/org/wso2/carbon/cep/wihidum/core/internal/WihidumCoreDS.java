@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.brokermanager.core.BrokerManagerService;
+import org.wso2.carbon.cep.wihidum.core.cluster.ClusterManager;
 
 /**
  * @scr.component name="wihidumcoreservice.component" immediate="true"
@@ -16,7 +17,13 @@ public class WihidumCoreDS {
 
 
     protected void activate(ComponentContext context){
-
+        try{
+        ClusterManager clusterManager = ClusterManager.getInstant();
+        clusterManager.initiate();
+        log.info("Successfully initiated cluster manager");
+        }catch (Throwable e){
+            log.error("Can not initiate cluster service ", e);
+        }
     }
 
     protected void setBrokerManagerService(BrokerManagerService brokerManagerService) {
