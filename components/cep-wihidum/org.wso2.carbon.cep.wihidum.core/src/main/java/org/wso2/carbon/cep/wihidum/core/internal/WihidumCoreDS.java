@@ -8,8 +8,8 @@ import org.wso2.carbon.cep.wihidum.core.cluster.ClusterManager;
 
 /**
  * @scr.component name="wihidumcoreservice.component" immediate="true"
- * @scr.reference name="broker.service"
- * interface="org.wso2.carbon.broker.core.BrokerService" cardinality="1..1"
+ * @scr.reference name="brokermanager.service"
+ * interface="org.wso2.carbon.brokermanager.core.BrokerManagerService" cardinality="1..1"
  * policy="dynamic" bind="setBrokerManagerService" unbind="unsetBrokerManagerService"
  **/
 public class WihidumCoreDS {
@@ -26,11 +26,11 @@ public class WihidumCoreDS {
         }
     }
 
-    protected void setBrokerManagerService(BrokerManagerService brokerManagerService) {
+    public void setBrokerManagerService(BrokerManagerService brokerManagerService) {
         WihidumCoreValueHolder.getInstance().setBrokerManagerService(brokerManagerService);
     }
 
-    protected void unsetBrokerManagerService(BrokerManagerService brokerManagerService) {
+    public void unsetBrokerManagerService(BrokerManagerService brokerManagerService) {
         WihidumCoreValueHolder.getInstance().unsetBrokerManagerService();
     }
 }
