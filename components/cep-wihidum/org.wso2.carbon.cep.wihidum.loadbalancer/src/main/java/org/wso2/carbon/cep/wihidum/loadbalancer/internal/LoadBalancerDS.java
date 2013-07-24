@@ -1,38 +1,34 @@
 package org.wso2.carbon.cep.wihidum.loadbalancer.internal;
 
-
-import org.apache.axiom.om.OMElement;
 import org.apache.log4j.Logger;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
-import org.wso2.carbon.cep.wihidum.loadbalancer.eventreceiver.ExternalEventReceiver;
-import org.wso2.carbon.cep.wihidum.loadbalancer.internal.exception.LoadBalancerConfigException;
-import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConfBuilder;
-import org.wso2.carbon.databridge.receiver.thrift.export.DataReceiverExporter;
+import org.wso2.carbon.cep.wihidum.loadbalancer.exception.LoadBalancerConfigException;
+import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 
 
+/**
+ * @scr.component name="loadbalancer.component" immediate="true"
+ */
 public class LoadBalancerDS {
 
-private static Logger log= Logger.getLogger(LoadBalancerDS.class);
+    private static Logger log = Logger.getLogger(LoadBalancerDS.class);
+    private ServiceRegistration serviceRegistration;
 
-protected void activate(ComponentContext context)  {
-    try {
-      OMElement omElement =  LoadBalancerConfBuilder.loadConfigXML();
-      LoadBalancerConfiguration loadBalancerConfiguration =  LoadBalancerConfBuilder.fromOM(omElement);
-      if(loadBalancerConfiguration.isLoadbalanceron()){
-          DataReceiverExporter.thriftDataReceiver.stop();
-          ExternalEventReceiver.startReciver("localhost",loadBalancerConfiguration.getPort());
-      }
+    /**
+     * initialize the loadbalancer here.
+     *
+     * @param context
+     */
+    protected void activate(ComponentContext context) throws LoadBalancerConfigException, DataBridgeException {
+        serviceRegistration = context.getBundleContext().registerService(LoadBalancerDS.class.getName(), LoadBalancerDS.class, null);
 
-    } catch (LoadBalancerConfigException e) {
-       e.printStackTrace();
+
+    }
+
+    protected void deactivate(ComponentContext context) {
+        context.getBundleContext().ungetService(serviceRegistration.getReference());
     }
 
 
-}
-
-protected void deactivate(ComponentContext context){
-
-
-}
 }

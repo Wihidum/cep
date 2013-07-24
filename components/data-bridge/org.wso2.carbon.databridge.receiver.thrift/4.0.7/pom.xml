@@ -32,6 +32,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cep.wihidum.loadbalancer</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.databridge.commons</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -44,6 +49,11 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.databridge.core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.equinox</groupId>
+            <artifactId>org.apache.log4j</artifactId>
+            <version>1.2.13.v200706111418</version>
         </dependency>
     </dependencies>
     <build>
@@ -78,7 +88,9 @@
                             !org.wso2.carbon.databridge.receiver.thrift.internal.*,
                             org.wso2.carbon.databridge.receiver.thrift.*
                         </Export-Package>
-                        <Import-Package>org.osgi.framework,*;resolution:=optional</Import-Package>
+                        <Import-Package>
+                            org.osgi.framework,*;resolution:=optional
+                        </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>

@@ -1,0 +1,17 @@
+<loadbalancer>
+
+  <start>true</start>
+   <port>7611</port>
+  <reciverbundlesize>100</reciverbundlesize>
+  <eventdividecount>10000</eventdividecount>
+    <blockingqueuecapacity>50</blockingqueuecapacity>
+    <workerthreads>1</workerthreads>
+   <method>
+       <roundrobin>true</roundrobin>
+       <eventstream>false</eventstream>
+   </method>
+   <outputnode>
+     <ip>localhost</ip>
+     <port>7613</port>
+   </outputnode>
+</loadbalancer>
