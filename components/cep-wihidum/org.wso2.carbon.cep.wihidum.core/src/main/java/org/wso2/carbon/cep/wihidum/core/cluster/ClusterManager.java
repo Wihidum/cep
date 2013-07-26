@@ -54,15 +54,15 @@ public class ClusterManager {
     }
 
     private synchronized void configureBrokers(Member member) {
-
+        String brokerName = member.getInetSocketAddress().getAddress().toString().substring(1);
         BrokerConfiguration brokerConfiguration = new BrokerConfiguration();
-        brokerConfiguration.setName(member.getInetSocketAddress().toString());
+        brokerConfiguration.setName(brokerName);
         brokerConfiguration.setType(Constants.AGENT_BROKER_TYPE);
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
         Map<String,String> properties = new HashMap<String, String>();
         PropertyGenerator generator;
 
-        generator = new PropertyGenerator(member.getInetSocketAddress());
+        generator = new PropertyGenerator(brokerName);
         properties.put("receiverURL",generator.getReceiverURL());
         properties.put("authenticatorURL",generator.getAuthenticatorURL());
         properties.put("username",generator.getUsername());
@@ -74,7 +74,7 @@ public class ClusterManager {
         }
         // add broker configuration
         try {
-            WihidumCoreValueHolder.getInstance().getBrokerManagerService().addBrokerConfiguration(brokerConfiguration, tenantId);
+            WihidumCoreValueHolder.getInstance().getBrokerManagerService().addBrokerConfiguration(brokerConfiguration, -1234);
             //testBrokerConfiguration(brokerName);
         } catch (BMConfigurationException e) {
             log.error("Cannot add broker for CEP node on " + member.getInetSocketAddress());
