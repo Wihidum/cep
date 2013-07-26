@@ -1,8 +1,5 @@
 package org.wso2.carbon.cep.wihidum.loadbalancer.utils;
 
-import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConstants;
-import org.wso2.carbon.utils.ServerConstants;
-
 import java.io.File;
 import java.io.IOException;
 

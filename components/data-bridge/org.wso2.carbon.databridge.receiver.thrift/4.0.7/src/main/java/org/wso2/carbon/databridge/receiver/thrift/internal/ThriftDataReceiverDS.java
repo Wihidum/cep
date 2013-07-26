@@ -72,7 +72,6 @@ public class ThriftDataReceiverDS {
      * @param context
      */
     protected void activate(ComponentContext context) {
-
         try {
             int portOffset = ThriftDataReceiverBuilder.readPortOffset(serverConfiguration);
             ThriftDataReceiverConfiguration thriftDataReceiverConfiguration = new ThriftDataReceiverConfiguration(CommonThriftConstants.DEFAULT_RECEIVER_PORT + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET + portOffset, CommonThriftConstants.DEFAULT_RECEIVER_PORT + portOffset);
@@ -91,6 +90,7 @@ public class ThriftDataReceiverDS {
                         log.warn("The server url :" + serverUrl + " is malformed URL hence hostname is assigned as '" + hostName + "'");
                     }
                 }
+
                 dataReceiver.start(hostName);
 
 
@@ -100,18 +100,18 @@ public class ThriftDataReceiverDS {
                 TCompactProtocol.Factory outProtFactory = new TCompactProtocol.Factory();
 
                 httpServiceInstance.registerServlet("/thriftReceiver",
-                                                    new ThriftEventTransmissionServlet(processor, inProtFactory,
-                                                                        outProtFactory),
-                                                    new Hashtable(),
-                                                    httpServiceInstance.createDefaultHttpContext());
+                        new ThriftEventTransmissionServlet(processor, inProtFactory,
+                                outProtFactory),
+                        new Hashtable(),
+                        httpServiceInstance.createDefaultHttpContext());
 
                 ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl> authProcessor = new ThriftSecureEventTransmissionService.Processor<ThriftSecureEventTransmissionServiceImpl>(
                         new ThriftSecureEventTransmissionServiceImpl(dataBridgeReceiverService));
                 httpServiceInstance.registerServlet("/thriftAuthenticator",
-                                                    new ThriftSecureEventTransmissionServlet(authProcessor, inProtFactory,
-                                                                             outProtFactory),
-                                                    new Hashtable(),
-                                                    httpServiceInstance.createDefaultHttpContext());
+                        new ThriftSecureEventTransmissionServlet(authProcessor, inProtFactory,
+                                outProtFactory),
+                        new Hashtable(),
+                        httpServiceInstance.createDefaultHttpContext());
 
             }
         } catch (DataBridgeException e) {
@@ -125,12 +125,15 @@ public class ThriftDataReceiverDS {
 
 
     protected void deactivate(ComponentContext context) {
+
+
         log.info("Thrift server shutting down...");
         dataReceiver.stop();
         if (log.isDebugEnabled()) {
             log.debug("Successfully stopped agent server");
         }
     }
+
 
     protected void setServerConfiguration(ServerConfigurationService serverConfiguration) {
         this.serverConfiguration = serverConfiguration;

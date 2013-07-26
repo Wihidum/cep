@@ -27,10 +27,18 @@ import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.base.ServerConfiguration;
+
+
+import org.wso2.carbon.cep.wihidum.loadbalancer.SiddhiLBManager;
+import org.wso2.carbon.databridge.commons.Credentials;
+import org.wso2.carbon.databridge.commons.Event;
+import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.databridge.commons.exception.TransportException;
 import org.wso2.carbon.databridge.commons.thrift.service.general.ThriftEventTransmissionService;
 import org.wso2.carbon.databridge.commons.thrift.service.secure.ThriftSecureEventTransmissionService;
 import org.wso2.carbon.databridge.commons.thrift.utils.CommonThriftConstants;
+import org.wso2.carbon.databridge.core.AgentCallback;
+import org.wso2.carbon.databridge.core.DataBridge;
 import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.core.internal.utils.DataBridgeConstants;
@@ -40,6 +48,7 @@ import org.wso2.carbon.databridge.receiver.thrift.service.ThriftSecureEventTrans
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * Carbon based implementation of the agent server
@@ -50,6 +59,7 @@ public class ThriftDataReceiver {
     private ThriftDataReceiverConfiguration thriftDataReceiverConfiguration;
     private TServer authenticationServer;
     private TServer dataReceiverServer;
+    private SiddhiLBManager siddhiLBManager = SiddhiLBManager.getSiddhiLBManager();
 
     /**
      * Initialize Carbon Agent Server
@@ -59,7 +69,7 @@ public class ThriftDataReceiver {
      * @param dataBridgeReceiverService
      */
     public ThriftDataReceiver(int secureReceiverPort, int receiverPort,
-                               DataBridgeReceiverService dataBridgeReceiverService) {
+                              DataBridgeReceiverService dataBridgeReceiverService) {
         this.dataBridgeReceiverService = dataBridgeReceiverService;
         this.thriftDataReceiverConfiguration = new ThriftDataReceiverConfiguration(secureReceiverPort, receiverPort);
     }
@@ -71,7 +81,7 @@ public class ThriftDataReceiver {
      * @param dataBridgeReceiverService
      */
     public ThriftDataReceiver(int receiverPort,
-                               DataBridgeReceiverService dataBridgeReceiverService) {
+                              DataBridgeReceiverService dataBridgeReceiverService) {
         this.dataBridgeReceiverService = dataBridgeReceiverService;
         this.thriftDataReceiverConfiguration = new ThriftDataReceiverConfiguration(receiverPort + CommonThriftConstants.SECURE_EVENT_RECEIVER_PORT_OFFSET, receiverPort);
     }
@@ -80,10 +90,11 @@ public class ThriftDataReceiver {
      * Initialize Carbon Agent Server
      *
      * @param thriftDataReceiverConfiguration
+     *
      * @param dataBridgeReceiverService
      */
     public ThriftDataReceiver(ThriftDataReceiverConfiguration thriftDataReceiverConfiguration,
-                               DataBridgeReceiverService dataBridgeReceiverService) {
+                              DataBridgeReceiverService dataBridgeReceiverService) {
         this.dataBridgeReceiverService = dataBridgeReceiverService;
         this.thriftDataReceiverConfiguration = thriftDataReceiverConfiguration;
     }
@@ -98,6 +109,7 @@ public class ThriftDataReceiver {
             throws DataBridgeException {
         startSecureEventTransmission(hostName, thriftDataReceiverConfiguration.getSecureDataReceiverPort(), dataBridgeReceiverService);
         startEventTransmission(thriftDataReceiverConfiguration.getDataReceiverPort(), dataBridgeReceiverService);
+
     }
 
 
@@ -143,7 +155,7 @@ public class ThriftDataReceiver {
             InetAddress inetAddress = InetAddress.getByName(hostName);
             serverTransport = TSSLTransportFactory.getServerSocket(
                     port, DataBridgeConstants.CLIENT_TIMEOUT_MS, inetAddress, params);
-            log.info("Thrift Server started at "+hostName);
+            log.info("Thrift Server started at " + hostName);
         } catch (TTransportException e) {
             throw new TransportException("Thrift transport exception occurred ", e);
         }
@@ -160,6 +172,7 @@ public class ThriftDataReceiver {
 
     protected void startEventTransmission(int port, DataBridgeReceiverService dataBridgeReceiverService)
             throws DataBridgeException {
+
         try {
             TServerSocket serverTransport = new TServerSocket(port);
             ThriftEventTransmissionService.Processor<ThriftEventTransmissionServiceImpl> processor =
@@ -171,8 +184,11 @@ public class ThriftDataReceiver {
             log.info("Thrift port : " + port);
             thread.start();
         } catch (TTransportException e) {
+            log.info("Databridge Exception");
             throw new DataBridgeException("Cannot start Thrift server on port " + port, e);
+
         }
+
     }
 
     /**
@@ -181,7 +197,11 @@ public class ThriftDataReceiver {
     public void stop() {
         authenticationServer.stop();
         dataReceiverServer.stop();
+        if (siddhiLBManager.loadBalancerConfiguration().isLoadbalanceron()) {
+            siddhiLBManager.stopLoadBalancer();
+        }
     }
+
 
     static class ServerThread implements Runnable {
         private TServer server;
