@@ -61,6 +61,7 @@ public class ThriftDataReceiver {
     private TServer dataReceiverServer;
     private SiddhiLBManager siddhiLBManager = SiddhiLBManager.getSiddhiLBManager();
 
+
     /**
      * Initialize Carbon Agent Server
      *
