@@ -4,7 +4,6 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.internal.util;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.log4j.Logger;
-import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.cep.wihidum.loadbalancer.exception.LoadBalancerConfigException;
 import org.wso2.carbon.utils.ServerConstants;
 
@@ -13,7 +12,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
-import java.util.Iterator;
+
 
 public class LoadBalancerConfBuilder {
 
@@ -28,7 +27,7 @@ public class LoadBalancerConfBuilder {
             log.info("The " + LoadBalancerConstants.WIHIDUM_DIR + File.separator + LoadBalancerConstants.LOADBALANCER_FILE + " can not found ");
             return null;
         }
-    BufferedInputStream inputStream = null;
+        BufferedInputStream inputStream = null;
         try {
             inputStream = new BufferedInputStream(new FileInputStream(configFile));
             XMLStreamReader parser = XMLInputFactory.newInstance().

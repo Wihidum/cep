@@ -8,7 +8,6 @@ import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConsta
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,7 +24,7 @@ public class LoadBalancerConfiguration {
     private List<Node> nodeList = new ArrayList<Node>();
     private String host;
     private int blockingQueueCapacity;
-    private  int queueWorkerThreads;
+    private int queueWorkerThreads;
 
 
     public int getQueueWorkerThreads() {

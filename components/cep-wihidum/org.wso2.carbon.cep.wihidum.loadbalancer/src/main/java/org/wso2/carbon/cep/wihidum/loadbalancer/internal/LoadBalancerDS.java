@@ -22,12 +22,13 @@ public class LoadBalancerDS {
      */
     protected void activate(ComponentContext context) throws LoadBalancerConfigException, DataBridgeException {
         serviceRegistration = context.getBundleContext().registerService(LoadBalancerDS.class.getName(), LoadBalancerDS.class, null);
-
+        log.info("wihidum LoadBalancer Deployed");
 
     }
 
     protected void deactivate(ComponentContext context) {
         context.getBundleContext().ungetService(serviceRegistration.getReference());
+        log.info("Wihidum LoadBalancer Undeployed");
     }
 
 

@@ -1,5 +1,4 @@
 <loadbalancer>
-
   <start>true</start>
    <port>7611</port>
   <reciverbundlesize>100</reciverbundlesize>

@@ -60,7 +60,9 @@ public class Node {
 
     public void addEventList(List<Event> eventList) throws EventPublishException {
         try {
+            eventPublisher.updateEventPublisher();
             eventPublisher.publishEvents(eventList);
+
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
             logger.info(e.getMessage());
             throw new EventPublishException(e.getMessage(), e);

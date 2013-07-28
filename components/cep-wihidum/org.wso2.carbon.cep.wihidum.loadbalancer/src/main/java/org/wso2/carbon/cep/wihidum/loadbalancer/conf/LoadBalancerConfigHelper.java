@@ -52,9 +52,9 @@ public class LoadBalancerConfigHelper {
                     }
                 }
                 loadBalancerConfiguration.addOutputNode(ip, port);
-            }else if(omElementChild.getLocalName().equals("blockingqueuecapacity")){
+            } else if (omElementChild.getLocalName().equals("blockingqueuecapacity")) {
                 loadBalancerConfiguration.setBlockingQueueCapacity(Integer.parseInt(omElementChild.getText().trim()));
-            }else if(omElementChild.getLocalName().equals("workerthreads")){
+            } else if (omElementChild.getLocalName().equals("workerthreads")) {
                 loadBalancerConfiguration.setQueueWorkerThreads(Integer.parseInt(omElementChild.getText().trim()));
             }
 

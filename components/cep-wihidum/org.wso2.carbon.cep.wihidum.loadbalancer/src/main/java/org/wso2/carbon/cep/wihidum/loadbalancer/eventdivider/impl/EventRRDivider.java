@@ -3,8 +3,6 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.Divider;
-import org.wso2.carbon.cep.wihidum.loadbalancer.exception.EventDivideException;
-import org.wso2.carbon.cep.wihidum.loadbalancer.exception.EventPublishException;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.queue.EventQueue;
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConstants;
@@ -33,27 +31,21 @@ public class EventRRDivider implements Divider {
 
 
     @Override
-    public void divide(List<Event> eventList) {
-        synchronized (outputEventList){
+    public synchronized void divide(List<Event> eventList) {
         outputEventList.addAll(eventList);
-        eventCount = eventCount+eventList.size();
-        if(eventCount>=loadBalancerConfiguration.getEventDivideCount()){
-          EventComposite eventComposite =new EventComposite(outputEventList,nodeCount);
+        eventCount = eventCount + eventList.size();
+        if (eventCount >= loadBalancerConfiguration.getEventDivideCount()) {
+            EventComposite eventComposite = new EventComposite(outputEventList, nodeCount);
             nodeCount++;
             outputEventList.clear();
-            eventCount =LoadBalancerConstants.COUNTER_BEGIN_VALUE;
-          if(nodeCount==nodelist.size()){
-              nodeCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
-          }
-          eventQueue.addEventBundle(eventComposite);
-        }
+            eventCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
+            if (nodeCount == nodelist.size()) {
+                nodeCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
+            }
+            eventQueue.addEventBundle(eventComposite);
         }
 
     }
-
-
-
-
 
 
 }
