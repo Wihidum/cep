@@ -10,16 +10,18 @@ import org.wso2.carbon.brokermanager.core.exception.BMConfigurationException;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
 import org.wso2.carbon.context.CarbonContext;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ClusterManager {
 
     private static ClusterManager clusterManager;
     private HazelcastInstance hazelcastInstance;
     private static final Log log = LogFactory.getLog(ClusterManager.class);
+    private Member localMember;
+    private ConcurrentSkipListSet<Member> memberList;
+    private String localMemberAddress;
+    private ArrayList<String> membersAddressList;
 
     private ClusterManager() {
         hazelcastInstance = Hazelcast.newHazelcastInstance(new Config().setInstanceName(UUID.randomUUID().toString()));
@@ -37,32 +39,35 @@ public class ClusterManager {
 
     public void initiate() {
         Cluster cluster = hazelcastInstance.getCluster();
-        Member localMember = cluster.getLocalMember();
-        Set<Member> memberList = cluster.getMembers();
+        localMember = cluster.getLocalMember();
+        //memberList = (ConcurrentSkipListSet)cluster.getMembers();
         cluster.addMembershipListener(new MembershipListener() {
             public void memberAdded(MembershipEvent membersipEvent) {
                 configureBrokers(membersipEvent.getMember());
+                //memberList.add(membersipEvent.getMember());
             }
 
             public void memberRemoved(MembershipEvent membersipEvent) {
+                memberList.remove(membersipEvent.getMember());
                 //TODO
             }
         });
-        for (Member member : memberList) {
+        for (Member member : cluster.getMembers()) {
             configureBrokers(member);
         }
     }
 
     private synchronized void configureBrokers(Member member) {
-
+        memberList.add(member);
+        String brokerName = member.getInetSocketAddress().getAddress().toString().substring(1);
         BrokerConfiguration brokerConfiguration = new BrokerConfiguration();
-        brokerConfiguration.setName(member.getInetSocketAddress().toString());
+        brokerConfiguration.setName(brokerName);
         brokerConfiguration.setType(Constants.AGENT_BROKER_TYPE);
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
         Map<String,String> properties = new HashMap<String, String>();
         PropertyGenerator generator;
 
-        generator = new PropertyGenerator(member.getInetSocketAddress());
+        generator = new PropertyGenerator(brokerName);
         properties.put("receiverURL",generator.getReceiverURL());
         properties.put("authenticatorURL",generator.getAuthenticatorURL());
         properties.put("username",generator.getUsername());
@@ -74,13 +79,29 @@ public class ClusterManager {
         }
         // add broker configuration
         try {
-            WihidumCoreValueHolder.getInstance().getBrokerManagerService().addBrokerConfiguration(brokerConfiguration, tenantId);
+            WihidumCoreValueHolder.getInstance().getBrokerManagerService().addBrokerConfiguration(brokerConfiguration, -1234);
             //testBrokerConfiguration(brokerName);
         } catch (BMConfigurationException e) {
             log.error("Cannot add broker for CEP node on " + member.getInetSocketAddress());
         }
 
 
+    }
+    //Return string list of all members in the cluster except local member
+    public AbstractList<String> getMemberList(){
+       membersAddressList = new ArrayList<String>(memberList.size());
+       for(Member member:memberList){
+          if(!member.equals(localMember)){
+              membersAddressList.add(member.getInetSocketAddress().getAddress().toString().substring(1));
+          }
+       }
+        return membersAddressList;
+    }
+
+    //return string address of the local member
+    public String getLocalMemberAddress(){
+        localMemberAddress = localMember.getInetSocketAddress().getAddress().toString().substring(1);
+        return localMemberAddress;
     }
 
 
