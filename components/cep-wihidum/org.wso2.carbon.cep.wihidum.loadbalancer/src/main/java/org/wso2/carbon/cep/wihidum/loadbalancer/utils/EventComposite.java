@@ -7,19 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventComposite {
-private List<Event> eventList = new ArrayList<Event>();
-private int nodeIndex;
+    private List<Event> eventList = new ArrayList<Event>();
+    private int nodeIndex;
 
- public EventComposite(List<Event> eventList, int nodeIndex){
-     this.eventList.addAll(eventList);
-     this.nodeIndex = nodeIndex;
+    public EventComposite(List<Event> eventList, int nodeIndex) {
+        this.eventList.addAll(eventList);
+        this.nodeIndex = nodeIndex;
 
- }
-  public List<Event> getEventList(){
-      return eventList;
-  }
+    }
 
-    public int getNodeIndex(){
+    public List<Event> getEventList() {
+        return eventList;
+    }
+
+    public int getNodeIndex() {
         return nodeIndex;
     }
 

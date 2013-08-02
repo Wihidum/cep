@@ -1,5 +1,7 @@
-package org.wso2.carbon.cep.wihidum.core;
+package org.wso2.carbon.cep.wihidum.core.cluster;
 
+
+import org.wso2.carbon.cep.wihidum.core.cluster.Constants;
 
 import java.net.InetSocketAddress;
 
@@ -7,8 +9,8 @@ public class PropertyGenerator {
     private String inetAddress;
     private int receiverPort = Constants.DEFAULT_RECEIVER_PORT;
     private int authenticatorPort = Constants.DEFAULT_AUTHENTICATOR_PORT;
-    public PropertyGenerator(InetSocketAddress inetSocketAddress) {
-        inetAddress = inetSocketAddress.toString();
+    public PropertyGenerator(String Address) {
+        inetAddress = Address;
     }
 
     public String getReceiverURL() {

@@ -64,9 +64,19 @@
       </dependency>
       <dependency>
           <groupId>org.wso2.carbon</groupId>
-          <artifactId>org.wso2.carbon.brokermanager.admin</artifactId>
-          <version>4.0.0</version>
+          <artifactId>org.wso2.carbon.brokermanager.core</artifactId>
+          <version>4.0.2</version>
           <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.wso2.carbon.automation</groupId>
+          <artifactId>org.wso2.carbon.automation.api</artifactId>
+          <version>4.0.2</version>
+      </dependency>
+      <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.cep.core</artifactId>
+          <version>4.0.7</version>
       </dependency>
   </dependencies>
 

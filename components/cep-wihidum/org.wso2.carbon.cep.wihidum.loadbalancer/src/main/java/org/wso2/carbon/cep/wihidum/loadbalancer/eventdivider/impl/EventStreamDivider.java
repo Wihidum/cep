@@ -12,8 +12,6 @@ public class EventStreamDivider implements Divider {
     final static Query query = QueryFactory.createQuery();
 
 
-
-
     @Override
     public void divide(List<Event> eventList) {
 

@@ -8,6 +8,7 @@ import org.wso2.carbon.databridge.commons.Event;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+
 import org.apache.log4j.Logger;
 
 public class QueueWorker implements Runnable {
@@ -16,25 +17,23 @@ public class QueueWorker implements Runnable {
     private BlockingQueue<EventComposite> eventQueue;
     private static Logger logger = Logger.getLogger(QueueWorker.class);
 
-    public  QueueWorker(List<Node> nodeList,BlockingQueue<EventComposite> eventQueue){
-       this.eventQueue = eventQueue;
+    public QueueWorker(List<Node> nodeList, BlockingQueue<EventComposite> eventQueue) {
+        this.eventQueue = eventQueue;
         this.nodeList = nodeList;
     }
 
 
-
     @Override
     public void run() {
-             EventComposite eventComposite = eventQueue.poll();
-             int index = eventComposite.getNodeIndex();
-             List<Event> eventList  = eventComposite.getEventList();
-             Node node = nodeList.get(index);
+        EventComposite eventComposite = eventQueue.poll();
+        int index = eventComposite.getNodeIndex();
+        List<Event> eventList = eventComposite.getEventList();
+        Node node = nodeList.get(index);
         try {
             node.addEventList(eventList);
         } catch (EventPublishException e) {
-           logger.info("EventPublish Error" + e.getMessage());
+            logger.info("EventPublish Error" + e.getMessage());
         }
-
 
     }
 }

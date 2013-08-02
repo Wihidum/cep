@@ -18,14 +18,12 @@ public class ExternalEventReceiver {
     public ExternalEventReceiver() {
         dividerFactory = DividerFactory.getInstances();
         divider = dividerFactory.getDivider();
-
     }
 
 
     public void receiveEventBundle(List<Event> eventList) {
         divider.divide(eventList);
-        count = count+eventList.size();
-       // log.info("Events Recived TO LB RECIVER" +count);
+        count = count + eventList.size();
     }
 
 
