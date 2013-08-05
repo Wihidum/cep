@@ -31,6 +31,7 @@ public class EventPublisher {
         count = count + eventList.size();
         if (dataPublisher == null) {
             initDataPublisher(host, port);
+
         }
         for (Event event : eventList) {
             try {
@@ -50,7 +51,7 @@ public class EventPublisher {
         for (StreamDefinition streamDefinition : StreamDefinitionProvider.getStreamDefinitionList()) {
             try {
                 dataPublisher.defineStream(streamDefinition);
-            } catch (AgentException e) {
+            } catch (AgentException e){
                 logger.info(e.getMessage(), e);
             } catch (StreamDefinitionException e) {
                 logger.info(e.getMessage(), e);

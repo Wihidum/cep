@@ -6,7 +6,7 @@ import org.wso2.carbon.databridge.commons.StreamDefinition;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StreamDefinitionProvider {
+public class StreamDefinitionProvider{
 
     private static List<StreamDefinition> streamDefinitions = new ArrayList<StreamDefinition>();
 
@@ -18,7 +18,7 @@ public class StreamDefinitionProvider {
                 add = false;
             }
         }
-        if (add) {
+        if (add){
             streamDefinitions.add(streamDefinition);
         }
 
