@@ -31,7 +31,7 @@ public class QueueWorker implements Runnable {
         Node node = nodeList.get(index);
         try {
             node.addEventList(eventList);
-        } catch (EventPublishException e) {
+        }catch (EventPublishException e) {
             logger.info("EventPublish Error" + e.getMessage());
         }
 
