@@ -66,7 +66,6 @@ public class RemoteBucketDeployer {
         AuthenticationAdminServiceClient.setSystemProperties(new File(".").getCanonicalPath()+ProductConstants.CLIENT_TRUST_STORE_PATH, ProductConstants.KEY_STORE_TYPE, ProductConstants.KEY_STORE_PASSWORD);
 
         adminCookie = AuthenticationAdminServiceClient.login(ip, ProductConstants.USER_NAME, ProductConstants.PASSWORD);
-
         if (adminCookie == null) {
             throw new RuntimeException("could not login to the back-end server");
         }
