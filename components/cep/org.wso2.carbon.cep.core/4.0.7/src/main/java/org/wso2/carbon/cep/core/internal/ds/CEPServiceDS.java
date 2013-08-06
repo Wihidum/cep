@@ -22,7 +22,9 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.broker.core.BrokerService;
 import org.wso2.carbon.brokermanager.core.BrokerManagerService;
+import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.CEPServiceInterface;
+import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.CEPService;
 import org.wso2.carbon.cep.core.internal.builder.Axis2ConfigurationContextObserverImpl;
@@ -96,7 +98,9 @@ public class CEPServiceDS {
 
         List<NotDeployedBucketElement> unDeployedBuckets = CEPServiceValueHolder.getInstance().getNotDeployedBucketElements();
         for (NotDeployedBucketElement notDeployedBucketElement : unDeployedBuckets) {
-            cepService.deployBucket(BucketHelper.fromOM(notDeployedBucketElement.getBucket()), axisConfiguration, notDeployedBucketElement.getPath());
+          Bucket bucket =  BucketHelper.fromOM(notDeployedBucketElement.getBucket());
+            cepService.deployBucket(bucket, axisConfiguration, notDeployedBucketElement.getPath());
+            DistributingBucketProvider.getInstance().addBucket(bucket);  // assume only manager node has one bucket.
         }
         unDeployedBuckets.clear();
         return cepService;
