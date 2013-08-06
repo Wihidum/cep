@@ -3,10 +3,10 @@ package org.wso2.carbon.cep.wihidum.core.bucket;
 
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
-import org.wso2.carbon.cep.core.distributing.util.BrokerConfig;
-import org.wso2.carbon.cep.core.distributing.util.BrokerProvider;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.output.Output;
+import org.wso2.carbon.cep.wihidum.core.broker.BrokerConfiguration;
+import org.wso2.carbon.cep.wihidum.core.broker.BrokerProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,14 +21,14 @@ public class BucketSplitter {
 
 
     public Map<String, Bucket> getBucketList(Bucket bucket){
-        Map<String, BrokerConfig> brokerMap = BrokerProvider.getBrokers();
+        Map<String, BrokerConfiguration> brokerMap = BrokerProvider.getBrokers();
         Map<String, Bucket> bucketMap = new HashMap<String, Bucket>();
         List<Query> queryList = bucket.getQueries();
         for (Query query : queryList){
             List<String> ipList = query.getIpList();
             if (!ipList.isEmpty()){
                 for (String ip : ipList) {
-                    BrokerConfig broker = brokerMap.get(ip);
+                    BrokerConfiguration broker = brokerMap.get(ip);
                     Bucket smallBucket = createBucket(bucket, query, broker);
                     bucketMap.put(ip, smallBucket);
                 }
@@ -38,7 +38,7 @@ public class BucketSplitter {
     }
 
 
-    private Bucket createBucket(Bucket bucket, Query query, BrokerConfig broker){
+    private Bucket createBucket(Bucket bucket, Query query, BrokerConfiguration  broker){
         Output output = query.getOutput();
        // output.setBrokerName(broker.getOutputBroker());
       //  output.setTopic(broker.getOutputTopic());
