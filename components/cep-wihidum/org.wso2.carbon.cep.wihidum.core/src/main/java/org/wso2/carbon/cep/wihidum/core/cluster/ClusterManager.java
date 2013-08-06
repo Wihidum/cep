@@ -88,7 +88,7 @@ public class ClusterManager {
 
     }
     //Return string list of all members in the cluster except local member
-    public AbstractList<String> getMemberList(){
+    public ArrayList<String> getMemberList(){
        membersAddressList = new ArrayList<String>(memberList.size());
        for(Member member:memberList){
           if(!member.equals(localMember)){
