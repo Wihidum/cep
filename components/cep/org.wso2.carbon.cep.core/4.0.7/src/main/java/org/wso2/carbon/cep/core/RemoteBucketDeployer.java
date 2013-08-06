@@ -116,100 +116,21 @@ public class RemoteBucketDeployer {
 
                 if(outputMapping != null){
                     if(outputMapping instanceof XMLOutputMapping){
-                        OutputXMLMappingDTO outputXmlMappingDTO =  new OutputXMLMappingDTO();
-                        outputXmlMappingDTO.setMappingXMLText(((XMLOutputMapping) outputMapping).getMappingXMLText());
+                        XMLOutputMapping xmlOutputMapping = (XMLOutputMapping) outputMapping;
+                        OutputXMLMappingDTO outputXmlMappingDTO = adaptOutputMapping(xmlOutputMapping);
                         outputDTO.setOutputXmlMapping(outputXmlMappingDTO);
                     }
 
                     if(outputMapping instanceof TupleOutputMapping){
-                        OutputTupleMappingDTO outputTupleMappingDTO =  new OutputTupleMappingDTO();
                         TupleOutputMapping tupleOutputMapping = (TupleOutputMapping) outputMapping;
-
-                        if (tupleOutputMapping.getMetaDataProperties() != null && tupleOutputMapping.getMetaDataProperties().size() != 0) {
-                           List<TupleOutputProperty> outputProperties = tupleOutputMapping.getMetaDataProperties();
-
-                            OutputTuplePropertyDTO[] outputTuplePropertyDTOs = new OutputTuplePropertyDTO[outputProperties.size()];
-                            int i=0;
-                            for(TupleOutputProperty property:outputProperties){
-                                 OutputTuplePropertyDTO outputTuplePropertyDTO = new OutputTuplePropertyDTO();
-                                 outputTuplePropertyDTO.setName(property.getName());
-                                 outputTuplePropertyDTO.setType(property.getType());
-                                 outputTuplePropertyDTO.setValueOf(property.getValueOf());
-                                 outputTuplePropertyDTOs[i]= outputTuplePropertyDTO;
-                                 i++;
-
-                             }
-
-
-                            outputTupleMappingDTO.setMetaDataProperties(outputTuplePropertyDTOs);
-                        }
-                        if (tupleOutputMapping.getCorrelationDataProperties() != null && tupleOutputMapping.getCorrelationDataProperties().size() != 0) {
-                            List<TupleOutputProperty> outputProperties = tupleOutputMapping.getCorrelationDataProperties();
-
-                            OutputTuplePropertyDTO[] outputTuplePropertyDTOs = new OutputTuplePropertyDTO[outputProperties.size()];
-                            int i=0;
-                            for(TupleOutputProperty property:outputProperties){
-                                OutputTuplePropertyDTO outputTuplePropertyDTO = new OutputTuplePropertyDTO();
-                                outputTuplePropertyDTO.setName(property.getName());
-                                outputTuplePropertyDTO.setType(property.getType());
-                                outputTuplePropertyDTO.setValueOf(property.getValueOf());
-                                outputTuplePropertyDTOs[i]= outputTuplePropertyDTO;
-                                i++;
-
-                            }
-
-
-
-
-                            outputTupleMappingDTO.setCorrelationDataProperties(outputTuplePropertyDTOs);
-                        }
-
-
-                        if (tupleOutputMapping.getPayloadDataProperties() != null && tupleOutputMapping.getPayloadDataProperties().size() != 0) {
-                            List<TupleOutputProperty> outputProperties = tupleOutputMapping.getPayloadDataProperties();
-
-                            OutputTuplePropertyDTO[] outputTuplePropertyDTOs = new OutputTuplePropertyDTO[outputProperties.size()];
-                            int i=0;
-                            for(TupleOutputProperty property:outputProperties){
-                                OutputTuplePropertyDTO outputTuplePropertyDTO = new OutputTuplePropertyDTO();
-                                outputTuplePropertyDTO.setName(property.getName());
-                                outputTuplePropertyDTO.setType(property.getType());
-                                outputTuplePropertyDTO.setValueOf(property.getValueOf());
-                                outputTuplePropertyDTOs[i]= outputTuplePropertyDTO;
-                                i++;
-
-                            }
-                            outputTupleMappingDTO.setPayloadDataProperties(outputTuplePropertyDTOs);
-                        }
-
+                        OutputTupleMappingDTO outputTupleMappingDTO =  adaptOutputMapping(tupleOutputMapping);
                         outputDTO.setOutputTupleMapping(outputTupleMappingDTO);
-
                     }
 
                     if(outputMapping instanceof MapOutputMapping){
-                        OutputMapMappingDTO outputMapMappingDTO =  new OutputMapMappingDTO();
                         MapOutputMapping mapOutputMapping = (MapOutputMapping) outputMapping;
-
-                        if(mapOutputMapping.getPropertyList()!= null && mapOutputMapping.getPropertyList().size()!=0) {
-                            List<MapOutputProperty> outputProperties = mapOutputMapping.getPropertyList();
-                            OutputMapPropertyDTO[] outputMapPropertyDTOs = new OutputMapPropertyDTO[outputProperties.size()];
-
-                            int i=0;
-                            for(MapOutputProperty property:outputProperties){
-                                OutputMapPropertyDTO outputMapPropertyDTO = new OutputMapPropertyDTO();
-                                outputMapPropertyDTO.setName(property.getName());
-                                outputMapPropertyDTO.setValueOf(property.getValueOf());
-
-                                outputMapPropertyDTOs[i]= outputMapPropertyDTO;
-                                i++;
-                            }
-
-
-                                outputMapMappingDTO.setMapProperties(outputMapPropertyDTOs);
-                        }
-
+                        OutputMapMappingDTO outputMapMappingDTO =adaptOutputMapping(mapOutputMapping);
                         outputDTO.setOutputMapMapping(outputMapMappingDTO);
-
                     }
 
                 }
@@ -340,9 +261,72 @@ public class RemoteBucketDeployer {
 
     }
 
+    private static OutputMapMappingDTO adaptOutputMapping(MapOutputMapping mapOutputMapping){
+        OutputMapMappingDTO outputMapMappingDTO =  new OutputMapMappingDTO();
+
+        if(mapOutputMapping.getPropertyList()!= null && mapOutputMapping.getPropertyList().size()!=0) {
+            List<MapOutputProperty> outputProperties = mapOutputMapping.getPropertyList();
+
+            for(MapOutputProperty property:outputProperties){
+                OutputMapPropertyDTO outputMapPropertyDTO = new OutputMapPropertyDTO();
+                outputMapPropertyDTO.setName(property.getName());
+                outputMapPropertyDTO.setValueOf(property.getValueOf());
+                outputMapMappingDTO.addMapProperties(outputMapPropertyDTO);
+            }
+
+        }
+
+        return outputMapMappingDTO;
+
+    }
+
+    private static OutputTupleMappingDTO adaptOutputMapping(TupleOutputMapping tupleOutputMapping){
+        OutputTupleMappingDTO outputTupleMappingDTO =  new OutputTupleMappingDTO();
+
+        if (tupleOutputMapping.getMetaDataProperties() != null && tupleOutputMapping.getMetaDataProperties().size() != 0) {
+            List<TupleOutputProperty> outputProperties = tupleOutputMapping.getMetaDataProperties();
+
+           for(TupleOutputProperty property:outputProperties){
+                OutputTuplePropertyDTO outputTuplePropertyDTO = new OutputTuplePropertyDTO();
+                outputTuplePropertyDTO.setName(property.getName());
+                outputTuplePropertyDTO.setType(property.getType());
+                outputTuplePropertyDTO.setValueOf(property.getValueOf());
+                outputTupleMappingDTO.addMetaDataProperties(outputTuplePropertyDTO);
+           }
+        }
+
+        if (tupleOutputMapping.getCorrelationDataProperties() != null && tupleOutputMapping.getCorrelationDataProperties().size() != 0) {
+            List<TupleOutputProperty> outputProperties = tupleOutputMapping.getCorrelationDataProperties();
+
+           for(TupleOutputProperty property:outputProperties){
+                OutputTuplePropertyDTO outputTuplePropertyDTO = new OutputTuplePropertyDTO();
+                outputTuplePropertyDTO.setName(property.getName());
+                outputTuplePropertyDTO.setType(property.getType());
+                outputTuplePropertyDTO.setValueOf(property.getValueOf());
+                outputTupleMappingDTO.addCorrelationDataProperties(outputTuplePropertyDTO);
+            }
+        }
 
 
+        if (tupleOutputMapping.getPayloadDataProperties() != null && tupleOutputMapping.getPayloadDataProperties().size() != 0) {
+            List<TupleOutputProperty> outputProperties = tupleOutputMapping.getPayloadDataProperties();
+            for(TupleOutputProperty property:outputProperties){
+                OutputTuplePropertyDTO outputTuplePropertyDTO = new OutputTuplePropertyDTO();
+                outputTuplePropertyDTO.setName(property.getName());
+                outputTuplePropertyDTO.setType(property.getType());
+                outputTuplePropertyDTO.setValueOf(property.getValueOf());
+                outputTupleMappingDTO.addPayloadDataProperties(outputTuplePropertyDTO);
+            }
+        }
 
+        return outputTupleMappingDTO;
+    }
 
+    private static OutputXMLMappingDTO adaptOutputMapping(XMLOutputMapping xmlOutputMapping){
+        OutputXMLMappingDTO outputXmlMappingDTO =  new OutputXMLMappingDTO();
+        outputXmlMappingDTO.setMappingXMLText(xmlOutputMapping.getMappingXMLText());
+        return outputXmlMappingDTO;
+
+    }
 
 }
