@@ -103,6 +103,22 @@ public class ClusterManager {
         localMemberAddress = localMember.getInetSocketAddress().getAddress().toString().substring(1);
         return localMemberAddress;
     }
+    /*
+    Return a Map consisting node ip and the bucket deployed at the node
+     */
+    public Map<String,Object> getBucketConfigurations(){
+        Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+        return bucketConfigurations;
+    }
 
+    /*
+    Set bucket configuration in Hazelcast
+    @nodeAddress: ip address of the node
+    @bucket: Bucket configuration of the node.
+     */
+    public void setBucketConfigurations(String nodeAddress,Object bucket){
+       Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+       bucketConfigurations.put(nodeAddress,bucket);
+    }
 
 }
