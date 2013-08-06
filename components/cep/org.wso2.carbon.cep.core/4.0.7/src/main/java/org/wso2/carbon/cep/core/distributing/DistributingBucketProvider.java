@@ -13,7 +13,7 @@ public class DistributingBucketProvider extends CEPDistributionAdmin {
 
     }
 
-    public Bucket getBucket( ) {
+    public Bucket getBucket() {
         return bucket;
     }
 

@@ -26,6 +26,7 @@ import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.backend.CEPEngineProvider;
 import org.wso2.carbon.cep.core.distributing.CEPDistributionAdmin;
+import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.persistance.CEPResourcePersister;
@@ -158,6 +159,10 @@ public class CEPService implements CEPServiceInterface {
     public boolean deployBucket(Bucket bucket,
                                 AxisConfiguration axisConfiguration, String bucketPath)
             throws CEPConfigurationException {
+        if(bucket.isMaster()){
+            DistributingBucketProvider.getInstance().addBucket(bucket);
+            DistributingBucketProvider.getInstance().setUpdate(true);
+        }
         CEPEngineProvider cepEngineProvider;
         this.axisConfiguration = axisConfiguration;
         if (bucket.getEngineProvider() == null) {

@@ -16,9 +16,6 @@
 
 package org.wso2.carbon.cep.core;
 
-
-
-
 import org.wso2.carbon.automation.api.clients.cep.CEPAdminServiceClient;
 import org.wso2.carbon.cep.core.internal.client.AuthenticationAdminServiceClient;
 import org.wso2.carbon.cep.core.internal.util.ProductConstants;
@@ -63,15 +60,14 @@ public class RemoteBucketDeployer {
         cepAdminServiceURL = serviceURL ;
 
         AuthenticationAdminServiceClient.init(authenticationAdminURL);
-        AuthenticationAdminServiceClient.setSystemProperties(new File(".").getCanonicalPath()+ProductConstants.CLIENT_TRUST_STORE_PATH, ProductConstants.KEY_STORE_TYPE, ProductConstants.KEY_STORE_PASSWORD);
+        AuthenticationAdminServiceClient.setSystemProperties(ProductConstants.CLIENT_TRUST_STORE_PATH, ProductConstants.KEY_STORE_TYPE, ProductConstants.KEY_STORE_PASSWORD);
 
         adminCookie = AuthenticationAdminServiceClient.login(ip, ProductConstants.USER_NAME, ProductConstants.PASSWORD);
-
         if (adminCookie == null) {
             throw new RuntimeException("could not login to the back-end server");
         }
 
-        CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
+        CEPAdminServiceClient cepAdminServiceClient = new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
         cepAdminServiceClient.addBucket(bucket);
 
 
@@ -250,14 +246,9 @@ public class RemoteBucketDeployer {
 
             bucketDTO.addInputs(inputDTO);
         }
-
-
-
         //  bucketDTO.setInputs(CEPAdminUtils.adaptInput(bucket.getInputs()));
 
-
         return bucketDTO;
-
     }
 
 
@@ -340,10 +331,4 @@ public class RemoteBucketDeployer {
         return inputMapMappingDTO;
 
     }
-
-
-
-
-
-
 }
