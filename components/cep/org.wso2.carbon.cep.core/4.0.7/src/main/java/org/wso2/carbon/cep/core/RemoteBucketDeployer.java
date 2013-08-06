@@ -38,6 +38,7 @@ import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.property.MapOutputProperty;
 import org.wso2.carbon.cep.core.mapping.output.property.TupleOutputProperty;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.*;
+import org.wso2.carbon.utils.CarbonUtils;
 
 
 import java.io.File;
@@ -53,7 +54,6 @@ public class RemoteBucketDeployer {
     private static String cepAdminServiceURL;
     private static final String ADMIN_SERVICE = "AuthenticationAdmin";
 
-
     public static void deploy(String ip, Bucket bucketToDeploy) throws Exception {
 
 
@@ -63,7 +63,7 @@ public class RemoteBucketDeployer {
         cepAdminServiceURL = serviceURL ;
 
         AuthenticationAdminServiceClient.init(authenticationAdminURL);
-        AuthenticationAdminServiceClient.setSystemProperties(new File(".").getCanonicalPath()+ProductConstants.CLIENT_TRUST_STORE_PATH, ProductConstants.KEY_STORE_TYPE, ProductConstants.KEY_STORE_PASSWORD);
+        AuthenticationAdminServiceClient.setSystemProperties(ProductConstants.CLIENT_TRUST_STORE_PATH, ProductConstants.KEY_STORE_TYPE, ProductConstants.KEY_STORE_PASSWORD);
 
         adminCookie = AuthenticationAdminServiceClient.login(ip, ProductConstants.USER_NAME, ProductConstants.PASSWORD);
         if (adminCookie == null) {
@@ -328,5 +328,8 @@ public class RemoteBucketDeployer {
         return outputXmlMappingDTO;
 
     }
+
+
+
 
 }
