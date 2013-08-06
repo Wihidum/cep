@@ -19,7 +19,7 @@ public class ClusterManager {
     private HazelcastInstance hazelcastInstance;
     private static final Log log = LogFactory.getLog(ClusterManager.class);
     private Member localMember;
-    private ConcurrentSkipListSet<Member> memberList;
+    private Vector<Member> memberList;
     private String localMemberAddress;
     private ArrayList<String> membersAddressList;
 
@@ -40,7 +40,7 @@ public class ClusterManager {
     public void initiate() {
         Cluster cluster = hazelcastInstance.getCluster();
         localMember = cluster.getLocalMember();
-        memberList = new ConcurrentSkipListSet<Member>();
+        memberList = new Vector<Member>();
         cluster.addMembershipListener(new MembershipListener() {
             public void memberAdded(MembershipEvent membersipEvent) {
                 configureBrokers(membersipEvent.getMember());
