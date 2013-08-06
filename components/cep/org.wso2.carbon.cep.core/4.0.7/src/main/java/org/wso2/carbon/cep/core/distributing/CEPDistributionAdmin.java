@@ -10,12 +10,11 @@ public abstract class CEPDistributionAdmin {
 
     public static CEPDistributionAdmin cepDistributionAdmin = null;
 
-    public abstract Map<String, Bucket> getBucketList(Bucket bucket, String bucketpath);
+    public abstract Bucket getBucket(Bucket bucket);
 
 
     public static CEPDistributionAdmin getInstances() {
         cepDistributionAdmin = DistributingBucketProvider.getInstance();
-
         return cepDistributionAdmin;
     }
 

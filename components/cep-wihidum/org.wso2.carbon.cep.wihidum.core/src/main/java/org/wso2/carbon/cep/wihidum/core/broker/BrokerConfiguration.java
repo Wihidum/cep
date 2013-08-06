@@ -1,14 +1,15 @@
-package org.wso2.carbon.cep.core.distributing.util;
+package org.wso2.carbon.cep.wihidum.core.broker;
 
 
-public class BrokerConfig {
+public class BrokerConfiguration {
     private String ip;
     private String inputBroker;
     private String outputBroker;
     private String inputTopic;
     private String outputTopic;
 
-    public BrokerConfig(String ip, String inputBroker, String inputTopic, String outputBroker, String outputTopic) {
+
+    public BrokerConfiguration(String ip, String inputBroker, String inputTopic, String outputBroker, String outputTopic) {
         this.ip = ip;
         this.inputBroker = inputBroker;
         this.outputBroker = outputBroker;
@@ -55,4 +56,10 @@ public class BrokerConfig {
     public void setOutputTopic(String outputTopic) {
         this.outputTopic = outputTopic;
     }
+
+
+
+
+
+
 }
