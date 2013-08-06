@@ -40,7 +40,7 @@ public class ClusterManager {
     public void initiate() {
         Cluster cluster = hazelcastInstance.getCluster();
         localMember = cluster.getLocalMember();
-        //memberList = (ConcurrentSkipListSet)cluster.getMembers();
+        memberList = new ConcurrentSkipListSet<Member>();
         cluster.addMembershipListener(new MembershipListener() {
             public void memberAdded(MembershipEvent membersipEvent) {
                 configureBrokers(membersipEvent.getMember());
@@ -52,6 +52,7 @@ public class ClusterManager {
                 //TODO
             }
         });
+
         for (Member member : cluster.getMembers()) {
             configureBrokers(member);
         }
