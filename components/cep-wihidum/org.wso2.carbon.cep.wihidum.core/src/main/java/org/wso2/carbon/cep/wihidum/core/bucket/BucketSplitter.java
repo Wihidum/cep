@@ -15,11 +15,6 @@ import java.util.Map;
 
 public class BucketSplitter {
 
-
-
-
-
-
     public Map<String, Bucket> getBucketList(Bucket bucket){
         Map<String, BrokerConfiguration> brokerMap = BrokerProvider.getBrokers();
         Map<String, Bucket> bucketMap = new HashMap<String, Bucket>();
