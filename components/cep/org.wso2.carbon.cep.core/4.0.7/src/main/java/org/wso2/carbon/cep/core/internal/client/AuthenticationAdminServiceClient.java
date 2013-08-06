@@ -1,4 +1,4 @@
-package org.wso2.carbon.cep.wihidum.core.deployer.client;
+package org.wso2.carbon.cep.core.internal.client;
 
 
 import org.apache.axis2.AxisFault;
@@ -7,7 +7,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
-import org.wso2.carbon.cep.wihidum.core.deployer.util.ProductConstants;
+import org.wso2.carbon.cep.core.internal.util.ProductConstants;
 
 public class AuthenticationAdminServiceClient {
      private static AuthenticationAdminStub authenticationAdminStub;

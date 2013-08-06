@@ -115,13 +115,12 @@ public class ThriftEventTransmissionServiceImpl implements
             throws ThriftUndefinedEventTypeException, ThriftSessionExpiredException, TException {
 
         if(siddhiLBManager.loadBalancerConfiguration().isLoadbalanceron()){
-
-
            AgentSession agentSession =    ((DataBridge)dataBridgeReceiverService).getAgentSession(eventBundle.getSessionId());
            StreamTypeHolder streamTypeHolder = new StreamTypeHolder(agentSession.getDomainName());
-          List<StreamDefinition> streamDefinitionList = ((DataBridge) dataBridgeReceiverService).getAllStreamDefinitions(agentSession.getCredentials());
+           List<StreamDefinition> streamDefinitionList = ((DataBridge) dataBridgeReceiverService).getAllStreamDefinitions(agentSession.getCredentials());
             for(StreamDefinition streamDefinition:streamDefinitionList){
                 streamTypeHolder.putStreamDefinition(streamDefinition);
+                siddhiLBManager.addStreamDefinition(streamDefinition);
             }
             List<Event> eventList =eventConverter.toEventList(eventBundle,streamTypeHolder);
              siddhiLBManager.receiveEventBundle(eventList);
