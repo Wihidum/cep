@@ -19,7 +19,7 @@ public class ClusterManager {
     private HazelcastInstance hazelcastInstance;
     private static final Log log = LogFactory.getLog(ClusterManager.class);
     private Member localMember;
-    private ConcurrentSkipListSet<Member> memberList;
+    private Vector<Member> memberList;
     private String localMemberAddress;
     private ArrayList<String> membersAddressList;
 
@@ -40,7 +40,7 @@ public class ClusterManager {
     public void initiate() {
         Cluster cluster = hazelcastInstance.getCluster();
         localMember = cluster.getLocalMember();
-        //memberList = (ConcurrentSkipListSet)cluster.getMembers();
+        memberList = new Vector<Member>();
         cluster.addMembershipListener(new MembershipListener() {
             public void memberAdded(MembershipEvent membersipEvent) {
                 configureBrokers(membersipEvent.getMember());
@@ -52,6 +52,7 @@ public class ClusterManager {
                 //TODO
             }
         });
+
         for (Member member : cluster.getMembers()) {
             configureBrokers(member);
         }
@@ -103,6 +104,22 @@ public class ClusterManager {
         localMemberAddress = localMember.getInetSocketAddress().getAddress().toString().substring(1);
         return localMemberAddress;
     }
+    /*
+    Return a Map consisting node ip and the bucket deployed at the node
+     */
+    public Map<String,Object> getBucketConfigurations(){
+        Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+        return bucketConfigurations;
+    }
 
+    /*
+    Set bucket configuration in Hazelcast
+    @nodeAddress: ip address of the node
+    @bucket: Bucket configuration of the node.
+     */
+    public void setBucketConfigurations(String nodeAddress,Object bucket){
+       Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+       bucketConfigurations.put(nodeAddress,bucket);
+    }
 
 }

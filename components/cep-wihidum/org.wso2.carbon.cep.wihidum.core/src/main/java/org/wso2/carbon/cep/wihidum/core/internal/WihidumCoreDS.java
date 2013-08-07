@@ -22,7 +22,7 @@ public class WihidumCoreDS {
          ClusterManager clusterManager = ClusterManager.getInstant();
          clusterManager.initiate();
          Thread bucketDeployerThread = new Thread(new RemoteBucketDeployManager());
-         bucketDeployerThread.run();
+         bucketDeployerThread.start();
         log.info("Successfully initiated cluster manager");
         }catch (Throwable e){
             log.error("Can not initiate cluster service ", e);
