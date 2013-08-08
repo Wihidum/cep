@@ -55,6 +55,7 @@ public class BucketSplitter {
         newQuery.setOutput(output);
         Bucket newBucket = new Bucket();
         newBucket.setDescription(bucket.getDescription());
+        newBucket.setMaster(false);
         newBucket.setEngineProvider(bucket.getEngineProvider());
         newBucket.setProviderConfigurationProperties(bucket.getProviderConfigurationProperties());
         newBucket.setName(broker.getIp());
