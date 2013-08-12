@@ -25,7 +25,6 @@ import org.wso2.carbon.cep.core.CEPServiceInterface;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.backend.CEPEngineProvider;
-import org.wso2.carbon.cep.core.distributing.CEPDistributionAdmin;
 import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
@@ -250,7 +249,7 @@ public class CEPService implements CEPServiceInterface {
 
     }
 
-    public boolean removeAllBuckets() throws CEPConfigurationException {
+    public boolean removeAllBuckets() throws CEPConfigurationException{
         try {
             int tenantId = CarbonContext.getCurrentContext().getTenantId();
             Map<String, CEPBucket> tenantBuckets = this.tenantSpecificCEPBuckets.get(tenantId);
