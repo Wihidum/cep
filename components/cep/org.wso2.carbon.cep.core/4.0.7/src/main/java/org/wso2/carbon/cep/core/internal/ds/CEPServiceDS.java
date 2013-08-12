@@ -98,9 +98,8 @@ public class CEPServiceDS {
 
         List<NotDeployedBucketElement> unDeployedBuckets = CEPServiceValueHolder.getInstance().getNotDeployedBucketElements();
         for (NotDeployedBucketElement notDeployedBucketElement : unDeployedBuckets) {
-          Bucket bucket =  BucketHelper.fromOM(notDeployedBucketElement.getBucket());
-            cepService.deployBucket(bucket, axisConfiguration, notDeployedBucketElement.getPath());
-            DistributingBucketProvider.getInstance().addBucket(bucket);  // assume only manager node has one bucket.
+
+            cepService.deployBucket(BucketHelper.fromOM(notDeployedBucketElement.getBucket()), axisConfiguration, notDeployedBucketElement.getPath());
         }
         unDeployedBuckets.clear();
         return cepService;

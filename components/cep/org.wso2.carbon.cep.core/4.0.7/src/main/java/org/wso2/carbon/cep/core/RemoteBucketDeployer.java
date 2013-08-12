@@ -16,10 +16,9 @@
 
 package org.wso2.carbon.cep.core;
 
-
-
-
-import org.wso2.carbon.automation.api.clients.cep.CEPAdminServiceClient;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
+import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
 import org.wso2.carbon.cep.core.internal.client.AuthenticationAdminServiceClient;
 import org.wso2.carbon.cep.core.internal.util.ProductConstants;
 import org.wso2.carbon.cep.core.mapping.input.Input;
@@ -37,14 +36,14 @@ import org.wso2.carbon.cep.core.mapping.output.mapping.TupleOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.XMLOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.property.MapOutputProperty;
 import org.wso2.carbon.cep.core.mapping.output.property.TupleOutputProperty;
+import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPAdminException;
+import org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.*;
-import org.wso2.carbon.utils.CarbonUtils;
-
-
-import java.io.File;
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import org.apache.log4j.Logger;
 
 
 public class RemoteBucketDeployer {
@@ -53,6 +52,7 @@ public class RemoteBucketDeployer {
     private static String authenticationAdminURL;
     private static String cepAdminServiceURL;
     private static final String ADMIN_SERVICE = "AuthenticationAdmin";
+    private static Logger logger = Logger.getLogger(RemoteBucketDeployer.class);
 
     public static void deploy(String ip, Bucket bucketToDeploy) throws Exception {
 
@@ -67,14 +67,32 @@ public class RemoteBucketDeployer {
 
         adminCookie = AuthenticationAdminServiceClient.login(ip, ProductConstants.USER_NAME, ProductConstants.PASSWORD);
         if (adminCookie == null) {
+
             throw new RuntimeException("could not login to the back-end server");
         }
 
-        CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
-        cepAdminServiceClient.addBucket(bucket);
+//        CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
+//        cepAdminServiceClient.addBucket(bucket);
+        CEPAdminServiceStub cepAdminServiceStub = new CEPAdminServiceStub(cepAdminServiceURL+"CEPAdminService");
+       // AuthenticateStub.authenticateStub(adminCookie, cepAdminServiceStub);
+        ServiceClient client = cepAdminServiceStub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        option.setTimeOutInMilliSeconds(5*60*1000);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, adminCookie);
+        try {
+            cepAdminServiceStub.addBucket(bucket);
+
+        } catch (RemoteException e) {
+            logger.error("RemoteException", e);
+            throw new RemoteException();
+        } catch (CEPAdminServiceCEPAdminException e) {
+            throw new CEPAdminServiceCEPAdminException("CEPAdminServiceCEPAdminException", e);
+        }
 
 
     }
+
 
     public static BucketDTO getBucket(Bucket bucket){
 

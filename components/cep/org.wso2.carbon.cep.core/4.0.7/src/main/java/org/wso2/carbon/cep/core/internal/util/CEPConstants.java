@@ -50,6 +50,7 @@ public interface CEPConstants {
     String CE_CONF_ELE_XML_FIELD_TYPE = "xmlFieldType";
     String CEP_CONF_ATTR_INPUT_TUPLE_DATA_TYPE ="inputDataType" ;
     String CEP_CONF_QUERY_IP="ip";
+    String CEP_CONF_MASTER_BUCKET="master";
 
 
     String CEP_CONF_ATTR_QUERY_EVENT_TYPE = "queryEventType";
