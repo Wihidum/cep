@@ -59,6 +59,14 @@ public class BucketHelper {
                 bucketElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
                         CEPConstants.CEP_CONF_ELE_PROVIDER_CONFIG));
         bucket.setEngineProvider(ProviderConfigurationHelper.engineProviderFromOM(providerConfiguration));
+        OMElement master = bucketElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                   CEPConstants.CEP_CONF_MASTER_BUCKET));
+        if(master.getText().trim().equals("true")){
+             bucket.setMaster(true);
+        }else{
+             bucket.setMaster(false);
+        }
+
 
         if (providerConfiguration.getChildElements().hasNext()) {
             bucket.setProviderConfigurationProperties(ProviderConfigurationHelper.propertiesFromOM(providerConfiguration));
@@ -106,13 +114,21 @@ public class BucketHelper {
                 CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
         bucketItem.addAttribute(CEPConstants.CEP_CONF_ATTR_NAME, bucketName,
                 null);
+        OMElement masterBucket = factory.createOMElement(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_MASTER_BUCKET,
+                CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+           if(bucket.isMaster()){
+               masterBucket.setText("true");
+           }else{
+               masterBucket.setText("false");
+           }
         OMElement description = factory.createOMElement(new QName(
                 CEPConstants.CEP_CONF_NAMESPACE,
                 CEPConstants.CEP_CONF_ELE_DESCRIPTION,
                 CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
 
         description.setText(bucketDescription);
-
+        bucketItem.addChild(masterBucket);
         bucketItem.addChild(description);
         bucketItem.addChild(ProviderConfigurationHelper.providerConfigurationToOM(bucket.getEngineProvider(), bucket.getProviderConfigurationProperties()));
         for (Input input : inputList) {

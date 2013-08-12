@@ -24,12 +24,14 @@ public class BucketSplitter {
             if (!ipList.isEmpty()){
                 for (String ip : ipList) {
                     BrokerConfiguration broker = brokerMap.get(ip);
+                    if(broker !=null){
                     Bucket smallBucket = createBucket(bucket, query, broker);
                     bucketMap.put(ip, smallBucket);
+                    }
                 }
             }
         }
-        return null;
+        return bucketMap;
     }
 
 
@@ -53,6 +55,7 @@ public class BucketSplitter {
         newQuery.setOutput(output);
         Bucket newBucket = new Bucket();
         newBucket.setDescription(bucket.getDescription());
+        newBucket.setMaster(false);
         newBucket.setEngineProvider(bucket.getEngineProvider());
         newBucket.setProviderConfigurationProperties(bucket.getProviderConfigurationProperties());
         newBucket.setName(broker.getIp());

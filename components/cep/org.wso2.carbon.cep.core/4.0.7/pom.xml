@@ -88,6 +88,11 @@
             <artifactId>ant</artifactId>
             <version>1.6.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+            <version>4.0.6</version>
+        </dependency>
 
 
     </dependencies>
