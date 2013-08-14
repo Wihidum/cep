@@ -79,5 +79,27 @@ public class Node {
 
     }
 
+    public void addEvent(Event event){
+        eventList.add(event);
 
+        if (eventList.size()>=1000){
+            if(this.streamID != null){
+
+            }
+            try {
+                eventPublisher.updateEventPublisher();
+                eventPublisher.publishEvents(eventList);
+            } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (MalformedStreamDefinitionException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (AgentException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (StreamDefinitionException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            eventList.clear();
+        }
+
+    }
 }

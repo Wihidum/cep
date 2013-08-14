@@ -20,6 +20,7 @@ package org.wso2.carbon.cep.core;
 
 
 import org.wso2.carbon.automation.api.clients.cep.CEPAdminServiceClient;
+import org.wso2.carbon.automation.api.clients.registry.ResourceAdminServiceClient;
 import org.wso2.carbon.cep.core.internal.client.AuthenticationAdminServiceClient;
 import org.wso2.carbon.cep.core.internal.util.ProductConstants;
 import org.wso2.carbon.cep.core.mapping.input.Input;
@@ -72,6 +73,8 @@ public class RemoteBucketDeployer {
         }
 
         CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
+
+        ResourceAdminServiceClient resourceAdminServiceClient = new ResourceAdminServiceClient();
         cepAdminServiceClient.addBucket(bucket);
 
 
