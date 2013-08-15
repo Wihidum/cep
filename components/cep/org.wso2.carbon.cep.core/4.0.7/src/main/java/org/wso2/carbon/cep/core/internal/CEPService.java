@@ -26,6 +26,9 @@ import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntimeFactory;
 import org.wso2.carbon.cep.core.backend.CEPEngineProvider;
 import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
+import org.wso2.carbon.cep.core.distributing.DistributingWihidumValueHolder;
+import org.wso2.carbon.cep.core.distributing.RemoteBucketHelper;
+import org.wso2.carbon.cep.core.distributing.WihidumValueHolder;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.persistance.CEPResourcePersister;
@@ -51,6 +54,7 @@ public class CEPService implements CEPServiceInterface {
     private Map<Integer, Map<String, CEPBucket>> tenantSpecificCEPBuckets;
 
     private Map<String, CEPEngineProvider> cepEngineProviderMap;
+
 
     /**
      * if the corresponding cep engine provider is not available when the
@@ -89,12 +93,12 @@ public class CEPService implements CEPServiceInterface {
         if (buckets != null && buckets.containsKey(bucket.getName())) {
             throw new CEPConfigurationException("A bucket with name " + bucket.getName() + " already exist!");
         }
-        /*String bucketPath = createCEPBucketDirectories(bucket, axisConfiguration);
+        String bucketPath = createCEPBucketDirectories(bucket, axisConfiguration);
         try {
             CEPResourcePersister.save(bucket, bucketPath);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
-        }*/
+        }
     }
 
     private String createCEPBucketDirectories(Bucket bucket, AxisConfiguration axisConfiguration)
@@ -161,6 +165,7 @@ public class CEPService implements CEPServiceInterface {
         if(bucket.isMaster()){
             DistributingBucketProvider.getInstance().addBucket(bucket);
             DistributingBucketProvider.getInstance().setUpdate(true);
+            RemoteBucketHelper.executeRemoteBucketDeploy();
         }
         CEPEngineProvider cepEngineProvider;
         this.axisConfiguration = axisConfiguration;
@@ -226,7 +231,7 @@ public class CEPService implements CEPServiceInterface {
             String errorMessage = "Can not instantiate factory class ";
             log.error(errorMessage, e);
             throw new CEPConfigurationException(errorMessage, e);
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e){
             String errorMessage = "Error in adding buckets";
             log.error(errorMessage, e);
             throw new CEPConfigurationException(errorMessage, e);
