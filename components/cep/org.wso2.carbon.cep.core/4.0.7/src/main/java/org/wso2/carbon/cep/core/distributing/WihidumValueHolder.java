@@ -12,7 +12,6 @@ public class WihidumValueHolder {
  }
 
  public void runDeploy(){
-
    if(remoteWihidum != null){
        remoteWihidum.execute();
    }

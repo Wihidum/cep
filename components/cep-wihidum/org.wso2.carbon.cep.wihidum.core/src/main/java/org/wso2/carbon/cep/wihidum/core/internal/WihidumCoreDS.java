@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.brokermanager.core.BrokerManagerService;
+import org.wso2.carbon.cep.core.distributing.RemoteBucketHelper;
 import org.wso2.carbon.cep.core.distributing.WihidumValueHolder;
 import org.wso2.carbon.cep.wihidum.core.bucket.RemoteBucketDeployManager;
 import org.wso2.carbon.cep.wihidum.core.cluster.ClusterManager;
@@ -26,6 +27,7 @@ public class WihidumCoreDS {
          clusterManager.initiate();
             wihidumValueHolder = WihidumValueHolder.getInstance();
             wihidumValueHolder.addRemoteObject(new RemoteBucketDeployManager());
+            RemoteBucketHelper.executeRemoteBucketDeploy();
 
         log.info("Successfully initiated cluster manager");
         }catch (Throwable e){
