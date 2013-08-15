@@ -5,28 +5,35 @@ import org.wso2.carbon.cep.core.RemoteBucketDeployer;
 import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
 import java.util.Map;
 import org.apache.log4j.Logger;
+import org.wso2.carbon.cep.core.distributing.DistributingWihidumValueHolder;
+import org.wso2.carbon.cep.core.distributing.WihidumValueHolder;
 
-public class RemoteBucketDeployManager implements Runnable {
+public class RemoteBucketDeployManager implements DistributingWihidumValueHolder {
 
    private static Logger logger = Logger.getLogger(RemoteBucketDeployManager.class);
    private DistributingBucketProvider distributingBucketProvider = DistributingBucketProvider.getInstance();
    private BucketSplitter bucketSplitter;
 
 
+
     public RemoteBucketDeployManager(){
          bucketSplitter = new BucketSplitter();
+
      }
 
     @Override
-    public void run() {
-      while(true){
+    public void execute(){
+        logger.info("Run the execute method in  Remote Bucket Deploy Manager");
           if(distributingBucketProvider.isUpdate()){
+              logger.info("Distributing bucket Provider updated");
               synchronized (distributingBucketProvider){
                 Bucket bucket = distributingBucketProvider.getBucket();
                 Map<String,Bucket> map =  bucketSplitter.getBucketList(bucket);
+                  logger.info("Map Size" +map.size());
                  for(String key : map.keySet()){
                      try {
                          RemoteBucketDeployer.deploy(key,map.get(key));
+                         logger.info("run deploy in affter spilitting buckets  bucket is " +map.get(key).getName());
                      } catch (Exception e){
                          logger.info(e.getMessage());
                      }
@@ -34,6 +41,5 @@ public class RemoteBucketDeployManager implements Runnable {
               }
               distributingBucketProvider.setUpdate(false);
           }
-      }
     }
 }

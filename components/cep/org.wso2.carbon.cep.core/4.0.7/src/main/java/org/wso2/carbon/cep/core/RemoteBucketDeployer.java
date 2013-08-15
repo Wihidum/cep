@@ -87,6 +87,7 @@ public class RemoteBucketDeployer {
             logger.error("RemoteException", e);
             throw new RemoteException();
         } catch (CEPAdminServiceCEPAdminException e) {
+            logger.info(e.getMessage());
             throw new CEPAdminServiceCEPAdminException("CEPAdminServiceCEPAdminException", e);
         }
 
