@@ -37,7 +37,7 @@ public class BucketSplitter {
 
     private Bucket createBucket(Bucket bucket, Query query, BrokerConfiguration  broker){
         Output output = query.getOutput();
-       // output.setBrokerName(broker.getOutputBroker());
+        output.setBrokerName("externalAgentBroker");
       //  output.setTopic(broker.getOutputTopic());
         List<Input> inputList = bucket.getInputs();
         if (!inputList.isEmpty()){
