@@ -58,6 +58,7 @@ public class BucketSplitter {
         newBucket.setMaster(false);
         newBucket.setEngineProvider(bucket.getEngineProvider());
         newBucket.setProviderConfigurationProperties(bucket.getProviderConfigurationProperties());
+        newBucket.getProviderConfigurationProperties().setProperty("siddhi.enable.distributed.processing","false");
         newBucket.setName(broker.getIp());
         newBucket.setInputs(inputList);
         newBucket.addQuery(newQuery);
