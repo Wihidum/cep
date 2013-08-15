@@ -39,6 +39,16 @@ public class Query {
     private String name;
 
     /**
+     * InputStreams of the Query
+     */
+    private List<String> inputStreams;
+
+    /**
+     * InputStreams of the Query
+     */
+    private String outputStream;
+
+    /**
      * configuration ot the output topic and the output XML Element
      */
     private Output output;
@@ -99,6 +109,21 @@ public class Query {
         this.queryIndex = queryIndex;
     }
 
+    public void setInputStreams(List inputStreams){
+        this.inputStreams = inputStreams;
+    }
+
+    public List<String> getInputStreams(){
+        return inputStreams;
+    }
+
+    public void setOutputStream(String outputStream){
+        this.outputStream = outputStream;
+    }
+
+    public String getOutputStream(){
+        return outputStream;
+    }
 
     public List<String> getIpList() {
         return ipList;
