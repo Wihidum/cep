@@ -138,20 +138,24 @@ public class RemoteBucketDeployer {
                         XMLOutputMapping xmlOutputMapping = (XMLOutputMapping) outputMapping;
                         OutputXMLMappingDTO outputXmlMappingDTO = adaptOutputMapping(xmlOutputMapping);
                         outputDTO.setOutputXmlMapping(outputXmlMappingDTO);
+
                     }
 
                     if(outputMapping instanceof TupleOutputMapping){
                         TupleOutputMapping tupleOutputMapping = (TupleOutputMapping) outputMapping;
                         OutputTupleMappingDTO outputTupleMappingDTO =  adaptOutputMapping(tupleOutputMapping);
                         outputDTO.setOutputTupleMapping(outputTupleMappingDTO);
+
                     }
 
                     if(outputMapping instanceof MapOutputMapping){
                         MapOutputMapping mapOutputMapping = (MapOutputMapping) outputMapping;
                         OutputMapMappingDTO outputMapMappingDTO =adaptOutputMapping(mapOutputMapping);
                         outputDTO.setOutputMapMapping(outputMapMappingDTO);
+
                     }
 
+                    queryDTO.setOutput(outputDTO);
                 }
 
             }
