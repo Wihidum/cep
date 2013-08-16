@@ -136,4 +136,5 @@ public interface CEPConstants {
 
 
     String CEP_BUCKETS_REPO = "cepbuckets";
+    String DISTRIBUTED_PROCESSING = "siddhi.enable.distributed.processing";
 }
