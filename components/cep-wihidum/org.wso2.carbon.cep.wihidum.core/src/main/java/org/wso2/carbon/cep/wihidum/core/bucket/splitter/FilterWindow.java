@@ -34,11 +34,7 @@ import java.util.Map;
 public class FilterWindow {
 
     private static final String DISTRIBUTED_PROCESSING= "siddhi.enable.distributed.processing";
-    public void splitBucket(Bucket bucket){
-        ClusterManager clusterManager =  ClusterManager.getInstant();
-        clusterManager.getMemberList();
 
-    }
 
     public Map<String, Bucket> getBucketLists(Bucket bucket){
         Map<String, Object> streamDefinitionMap =  new HashMap<String, Object>();
