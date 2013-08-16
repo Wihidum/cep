@@ -44,7 +44,7 @@ public class QueryHelper {
 
         Iterator iterator = queryElement.getChildrenWithName(new QName(CEPConstants.CEP_CONF_QUERY_IP));
 
-        if (iterator != null && iterator.hasNext()) {
+        while (iterator != null && iterator.hasNext()) {
             OMElement ipElement = (OMElement) iterator.next();
             String ip = ipElement.getText();
             query.addIP(ip);
