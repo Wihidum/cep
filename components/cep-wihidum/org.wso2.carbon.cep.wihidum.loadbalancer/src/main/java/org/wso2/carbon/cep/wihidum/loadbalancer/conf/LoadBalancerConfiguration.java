@@ -113,6 +113,10 @@ public class LoadBalancerConfiguration {
 
     }
 
+    public void clearOutputNodes(){
+        nodeList.clear();
+    }
+
     public static LoadBalancerConfiguration getInstance() {
         if (loadBalancerConfiguration == null) {
             OMElement omElement = null;
@@ -133,8 +137,6 @@ public class LoadBalancerConfiguration {
                 loadBalancerConfiguration.setHost(LoadBalancerConstants.DEFAULT_RUNNING_HOST);
             }
         }
-
         return loadBalancerConfiguration;
     }
-
 }

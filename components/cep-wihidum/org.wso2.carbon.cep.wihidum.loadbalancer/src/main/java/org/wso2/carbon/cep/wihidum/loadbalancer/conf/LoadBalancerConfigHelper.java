@@ -2,7 +2,6 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.conf;
 
 
 import org.apache.axiom.om.OMElement;
-
 import java.util.Iterator;
 
 public class LoadBalancerConfigHelper {

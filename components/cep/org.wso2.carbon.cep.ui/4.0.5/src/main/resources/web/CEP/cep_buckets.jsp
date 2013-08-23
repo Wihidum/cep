@@ -919,6 +919,7 @@
     <td class="leftCol-small"><fmt:message key="query.name"/><span class="required">*</span></td>
     <td><input type="text" id="queryName"></td>
 </tr>
+
 <tr id="expressionInlined">
     <td style="vertical-align:top !important;"><fmt:message key="query.expression"/><span
             class="required">*</span>
@@ -929,6 +930,58 @@
                   name="querySource" rows="30"></textarea>
     </td>
 </tr>
+
+
+
+
+
+
+
+<tr name="ipaddrow">
+    <td colspan="2" class="middle-header">
+        <fmt:message key="query_ips"/>
+    </td>
+</tr>
+<tr name="ipaddrow">
+    <td colspan="2">
+        <table class="styledLeft" id="iptable" style="width:100%;display:none">
+           <div id="noipdefine" class="noDataDiv-plain">
+                      No IPs Defined
+                  </div>
+            <thead>
+            <th class="leftCol-med"><fmt:message key="ip"/></th>
+            <th><fmt:message key="actions"/></th>
+            </thead>
+        </table>
+
+        <table id="addiptable" class="normal">
+            <tbody>
+            <tr>
+                <td class="leftCol-small"><fmt:message key="ip"/><span class="required">*</span></td>
+                <td><input type="text" id="ipaddress"/></td>
+                <td><input type="button" class="button" value="<fmt:message key="add"/>"
+                           onclick="addIP()"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </td>
+</tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <tr>
     <td class="middle-header" colspan="2">
         <fmt:message key="output"/>

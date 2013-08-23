@@ -1,6 +1,8 @@
 package org.wso2.carbon.cep.admin.internal;
 
 
+import java.util.List;
+
 public class QueryDTO {
 
     /**
@@ -18,9 +20,19 @@ public class QueryDTO {
 
     private int queryIndex;
 
+    private String[] ipList;
+
     public ExpressionDTO getExpression() {
         return expressionDTO;
     }
+
+     public void setIpList(String[] ipList){
+       this.ipList = ipList;
+     }
+
+     public String[] getIpList(){
+         return ipList;
+     }
 
     public void setExpression(ExpressionDTO expressionDTO) {
         this.expressionDTO = expressionDTO;

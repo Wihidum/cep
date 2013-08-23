@@ -17,7 +17,6 @@
 package org.wso2.carbon.cep.core;
 
 import org.wso2.carbon.cep.core.mapping.output.Output;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,7 +124,7 @@ public class Query {
         return outputStream;
     }
 
-    public List<String> getIpList() {
+    public List<String> getIpList(){
         return ipList;
     }
 
