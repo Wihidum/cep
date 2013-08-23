@@ -60,18 +60,17 @@
     bucket.setEngineProvider(engineProvider.trim());
 
     String message = "";
-    if (inputs != null) {
+    if (inputs != null){
         bucket.setInputs(inputs.toArray(new InputDTO[inputs.size()]));
     }
 
-    if (queries != null) {
+    if (queries != null){
         bucket.setQueries(queries.toArray(new QueryDTO[queries.size()]));
     }
 
     try {
         stub.addBucket(bucket);
         message = "Bucket Added Successfully";
-
         session.removeAttribute("editingBucket");
         session.removeAttribute("inputs");
         session.removeAttribute("queries");

@@ -1,0 +1,83 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://wso2.org/carbon/cep/wihidum/loadbalancer/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax223="http://internal.admin.loadbalancer.wihidum.cep.carbon.wso2.org/xsd" xmlns:tns="http://wso2.org/carbon/cep/wihidum/loadbalancer/admin" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://wso2.org/carbon/cep/wihidum/loadbalancer/admin">
+    <wsdl:documentation>LoadbalancerAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://internal.admin.loadbalancer.wihidum.cep.carbon.wso2.org/xsd">
+            <xs:complexType name="LoadbalancerDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="blockingQueueCapacity" type="xs:int"/>
+                    <xs:element minOccurs="0" name="eventDivideCount" type="xs:int"/>
+                    <xs:element minOccurs="0" name="host" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="loadbalanceron" type="xs:boolean"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="nodeList" nillable="true" type="ax223:NodeDTO"/>
+                    <xs:element minOccurs="0" name="port" type="xs:int"/>
+                    <xs:element minOccurs="0" name="queueWorkerThreads" type="xs:int"/>
+                    <xs:element minOccurs="0" name="reciverbundlesize" type="xs:int"/>
+                    <xs:element minOccurs="0" name="roundRobin" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="streamDivide" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="NodeDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="hostname" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="port" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax224="http://internal.admin.loadbalancer.wihidum.cep.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://wso2.org/carbon/cep/wihidum/loadbalancer/xsd">
+            <xs:import namespace="http://internal.admin.loadbalancer.wihidum.cep.carbon.wso2.org/xsd"/>
+            <xs:element name="addLoadBalancerConfiguration">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="loadbalancerDTO" nillable="true" type="ax223:LoadbalancerDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="addLoadBalancerConfigurationRequest">
+        <wsdl:part name="parameters" element="ns:addLoadBalancerConfiguration"/>
+    </wsdl:message>
+    <wsdl:portType name="LoadbalancerAdminServicePortType">
+        <wsdl:operation name="addLoadBalancerConfiguration">
+            <wsdl:input message="tns:addLoadBalancerConfigurationRequest" wsaw:Action="urn:addLoadBalancerConfiguration"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="LoadbalancerAdminServiceSoap11Binding" type="tns:LoadbalancerAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="addLoadBalancerConfiguration">
+            <soap:operation soapAction="urn:addLoadBalancerConfiguration" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="LoadbalancerAdminServiceSoap12Binding" type="tns:LoadbalancerAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="addLoadBalancerConfiguration">
+            <soap12:operation soapAction="urn:addLoadBalancerConfiguration" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="LoadbalancerAdminServiceHttpBinding" type="tns:LoadbalancerAdminServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="addLoadBalancerConfiguration">
+            <http:operation location="addLoadBalancerConfiguration"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="LoadbalancerAdminService">
+        <wsdl:port name="LoadbalancerAdminServiceHttpsSoap11Endpoint" binding="tns:LoadbalancerAdminServiceSoap11Binding">
+            <soap:address location="https://10.217.57.96:9444/services/LoadbalancerAdminService.LoadbalancerAdminServiceHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="LoadbalancerAdminServiceHttpsSoap12Endpoint" binding="tns:LoadbalancerAdminServiceSoap12Binding">
+            <soap12:address location="https://10.217.57.96:9444/services/LoadbalancerAdminService.LoadbalancerAdminServiceHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="LoadbalancerAdminServiceHttpsEndpoint" binding="tns:LoadbalancerAdminServiceHttpBinding">
+            <http:address location="https://10.217.57.96:9444/services/LoadbalancerAdminService.LoadbalancerAdminServiceHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -225,7 +225,6 @@
             <xs:complexType name="QueryDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="expression" nillable="true" type="ax217:ExpressionDTO"/>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="ipList" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="output" nillable="true" type="ax217:OutputDTO"/>
                     <xs:element minOccurs="0" name="queryIndex" type="xs:int"/>
@@ -241,7 +240,6 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="outputMapMapping" nillable="true" type="ax217:OutputMapMappingDTO"/>
-                    <xs:element minOccurs="0" name="outputTextMapping" nillable="true" type="ax217:OutputTextMappingDTO"/>
                     <xs:element minOccurs="0" name="outputTupleMapping" nillable="true" type="ax217:OutputTupleMappingDTO"/>
                     <xs:element minOccurs="0" name="outputXmlMapping" nillable="true" type="ax217:OutputXMLMappingDTO"/>
                     <xs:element minOccurs="0" name="topic" nillable="true" type="xs:string"/>
@@ -256,11 +254,6 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="valueOf" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="OutputTextMappingDTO">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="mappingText" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="OutputTupleMappingDTO">
@@ -717,13 +710,13 @@
     </wsdl:binding>
     <wsdl:service name="CEPAdminService">
         <wsdl:port name="CEPAdminServiceHttpsSoap11Endpoint" binding="tns:CEPAdminServiceSoap11Binding">
-            <soap:address location="https://10.217.71.84:9444/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://10.200.3.57:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsSoap12Endpoint" binding="tns:CEPAdminServiceSoap12Binding">
-            <soap12:address location="https://10.217.71.84:9444/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://10.200.3.57:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsEndpoint" binding="tns:CEPAdminServiceHttpBinding">
-            <http:address location="https://10.217.71.84:9444/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
+            <http:address location="https://10.200.3.57:9443/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

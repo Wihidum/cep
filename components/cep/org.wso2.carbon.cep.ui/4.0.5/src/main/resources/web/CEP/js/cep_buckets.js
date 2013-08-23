@@ -407,6 +407,112 @@ function addOutputMapProperty() {
     //    showAddProperty();
 }
 
+
+
+function addIP(){
+    var ipAddress = document.getElementById("ipaddress");
+    var noIPDefine = document.getElementById("noipdefine");
+    var ipTable = document.getElementById("iptable");
+
+    var error = "";
+
+    if (ipAddress.value == "") {
+        error = "IP field is empty.\n";
+    }
+
+    if (error != "") {
+        CARBON.showErrorDialog(error);
+        return;
+    }
+   ipTable.style.display = "";
+
+//    Check for duplications
+//    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("ip-names");
+//    var foundDuplication = false;
+//    for (var i = 0; i < topicNamesArr.length; i++) {
+//        if (topicNamesArr[i].innerHTML == propName.value) {
+//            foundDuplication = true;
+//            CARBON.showErrorDialog("Duplicated Entry");
+//            return;
+//        }
+//    }
+
+
+   addIPListToSession(ipAddress.value);
+    //add new row
+    var newTableRow = ipTable.insertRow(ipTable.rows.length);
+   var newCell0 = newTableRow.insertCell(0);
+   newCell0.innerHTML = ipAddress.value;
+   YAHOO.util.Dom.addClass(newCell0, "ip-names");
+
+
+    var newCel2 = newTableRow.insertCell(1);
+    newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeIP(this,\'' + 'ip' + '\')">Delete</a>';
+
+    ipAddress.value = "";
+    noIPDefine.style.display = "none";
+    //    propType.value = "";
+    //    showAddProperty();
+}
+
+
+ function removeIP(link, format) {
+     var rowToRemove = link.parentNode.parentNode;
+     var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
+    // removePropertyFromSession(propertyToERemove, format, 'output');
+     rowToRemove.parentNode.removeChild(rowToRemove);
+     CARBON.showInfoDialog("IP Remove Succesfully!!");
+     return;
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function removeOutputProperty(link, format) {
     var rowToRemove = link.parentNode.parentNode;
     var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
@@ -605,7 +711,7 @@ function addNewQueriesToList() {
     showAddQuery();
 }
 
-function addOldQueriesToList(index) {
+function addOldToList(index) {
     if(!addQueryToList(index,true)){
         return;
     }
@@ -841,6 +947,33 @@ function addOutputMapDataPropertyToSession(propName,valueOf) {
     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_output_mapping_property.jsp", callback, "propName=" + propName + "&valueOf=" + valueOf + "&format=map");
 
 }
+ function  addIPListToSession(ipAddress){
+   var callback =
+   {
+      success:function (o) {
+                 if (o.responseText !== undefined) {
+
+                 }
+             },
+             failure:function (o) {
+                 if (o.responseText !== undefined) {
+                     alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+                 }
+             }
+   };
+   var request = YAHOO.util.Connect.asyncRequest('POST', "cep_query_ip.jsp", callback, "ipadd=" + ipAddress);
+ }
+
+
+
+
+
+
+
+
+
+
+
 
 function addNSprefixesToSession(prefix, nameSpace) {
     var callback =
