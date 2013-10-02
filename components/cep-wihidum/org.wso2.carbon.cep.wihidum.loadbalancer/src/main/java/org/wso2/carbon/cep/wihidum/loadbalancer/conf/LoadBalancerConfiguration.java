@@ -8,6 +8,7 @@ import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConsta
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,7 +26,15 @@ public class LoadBalancerConfiguration {
     private String host;
     private int blockingQueueCapacity;
     private int queueWorkerThreads;
+    //to store streamId, nodes relations
+    //in the form of steamId -> nodeId
+    //TODO change this to a nodeId arraylist to support event duplication
+    private Hashtable<String, Integer> adjMatrix;
 
+
+    public Hashtable<String, Integer> getAdjMatrix(){
+       return adjMatrix;
+    }
 
     public int getQueueWorkerThreads() {
         return queueWorkerThreads;
@@ -113,6 +122,10 @@ public class LoadBalancerConfiguration {
 
     }
 
+    public void clearOutputNodes(){
+        nodeList.clear();
+    }
+
     public static LoadBalancerConfiguration getInstance() {
         if (loadBalancerConfiguration == null) {
             OMElement omElement = null;
@@ -133,8 +146,6 @@ public class LoadBalancerConfiguration {
                 loadBalancerConfiguration.setHost(LoadBalancerConstants.DEFAULT_RUNNING_HOST);
             }
         }
-
         return loadBalancerConfiguration;
     }
-
 }

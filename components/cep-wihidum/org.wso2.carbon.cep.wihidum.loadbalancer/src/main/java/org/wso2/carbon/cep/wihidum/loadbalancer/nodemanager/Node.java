@@ -17,7 +17,7 @@ public class Node {
 
     private String hostname;
     private String port;
-    private String streamID;
+    private String streamID; // this should be removed as this is redundant with adjList
     private List<Event> eventList = new ArrayList<Event>();
     private EventPublisher eventPublisher;
     private static Logger logger = Logger.getLogger(Node.class);
@@ -79,24 +79,25 @@ public class Node {
 
     }
 
-    public void addEvent(Event event){
+    public void addEvent(Event event) throws EventPublishException {
         eventList.add(event);
 
         if (eventList.size()>=1000){
-            if(this.streamID != null){
-
-            }
             try {
                 eventPublisher.updateEventPublisher();
                 eventPublisher.publishEvents(eventList);
             } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.info(e.getMessage());
+                throw new EventPublishException(e.getMessage(), e);
             } catch (MalformedStreamDefinitionException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.info(e.getMessage());
+                throw new EventPublishException(e.getMessage(), e);
             } catch (AgentException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.info(e.getMessage());
+                throw new EventPublishException(e.getMessage(), e);
             } catch (StreamDefinitionException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.info(e.getMessage());
+                throw new EventPublishException(e.getMessage(), e);
             }
             eventList.clear();
         }
