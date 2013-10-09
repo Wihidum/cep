@@ -12,6 +12,7 @@ import org.wso2.siddhi.query.api.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class EventStreamDivider implements Divider {
@@ -22,6 +23,7 @@ public class EventStreamDivider implements Divider {
     private StreamDividerEventQueue eventQueue;
     private List<Event> outputEventList = new ArrayList<Event>();
     private LoadBalancerConfiguration loadBalancerConfiguration = LoadBalancerConfiguration.getInstance();
+    private ConcurrentHashMap<String, List<String>> ESDConfig;
 
 
     public EventStreamDivider() {
@@ -32,26 +34,6 @@ public class EventStreamDivider implements Divider {
 
     @Override
     public void divide(List<Event> eventList) {
-        /*String streamId = eventList.get(0).getStreamId();
-           for(Node node:nodelist){
-                if(node.getStreamID().equals(streamId)){
-                    try {
-                        node.addEventList(eventList);
-                    } catch (EventPublishException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-
-            }*/
-        outputEventList.addAll(eventList);
-        eventCount = eventCount + eventList.size();
-        if (eventCount >= loadBalancerConfiguration.getEventDivideCount()) {
-            EventComposite eventComposite = new EventComposite(outputEventList, nodeCount);
-            outputEventList.clear();
-            eventCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
-            eventQueue.addEventBundle(eventComposite);
-        }
-
+        eventQueue.addEventBundle(new EventComposite(outputEventList));
     }
 }
