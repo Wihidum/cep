@@ -29,7 +29,7 @@ public class StreamDividerEventQueue {
         } catch (InterruptedException e) {
             logger.info("Cannot add Events to eventQueue");
         }
-        executorService.submit(new StreamDividerQueueWorker(endPoints, eventQueue));
+        executorService.submit(new StreamDividerQueueWorker(eventQueue));
     }
 
     protected void finalize() throws Throwable {
