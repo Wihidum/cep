@@ -5,21 +5,25 @@ import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.cep.wihidum.loadbalancer.exception.EventPublishException;
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
 import org.wso2.carbon.cep.wihidum.loadbalancer.utils.EventComposite;
+import org.wso2.carbon.cep.wihidum.loadbalancer.utils.eventSender;
 import org.wso2.carbon.databridge.commons.Event;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StreamDividerQueueWorker  implements Runnable {
 
-    private List<Node> nodeList;
     private BlockingQueue<EventComposite> eventQueue;
     private static Logger logger = Logger.getLogger(QueueWorker.class);
     private LoadBalancerConfiguration loadBalancerConfiguration = LoadBalancerConfiguration.getInstance();
+    private ConcurrentHashMap<String, List<String>> ESDConfig;
+    private ConcurrentHashMap<String, eventSender> senderMap;
 
-    public StreamDividerQueueWorker(List<Node> nodeList, BlockingQueue<EventComposite> eventQueue) {
+    public StreamDividerQueueWorker(BlockingQueue<EventComposite> eventQueue) {
         this.eventQueue = eventQueue;
-        this.nodeList = nodeList;
+        ESDConfig =  loadBalancerConfiguration.getESDConfig();
+        senderMap = loadBalancerConfiguration.getSenderMap();
     }
 
 
@@ -27,7 +31,16 @@ public class StreamDividerQueueWorker  implements Runnable {
     public void run() {
         EventComposite eventComposite = eventQueue.poll();
         List<Event> eventList = eventComposite.getEventList();
-        for (Event evt : eventList){
+        List<String> senderIds = ESDConfig.get(eventComposite.GetStreamId());
+        for (String senderId : senderIds){
+            eventSender sender = senderMap.get(senderId);
+            try {
+                sender.sendEvents(eventList);
+            }catch (EventPublishException e) {
+                logger.info("EventPublish Error" + e.getMessage());
+            }
+        }
+        /*for (Event evt : eventList){
             int nodeId = loadBalancerConfiguration.getAdjMatrix().get(evt.getStreamId());
             //TODO need to handle the case where given streamId is not added to the adjMatrix
             Node node = nodeList.get(nodeId);
@@ -36,7 +49,7 @@ public class StreamDividerQueueWorker  implements Runnable {
             }catch (EventPublishException e) {
                 logger.info("EventPublish Error" + e.getMessage());
             }
-        }
+        }*/
 
     }
 }
