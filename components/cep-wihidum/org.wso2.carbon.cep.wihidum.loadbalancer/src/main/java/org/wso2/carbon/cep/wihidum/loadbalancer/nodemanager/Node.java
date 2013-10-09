@@ -2,6 +2,7 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager;
 
 import org.wso2.carbon.cep.wihidum.loadbalancer.eventpublisher.EventPublisher;
 import org.wso2.carbon.cep.wihidum.loadbalancer.exception.EventPublishException;
+import org.wso2.carbon.cep.wihidum.loadbalancer.utils.eventSender;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.exception.*;
@@ -13,7 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 
-public class Node {
+public class Node implements eventSender {
 
     private String hostname;
     private String port;
@@ -102,5 +103,10 @@ public class Node {
             eventList.clear();
         }
 
+    }
+
+    @Override
+    public void sendEvents(List<Event> eventList) throws EventPublishException  {
+        addEventList(eventList);
     }
 }
