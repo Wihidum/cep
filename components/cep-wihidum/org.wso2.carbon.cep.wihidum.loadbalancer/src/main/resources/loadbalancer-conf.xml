@@ -1,5 +1,5 @@
 <loadbalancer>
-  <start>true</start>
+  <enabled>true</enabled>
   <port>7611</port>
   <reciverbundlesize>100</reciverbundlesize>
   <eventdividecount>10000</eventdividecount>
@@ -35,6 +35,7 @@
        </stream>
        <stream id="1.3.0">
             <outputnode id="127.0.0.1:7612"/>
+            <RRD id="rrd1"/>
        </stream>
    </ESD>
 </loadbalancer>
