@@ -47,6 +47,10 @@ public class QuerySplitter {
             return new PatternSplitter().getBucketList(bucket);
         }
 
+        if (bucket.getQueries().get(0).getExpression().getText().contains("join")) {
+            return new JoinSplitter().getBucketList(bucket);
+        }
+
         Map<String, Object> streamDefinitionMap = new HashMap<String, Object>();
         Map<String, Bucket> bucketMap = new HashMap<String, Bucket>();
         List<Query> queryList = bucket.getQueries();

@@ -3,10 +3,12 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.Divider;
+import org.wso2.carbon.cep.wihidum.loadbalancer.exception.EventPublishException;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.queue.EventQueue;
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConstants;
 import org.wso2.carbon.cep.wihidum.loadbalancer.utils.EventComposite;
+import org.wso2.carbon.cep.wihidum.loadbalancer.utils.eventSender;
 import org.wso2.carbon.databridge.commons.Event;
 
 
@@ -14,9 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EventRRDivider implements Divider {
+public class EventRRDivider implements Divider,eventSender {
     private static Logger logger = Logger.getLogger(EventRRDivider.class);
     private static List<Node> nodelist;
+    List<String> nodeIdList;
     private int eventCount;
     private int nodeCount;
     private EventQueue eventQueue;
@@ -28,7 +31,6 @@ public class EventRRDivider implements Divider {
         nodelist = loadBalancerConfiguration.getNodeList();
         eventQueue = new EventQueue(nodelist);
     }
-
 
     @Override
     public synchronized void divide(List<Event> eventList) {
@@ -47,5 +49,8 @@ public class EventRRDivider implements Divider {
 
     }
 
-
+    @Override
+    public void sendEvents(List<Event> eventList) throws EventPublishException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

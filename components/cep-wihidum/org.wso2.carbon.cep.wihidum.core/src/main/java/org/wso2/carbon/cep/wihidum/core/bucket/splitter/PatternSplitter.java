@@ -77,7 +77,7 @@ public class PatternSplitter {
                     break;
                 }
             }
-            expression = "from " + inputStreamWithCondition + "insert into " + inputStream + "P";
+            expression = "from " + inputStreamWithCondition + "insert into " + inputStream + "P ";
 
             Bucket subBucket = new Bucket();
             subBucket.setDescription(bucket.getDescription());
@@ -98,11 +98,6 @@ public class PatternSplitter {
 
             subQuery.setName(patternQuery.getName());
 
-            Expression queryExpression = new Expression();
-            queryExpression.setText(expression);
-
-            subQuery.setExpression(queryExpression);
-
             Output subQueryOutput = new Output();
             subQueryOutput.setBrokerName(ipList.get(ipList.size() - 1));
 
@@ -114,8 +109,10 @@ public class PatternSplitter {
             TupleInputMapping tupleInputMapping = (TupleInputMapping) subQueryInput.getInputMapping();
 
             for (TupleInputProperty inputProperty : tupleInputMapping.getProperties()) {
+                expression +=  inputProperty.getName() + " , ";
                 outputProperties.add(new TupleOutputProperty(inputProperty.getName(), inputProperty.getName(), inputProperty.getType()));
             }
+
 
             tupleOutputMapping.setPayloadDataProperties(outputProperties);
 
@@ -123,6 +120,12 @@ public class PatternSplitter {
             subQueryOutput.setTopic(subQueryInput.getTopic() + "1");
 
             subQuery.setOutput(subQueryOutput);
+
+            Expression queryExpression = new Expression();
+            expression = expression.substring(0,expression.length()-2) + ";";
+            queryExpression.setText(expression);
+            subQuery.setExpression(queryExpression);
+
 
             List<Query> queryList = new ArrayList<Query>();
             queryList.add(subQuery);
@@ -145,7 +148,7 @@ public class PatternSplitter {
             Input patternInput = new Input();
             patternInput.setBrokerName("localAgentBroker");
             patternInput.setSubscriptionId(input.getSubscriptionId());
-            patternInput.setTopic(input.getTopic());
+            patternInput.setTopic(input.getTopic()+"1");
 
             TupleInputMapping inputMapping = new TupleInputMapping();
             inputMapping.setStream(input.getInputMapping().getStream() + "P");
