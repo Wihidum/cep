@@ -2,6 +2,7 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.conf;
 
 
 import org.apache.axiom.om.OMElement;
+import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl.EventJoinDivider;
 import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl.EventRRDivider;
 import org.wso2.carbon.cep.wihidum.loadbalancer.exception.LoadBalancerConfigException;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConfBuilder;
@@ -78,7 +79,11 @@ public class LoadBalancerConfiguration {
     }
 
     public void addRRDconfig(String id, List<String> nodeIdList){
-        senderMap.put(id, new EventRRDivider());
+        senderMap.put(id, new EventRRDivider(nodeIdList));
+    }
+
+    public void addJoinconfig(String id, List<String> nodeIdList){
+        senderMap.put(id, new EventJoinDivider(nodeIdList));
     }
 
     public void addESDConfig(String streamID, List<String> senderIdList){
