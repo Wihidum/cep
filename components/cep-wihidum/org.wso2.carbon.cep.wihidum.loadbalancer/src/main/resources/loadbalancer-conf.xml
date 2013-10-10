@@ -1,41 +1,49 @@
 <loadbalancer>
-  <enabled>true</enabled>
-  <port>7611</port>
-  <reciverbundlesize>100</reciverbundlesize>
-  <eventdividecount>10000</eventdividecount>
-  <blockingqueuecapacity>50</blockingqueuecapacity>
-  <workerthreads>1</workerthreads>
-   <method>
-       <roundrobin>true</roundrobin>
-       <eventstream>false</eventstream>
-   </method>
-   <outputnodes>
-       <outputnode id="127.0.0.1:7612">
-         <ip>localhost</ip>
-         <port>7612</port>
-       </outputnode>
-       <outputnode id="127.0.0.1:7613">
-         <ip>localhost</ip>
-         <port>7613</port>
-       </outputnode>
-       <outputnode id="127.0.0.1:7614">
-         <ip>localhost</ip>
-         <port>7614</port>
-       </outputnode>
-   </outputnodes>
-   <RRDs>
-       <RRD id="rrd1">
+    <enabled>true</enabled>
+    <port>7611</port>
+    <reciverbundlesize>100</reciverbundlesize>
+    <eventdividecount>10000</eventdividecount>
+    <blockingqueuecapacity>50</blockingqueuecapacity>
+    <workerthreads>1</workerthreads>
+    <method>
+        <roundrobin>false</roundrobin>
+        <eventstream>true</eventstream>
+    </method>
+    <outputnodes>
+        <outputnode id="127.0.0.1:7612">
+            <ip>127.0.0.1</ip>
+            <port>7612</port>
+        </outputnode>
+        <outputnode id="127.0.0.1:7613">
+            <ip>127.0.0.1</ip>
+            <port>7613</port>
+        </outputnode>
+        <outputnode id="127.0.0.1:7614">
+            <ip>127.0.0.1 </ip>
+            <port>7614</port>
+        </outputnode>
+    </outputnodes>
+    <RRDs>
+    <RRD id="rrd1">
+        <outputnode id="127.0.0.1:7613"/>
+        <outputnode id="127.0.0.1:7614"/>
+    </RRD>
+    </RRDs>
+    <joins>
+        <join id="join1">
             <outputnode id="127.0.0.1:7613"/>
             <outputnode id="127.0.0.1:7614"/>
-       </RRD>
-   </RRDs>
-   <ESD>
-       <stream id="1.2.0">
+        </join>
+    </joins>
+    <ESD>
+        <stream id="org.wso2.phone.retail.store:1.2.0">
             <RRD id="rrd1"/>
-       </stream>
-       <stream id="1.3.0">
+            <join id="join1"/>
+        </stream>
+        <stream id="org.wso2.phone.retail.store:1.3.0">
             <outputnode id="127.0.0.1:7612"/>
             <RRD id="rrd1"/>
-       </stream>
-   </ESD>
+            <join id="join1"/>
+        </stream>
+    </ESD>
 </loadbalancer>
