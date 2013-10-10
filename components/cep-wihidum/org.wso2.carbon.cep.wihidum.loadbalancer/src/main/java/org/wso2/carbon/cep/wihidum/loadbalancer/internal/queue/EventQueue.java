@@ -17,9 +17,16 @@ public class EventQueue {
     private BlockingQueue<EventComposite> eventQueue;
     private ExecutorService executorService;
     private List<Node> endPoints;
+    private List<String> nodeIdList;
 
-    public EventQueue(List<Node> endPoints) {
+    /*public EventQueue(List<Node> endPoints) {
         this.endPoints = endPoints;
+        eventQueue = new ArrayBlockingQueue<EventComposite>(LoadBalancerConfiguration.getInstance().getBlockingQueueCapacity());
+        executorService = Executors.newFixedThreadPool(LoadBalancerConfiguration.getInstance().getQueueWorkerThreads());
+    }*/
+
+    public EventQueue(List<String> nodeIdList){
+        this.nodeIdList = nodeIdList;
         eventQueue = new ArrayBlockingQueue<EventComposite>(LoadBalancerConfiguration.getInstance().getBlockingQueueCapacity());
         executorService = Executors.newFixedThreadPool(LoadBalancerConfiguration.getInstance().getQueueWorkerThreads());
     }
@@ -30,7 +37,7 @@ public class EventQueue {
         } catch (InterruptedException e) {
             logger.info("Cannot add Events to eventQueue");
         }
-        executorService.submit(new QueueWorker(endPoints, eventQueue));
+        executorService.submit(new QueueWorker(nodeIdList, eventQueue));
     }
 
     protected void finalize() throws Throwable {
