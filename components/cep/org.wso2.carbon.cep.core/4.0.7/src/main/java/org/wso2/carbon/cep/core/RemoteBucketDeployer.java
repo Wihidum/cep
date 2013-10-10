@@ -71,6 +71,7 @@ public class RemoteBucketDeployer {
             throw new RuntimeException("could not login to the back-end server");
         }
 
+<<<<<<< HEAD
 //        CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
 //        cepAdminServiceClient.addBucket(bucket);
         CEPAdminServiceStub cepAdminServiceStub = new CEPAdminServiceStub(cepAdminServiceURL+"CEPAdminService");
@@ -90,6 +91,12 @@ public class RemoteBucketDeployer {
             logger.info(e.getMessage());
             throw new CEPAdminServiceCEPAdminException("CEPAdminServiceCEPAdminException", e);
         }
+=======
+        CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
+
+        ResourceAdminServiceClient resourceAdminServiceClient = new ResourceAdminServiceClient();
+        cepAdminServiceClient.addBucket(bucket);
+>>>>>>> 44a1c184a961cd4069c710d767bfd7ea7a9524ee
 
 
     }

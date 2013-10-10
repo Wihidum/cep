@@ -1,16 +1,41 @@
 <loadbalancer>
-  <start>true</start>
-   <port>7611</port>
+  <enabled>true</enabled>
+  <port>7611</port>
   <reciverbundlesize>100</reciverbundlesize>
   <eventdividecount>10000</eventdividecount>
-    <blockingqueuecapacity>50</blockingqueuecapacity>
-    <workerthreads>1</workerthreads>
+  <blockingqueuecapacity>50</blockingqueuecapacity>
+  <workerthreads>1</workerthreads>
    <method>
        <roundrobin>true</roundrobin>
        <eventstream>false</eventstream>
    </method>
-   <outputnode>
-     <ip>localhost</ip>
-     <port>7613</port>
-   </outputnode>
+   <outputnodes>
+       <outputnode id="127.0.0.1:7612">
+         <ip>localhost</ip>
+         <port>7612</port>
+       </outputnode>
+       <outputnode id="127.0.0.1:7613">
+         <ip>localhost</ip>
+         <port>7613</port>
+       </outputnode>
+       <outputnode id="127.0.0.1:7614">
+         <ip>localhost</ip>
+         <port>7614</port>
+       </outputnode>
+   </outputnodes>
+   <RRDs>
+       <RRD id="rrd1">
+            <outputnode id="127.0.0.1:7613"/>
+            <outputnode id="127.0.0.1:7614"/>
+       </RRD>
+   </RRDs>
+   <ESD>
+       <stream id="1.2.0">
+            <RRD id="rrd1"/>
+       </stream>
+       <stream id="1.3.0">
+            <outputnode id="127.0.0.1:7612"/>
+            <RRD id="rrd1"/>
+       </stream>
+   </ESD>
 </loadbalancer>
