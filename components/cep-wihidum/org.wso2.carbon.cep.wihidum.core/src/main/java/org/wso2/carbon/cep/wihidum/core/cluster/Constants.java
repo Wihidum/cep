@@ -10,6 +10,7 @@ public class Constants {
     public static final String DEFAULT_USERNAME = "admin";
     public static final String DEFAULT_PASSWORD = "admin";
     public static final String AGENT_BROKER_TYPE = "agent";
+    public static String CONFIG_MAP = "configurations";
     //public static final String AUTHENTICATOR_URL = "authenticatorURL";
 
 

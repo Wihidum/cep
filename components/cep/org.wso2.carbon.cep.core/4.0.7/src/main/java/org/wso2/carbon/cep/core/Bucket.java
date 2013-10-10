@@ -50,6 +50,12 @@ public class Bucket {
      * query list of this bucket.
      */
     private Map<Integer, Query> queries;
+     /**
+      * master bucket for decomposed
+      * **/
+    private boolean master;
+
+
 
     /**
      * Inputs for this bucket
@@ -195,6 +201,14 @@ public class Bucket {
 
     public Properties getProviderConfigurationProperties() {
         return providerConfigurationProperties;
+    }
+
+    public boolean isMaster() {
+        return master;
+    }
+
+    public void setMaster(boolean master){
+        this.master = master;
     }
 }
 

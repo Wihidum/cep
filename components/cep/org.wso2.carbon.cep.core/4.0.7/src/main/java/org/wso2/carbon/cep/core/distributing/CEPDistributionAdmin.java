@@ -10,7 +10,7 @@ public abstract class CEPDistributionAdmin {
 
     public static CEPDistributionAdmin cepDistributionAdmin = null;
 
-    public abstract Bucket getBucket(Bucket bucket);
+    public abstract Bucket getBucket();
 
 
     public static CEPDistributionAdmin getInstances() {

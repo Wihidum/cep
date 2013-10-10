@@ -222,6 +222,9 @@ public class CEPAdminUtils {
 
         backEndExpression.setText(queryDTO.getExpression().getText());
 
+        for(String ip:queryDTO.getIpList()){
+            backEndQuery.addIP(ip);
+        }
         backEndQuery.setName(queryDTO.getName());
         backEndQuery.setQueryIndex(queryDTO.getQueryIndex());
         backEndQuery.setExpression(backEndExpression);
@@ -481,6 +484,7 @@ public class CEPAdminUtils {
             }
             queryDTO.setExpression(adaptExpression(backEndQuery.getExpression()));
             queryDTOs[index] = queryDTO;
+            queryDTO.setIpList(backEndQuery.getIpList().toArray(new String[backEndQuery.getIpList().size()]));
             index++;
         }
         return queryDTOs;
