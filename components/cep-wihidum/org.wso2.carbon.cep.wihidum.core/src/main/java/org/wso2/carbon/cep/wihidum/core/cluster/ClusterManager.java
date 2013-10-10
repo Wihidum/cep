@@ -10,6 +10,7 @@ import org.wso2.carbon.brokermanager.core.exception.BMConfigurationException;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
 import org.wso2.carbon.context.CarbonContext;
 
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -19,7 +20,7 @@ public class ClusterManager {
     private HazelcastInstance hazelcastInstance;
     private static final Log log = LogFactory.getLog(ClusterManager.class);
     private Member localMember;
-    private ConcurrentSkipListSet<Member> memberList;
+    private Vector<Member> memberList;
     private String localMemberAddress;
     private ArrayList<String> membersAddressList;
 
@@ -40,7 +41,7 @@ public class ClusterManager {
     public void initiate() {
         Cluster cluster = hazelcastInstance.getCluster();
         localMember = cluster.getLocalMember();
-        //memberList = (ConcurrentSkipListSet)cluster.getMembers();
+        memberList = new Vector<Member>();
         cluster.addMembershipListener(new MembershipListener() {
             public void memberAdded(MembershipEvent membersipEvent) {
                 configureBrokers(membersipEvent.getMember());
@@ -52,6 +53,7 @@ public class ClusterManager {
                 //TODO
             }
         });
+
         for (Member member : cluster.getMembers()) {
             configureBrokers(member);
         }
@@ -59,7 +61,7 @@ public class ClusterManager {
 
     private synchronized void configureBrokers(Member member) {
         memberList.add(member);
-        String brokerName = member.getInetSocketAddress().getAddress().toString().substring(1);
+        String brokerName = getStringInetAddress(member.getInetSocketAddress());
         BrokerConfiguration brokerConfiguration = new BrokerConfiguration();
         brokerConfiguration.setName(brokerName);
         brokerConfiguration.setType(Constants.AGENT_BROKER_TYPE);
@@ -87,6 +89,10 @@ public class ClusterManager {
 
 
     }
+
+    private String getStringInetAddress(InetSocketAddress inetSocketAddress){
+       return inetSocketAddress.getAddress().toString().substring(1);
+    }
     //Return string list of all members in the cluster except local member
     public ArrayList<String> getMemberList(){
        membersAddressList = new ArrayList<String>(memberList.size());
@@ -103,6 +109,22 @@ public class ClusterManager {
         localMemberAddress = localMember.getInetSocketAddress().getAddress().toString().substring(1);
         return localMemberAddress;
     }
+    /*
+    Return a Map consisting node ip and the bucket deployed at the node
+     */
+    public Map<String,Object> getBucketConfigurations(){
+        Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+        return bucketConfigurations;
+    }
 
+    /*
+    Set bucket configuration in Hazelcast
+    @nodeAddress: ip address of the node
+    @bucket: Bucket configuration of the node.
+     */
+    public void setBucketConfigurations(String nodeAddress,Object bucket){
+       Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+       bucketConfigurations.put(nodeAddress,bucket);
+    }
 
 }

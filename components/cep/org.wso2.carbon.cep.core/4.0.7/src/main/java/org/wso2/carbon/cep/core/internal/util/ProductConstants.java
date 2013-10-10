@@ -14,6 +14,10 @@ package org.wso2.carbon.cep.core.internal.util;/*
  * limitations under the License.
  */
 
+
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.utils.ServerConstants;
+
 public interface ProductConstants {
 
    // public static final String CLIENT_TRUST_STORE_PATH = "/media/New Volume/FYP/GIT/siddhi-lb/cep/org.wso2.carbon.cep.core/4.0.7/src/main/resources/keystores/client-truststore.jks";
@@ -26,6 +30,6 @@ public interface ProductConstants {
     public static final String TRUSTSTORE_PASSWORD= "javax.net.ssl.trustStorePassword";
     public static final String TRUSTSTORE_TYPE = "javax.net.ssl.trustStoreType";
 
-    public static final String CLIENT_TRUST_STORE_PATH = "/src/main/resources/keystores/client-truststore.jks";
+    public static final String CLIENT_TRUST_STORE_PATH =  System.getProperty(ServerConstants.CARBON_HOME)+"/repository/resources/security/client-truststore.jks";
 
 }

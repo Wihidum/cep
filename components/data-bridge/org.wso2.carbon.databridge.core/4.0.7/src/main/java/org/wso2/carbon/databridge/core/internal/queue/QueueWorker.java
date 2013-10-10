@@ -67,8 +67,8 @@ public class QueueWorker implements Runnable {
                     }
                 }
             }
-            if (subscribers.size() > 0) {
-                try {
+            if (subscribers.size() > 0){
+                try{
                     eventList = eventComposite.getEventConverter().toEventList(eventComposite.getEventBundle(),
                             eventComposite.getStreamTypeHolder());
 
@@ -87,7 +87,7 @@ public class QueueWorker implements Runnable {
                        //         Thread.currentThread().getName() + " worker has finished work");
                     }
 
-                } catch (EventConversionException re) {
+                }catch(EventConversionException re){
                     log.error("Wrongly formatted event sent for " + eventComposite.getStreamTypeHolder().getDomainName(), re);
                 }
             }
