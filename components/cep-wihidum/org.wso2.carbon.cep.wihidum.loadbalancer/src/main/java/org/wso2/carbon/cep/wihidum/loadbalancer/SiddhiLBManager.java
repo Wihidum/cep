@@ -50,5 +50,4 @@ public class SiddhiLBManager {
     public void addStreamDefinition(StreamDefinition streamDefinition) {
         StreamDefinitionProvider.addStreamDefinition(streamDefinition);
     }
-
 }
