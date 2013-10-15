@@ -17,18 +17,11 @@ import java.io.*;
 public class LoadBalancerConfBuilder {
 
     private static Logger log = Logger.getLogger(LoadBalancerConfBuilder.class);
-    static File filePath = new File(".");
+
 
     public static OMElement loadConfigXML() throws LoadBalancerConfigException {
         String carbonHome = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH);
-        String path = null;
-        try {
-            path = filePath.getCanonicalPath() + "/src/main/resources/" + LoadBalancerConstants.LOADBALANCER_FILE;
-            System.out.println("canonical path = " + path);
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-//                carbonHome + File.separator + LoadBalancerConstants.WIHIDUM_DIR + File.separator + LoadBalancerConstants.LOADBALANCER_FILE;
+        String path = carbonHome + File.separator + LoadBalancerConstants.WIHIDUM_DIR + File.separator + LoadBalancerConstants.LOADBALANCER_FILE;
         File configFile = new File(path);
         if (!configFile.exists()) {
             log.info("The " + LoadBalancerConstants.WIHIDUM_DIR + File.separator + LoadBalancerConstants.LOADBALANCER_FILE + " can not found ");
