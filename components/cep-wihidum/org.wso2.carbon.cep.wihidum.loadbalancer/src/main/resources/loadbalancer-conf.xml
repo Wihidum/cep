@@ -6,8 +6,8 @@
     <blockingqueuecapacity>50</blockingqueuecapacity>
     <workerthreads>1</workerthreads>
     <method>
-        <roundrobin>false</roundrobin>
-        <eventstream>true</eventstream>
+        <roundrobin id="rrd1">true</roundrobin>
+        <eventstream>false</eventstream>
     </method>
     <outputnodes>
         <outputnode id="127.0.0.1:7612">

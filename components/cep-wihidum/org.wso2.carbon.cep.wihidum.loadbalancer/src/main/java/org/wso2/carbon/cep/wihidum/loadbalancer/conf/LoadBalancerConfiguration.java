@@ -23,6 +23,7 @@ public class LoadBalancerConfiguration {
     private boolean loadbalanceron;
     private int port;
     private boolean roundRobin;
+    private String RRDId;  //If load balancer only uses a RRD then this ID is picked from the config file
     private boolean eventStream;
     private boolean streamDivide;
     private int reciverbundlesize;
@@ -130,6 +131,10 @@ public class LoadBalancerConfiguration {
         this.roundRobin = roundRobin;
     }
 
+    public void setRoundRobinID(String roundRobinID) {
+        this.RRDId = roundRobinID;
+    }
+
     public void setEventStream(boolean eventStream) {
         this.eventStream = eventStream;
     }
@@ -156,7 +161,10 @@ public class LoadBalancerConfiguration {
 
     public boolean isRoundRobin() {
         return this.roundRobin;
+    }
 
+    public String getRRDId() {
+        return this.RRDId;
     }
 
      public boolean isEventStream() {

@@ -31,7 +31,12 @@ public class LoadBalancerConfigHelper {
                     if (obj instanceof OMElement) {
                         OMElement omElementOne = (OMElement) obj;
                         if (omElementOne.getLocalName().equals("roundrobin")) {
-                            loadBalancerConfiguration.setRoundRobin(Boolean.parseBoolean(omElementOne.getText().trim()));
+                            boolean isRoundRobin = Boolean.parseBoolean(omElementOne.getText().trim());
+                            loadBalancerConfiguration.setRoundRobin(isRoundRobin);
+                            if (isRoundRobin){
+                                String useRRDid = ((OMElement) omElementOne).getAttribute(new QName("id")).getAttributeValue();
+                                loadBalancerConfiguration.setRoundRobinID(useRRDid);
+                            }
                         }
                         if (omElementOne.getLocalName().equals("eventstream")) {
                             loadBalancerConfiguration.setEventStream(Boolean.parseBoolean(omElementOne.getText().trim()));
