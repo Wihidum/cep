@@ -37,12 +37,12 @@ public class QueueWorker implements Runnable {
         String senderId = nodeIdList.get(index);
         Node node = (Node) senderMap.get(senderId);
         //TODO remove debugging code
-        System.out.println("streamID = " + eventComposite.GetStreamId() + " routed to node = " + node.getHostname() + ":" + node.getPort() + " on RRD");
-        /*try {
+//        System.out.println("streamID = " + eventComposite.GetStreamId() + " routed to node = " + node.getHostname() + ":" + node.getPort() + " on RRD");
+        try {
             node.addEventList(eventList);
         }catch (EventPublishException e) {
             logger.info("EventPublish Error" + e.getMessage());
-        }*/
+        }
 
     }
 }

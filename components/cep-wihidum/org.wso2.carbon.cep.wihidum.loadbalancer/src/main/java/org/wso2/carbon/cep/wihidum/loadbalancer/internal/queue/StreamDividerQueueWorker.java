@@ -34,7 +34,7 @@ public class StreamDividerQueueWorker  implements Runnable {
         List<String> senderIds = ESDConfig.get(eventComposite.GetStreamId());
         for (String senderId : senderIds){
             eventSender sender = senderMap.get(senderId);
-            System.out.println("streamID = " + eventComposite.GetStreamId() + " routed to sender = " + senderId + " on ESD");
+//            System.out.println("streamID = " + eventComposite.GetStreamId() + " routed to sender = " + senderId + " on ESD");
             try {
                 sender.sendEvents(eventList);
             }catch (EventPublishException e) {
