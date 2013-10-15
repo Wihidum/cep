@@ -167,7 +167,7 @@ public class LoadBalancerConfiguration {
         return this.RRDId;
     }
 
-     public boolean isEventStream() {
+    public boolean isEventStream() {
         return this.eventStream;
 
     }
