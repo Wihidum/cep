@@ -89,7 +89,7 @@ public class CEPService implements CEPServiceInterface {
             throws CEPConfigurationException {
         if(bucket.getProviderConfigurationProperties().getProperty(CEPConstants.DISTRIBUTED_PROCESSING).equals("true")){
             deployBucket(bucket,axisConfiguration,createCEPBucketDirectories(bucket, axisConfiguration));
-        }
+        }else{
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
         Map<String, CEPBucket> buckets = this.tenantSpecificCEPBuckets.get(tenantId);
         if (buckets != null && buckets.containsKey(bucket.getName())) {
@@ -100,6 +100,7 @@ public class CEPService implements CEPServiceInterface {
             CEPResourcePersister.save(bucket, bucketPath);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
+        }
         }
     }
 
