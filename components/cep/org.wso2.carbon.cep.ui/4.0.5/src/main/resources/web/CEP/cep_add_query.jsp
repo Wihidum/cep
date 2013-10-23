@@ -5,13 +5,15 @@
     String queryName = request.getParameter("queryName");
     String outputMapping = request.getParameter("outputMapping");
 
-    if (queryName != null) {
+
+    if(queryName != null){
         queryName = queryName.trim();
     }
 
     List metaDataPropertyList = (List) session.getAttribute("outputTupleMetaDataPropertyList");
     List correlationDataPropertyList = (List) session.getAttribute("outputTupleCorrelationDataPropertyList");
     List payloadDataPropertyList = (List) session.getAttribute("outputTuplePayloadDataPropertyList");
+    List ipList = (List)session.getAttribute("iplist");
 
     OutputTupleMappingDTO tupleMapping = null;
     if (metaDataPropertyList != null) {
@@ -158,6 +160,13 @@
     query.setExpression(expression);
     query.setOutput(output);
 
+    String[] iparray = new String[ipList.size()];
+    for(int i=0;i<ipList.size();i++){
+        iparray[i]=(String)ipList.get(i);
+    }
+    query.setIpList(iparray);
+
+    session.removeAttribute("iplist");
     session.removeAttribute("outputXMLPropertyHashSet");
     session.removeAttribute("outputTextPropertyHashSet");
     session.removeAttribute("outputMapPropertyList");

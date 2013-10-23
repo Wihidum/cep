@@ -17,7 +17,7 @@ public class CEPAdminDS {
 
        }
 
-       protected void setCEPService(CEPServiceInterface cepService) {
+       protected void setCEPService(CEPServiceInterface cepService){
            CEPAdminDSHolder.getInstance().registerCEPService(cepService);
        }
 
