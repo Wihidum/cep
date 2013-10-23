@@ -11,6 +11,7 @@ import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.cep.core.mapping.output.mapping.OutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.mapping.TupleOutputMapping;
 import org.wso2.carbon.cep.core.mapping.output.property.TupleOutputProperty;
+import org.wso2.carbon.cep.wihidum.core.broker.RemoteBrokerDeployer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -179,10 +180,12 @@ public class PatternSplitter {
         finalQuery.setExpression(finalQueryExpression);
         finalQuery.setName(patternQuery.getName());
         Output output = patternQuery.getOutput();
-        output.setBrokerName("externalAgentBroker");
+       // output.setBrokerName("externalAgentBroker");
         finalQuery.setOutput(output);
         patternBucket.addQuery(finalQuery);
 
+        RemoteBrokerDeployer remoteBucketDeployer = RemoteBrokerDeployer.getInstance();
+        remoteBucketDeployer.deploy(output.getBrokerName(),ipList.get(ipList.size() - 1));
 
         bucketMap.put(ipList.get(ipList.size() - 1), patternBucket);
         return bucketMap;
