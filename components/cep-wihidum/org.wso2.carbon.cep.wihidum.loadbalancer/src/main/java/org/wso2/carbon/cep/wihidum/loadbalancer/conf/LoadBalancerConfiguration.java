@@ -2,6 +2,7 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.conf;
 
 
 import org.apache.axiom.om.OMElement;
+import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl.EventJoinDivider;
 import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl.EventRRDivider;
 import org.wso2.carbon.cep.wihidum.loadbalancer.exception.LoadBalancerConfigException;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConfBuilder;
@@ -22,6 +23,7 @@ public class LoadBalancerConfiguration {
     private boolean loadbalanceron;
     private int port;
     private boolean roundRobin;
+    private String RRDId;  //If load balancer only uses a RRD then this ID is picked from the config file
     private boolean eventStream;
     private boolean streamDivide;
     private int reciverbundlesize;
@@ -78,7 +80,11 @@ public class LoadBalancerConfiguration {
     }
 
     public void addRRDconfig(String id, List<String> nodeIdList){
-        senderMap.put(id, new EventRRDivider());
+        senderMap.put(id, new EventRRDivider(nodeIdList));
+    }
+
+    public void addJoinconfig(String id, List<String> nodeIdList){
+        senderMap.put(id, new EventJoinDivider(nodeIdList));
     }
 
     public void addESDConfig(String streamID, List<String> senderIdList){
@@ -125,6 +131,10 @@ public class LoadBalancerConfiguration {
         this.roundRobin = roundRobin;
     }
 
+    public void setRoundRobinID(String roundRobinID) {
+        this.RRDId = roundRobinID;
+    }
+
     public void setEventStream(boolean eventStream) {
         this.eventStream = eventStream;
     }
@@ -151,11 +161,13 @@ public class LoadBalancerConfiguration {
 
     public boolean isRoundRobin() {
         return this.roundRobin;
-
     }
 
+    public String getRRDId() {
+        return this.RRDId;
+    }
 
-     public boolean isEventStream() {
+    public boolean isEventStream() {
         return this.eventStream;
 
     }

@@ -20,20 +20,21 @@ public class EventStreamDivider implements Divider {
     private static List<Node> nodelist;
     private int eventCount;
     private int nodeCount;
-    private StreamDividerEventQueue eventQueue;
+    private static volatile StreamDividerEventQueue eventQueue = null;
     private List<Event> outputEventList = new ArrayList<Event>();
-    private LoadBalancerConfiguration loadBalancerConfiguration = LoadBalancerConfiguration.getInstance();
-    private ConcurrentHashMap<String, List<String>> ESDConfig;
 
 
     public EventStreamDivider() {
-        nodelist = loadBalancerConfiguration.getNodeList();
-        eventQueue = new StreamDividerEventQueue(nodelist);
+//        nodelist = loadBalancerConfiguration.getNodeList();
+//        eventQueue = new StreamDividerEventQueue(nodelist);
 
     }
 
     @Override
     public void divide(List<Event> eventList) {
-        eventQueue.addEventBundle(new EventComposite(outputEventList));
+        if (eventQueue == null){
+            eventQueue = new StreamDividerEventQueue();
+        }
+        eventQueue.addEventBundle(new EventComposite(eventList));
     }
 }

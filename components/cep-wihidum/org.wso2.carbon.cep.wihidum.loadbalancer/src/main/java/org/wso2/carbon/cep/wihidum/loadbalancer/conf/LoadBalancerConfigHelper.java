@@ -38,7 +38,12 @@ public class LoadBalancerConfigHelper {
                     if (obj instanceof OMElement) {
                         OMElement omElementOne = (OMElement) obj;
                         if (omElementOne.getLocalName().equals("roundrobin")) {
-                            loadBalancerConfiguration.setRoundRobin(Boolean.parseBoolean(omElementOne.getText().trim()));
+                            boolean isRoundRobin = Boolean.parseBoolean(omElementOne.getText().trim());
+                            loadBalancerConfiguration.setRoundRobin(isRoundRobin);
+                            if (isRoundRobin){
+                                String useRRDid = ((OMElement) omElementOne).getAttribute(new QName("id")).getAttributeValue();
+                                loadBalancerConfiguration.setRoundRobinID(useRRDid);
+                            }
                         }
                         if (omElementOne.getLocalName().equals("eventstream")) {
                             loadBalancerConfiguration.setEventStream(Boolean.parseBoolean(omElementOne.getText().trim()));
@@ -52,7 +57,7 @@ public class LoadBalancerConfigHelper {
 
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("outputnode")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
-                        String nodeId = ((OMElement) obj).getAttribute(new QName("id")).toString();
+                        String nodeId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
                         /*TODO need a way to store this node id
                           this was designed to calculate node id using host and port strings
                           may have to change it later*/
@@ -61,7 +66,7 @@ public class LoadBalancerConfigHelper {
 
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("ip")) {
                                     ip = ((OMElement) obj1).getText().trim();
                                 } else if (((OMElement) obj1).getLocalName().equals("port")) {
@@ -81,17 +86,37 @@ public class LoadBalancerConfigHelper {
 
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("RRD")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
-                        String RRDId = ((OMElement) obj).getAttribute(new QName("id")).toString();
+                        String RRDId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
                         ArrayList<String> nodeIdList = new ArrayList<String>();
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode")) {
-                                    nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).toString());
+                                    nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
                                 }
                             }
                         }
                         loadBalancerConfiguration.addRRDconfig(RRDId, nodeIdList);//TODO add error handling to storing mech
+                    }
+                }
+            } else if (omElementChild.getLocalName().equals("joins")) {
+                Iterator iteratorOne = omElementChild.getChildren();
+                for (; iteratorOne.hasNext(); ) {
+                    Object obj = iteratorOne.next();
+
+                    if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("join")) {
+                        Iterator iteratorTwo = ((OMElement) obj).getChildren();
+                        String JoinId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
+                        ArrayList<String> nodeIdList = new ArrayList<String>();
+                        for (; iteratorTwo.hasNext(); ) {
+                            Object obj1 = iteratorTwo.next();
+                            if (obj1 instanceof OMElement) {
+                                if (((OMElement) obj1).getLocalName().equals("outputnode")) {
+                                    nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
+                                }
+                            }
+                        }
+                        loadBalancerConfiguration.addJoinconfig(JoinId, nodeIdList);//TODO add error handling to storing mech
                     }
                 }
             } else if (omElementChild.getLocalName().equals("ESD")) {
@@ -101,14 +126,14 @@ public class LoadBalancerConfigHelper {
 
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("stream")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
-                        String streamId = ((OMElement) obj).getAttribute(new QName("id")).toString();
+                        String streamId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
                         ArrayList<String> senderIdList = new ArrayList<String>();
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode") ||
                                         ((OMElement) obj1).getLocalName().equals("RRD")) {
-                                    senderIdList.add(((OMElement) obj1).getAttribute(new QName("id")).toString());
+                                    senderIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
                                 }
                             }
                         }
