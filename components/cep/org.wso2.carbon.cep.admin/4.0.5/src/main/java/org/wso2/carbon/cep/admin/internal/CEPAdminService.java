@@ -8,6 +8,7 @@ import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.BucketBasicInfo;
 import org.wso2.carbon.cep.core.CEPServiceInterface;
 import org.wso2.carbon.cep.core.Query;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -38,9 +39,15 @@ public class CEPAdminService extends AbstractAdmin {
 
         QueryDTO[] queryDTOs = bucketDTO.getQueries();
         InputDTO[] inputDTOs = bucketDTO.getInputs();
+        LoadbalancerDTO[] loadbalancerDTOs = bucketDTO.getLoadbalancerDTOs();
         if (inputDTOs != null) {
             for (InputDTO inputDTO : inputDTOs) {
                 backendInputList.add(CEPAdminUtils.adaptInput(inputDTO));
+            }
+        }
+        if (loadbalancerDTOs != null) {
+            for (LoadbalancerDTO loadbalancerDTO : loadbalancerDTOs) {
+               backEndBucket.addLoadbalancerNode(CEPAdminUtils.adaptLoadbalancer(loadbalancerDTO));
             }
         }
 
@@ -70,6 +77,7 @@ public class CEPAdminService extends AbstractAdmin {
         backEndBucket.setInputs(backendInputList);
         backEndBucket.setQueries(backEndQueryList);
 
+
         CEPServiceInterface cepServiceInterface = CEPAdminDSHolder.getInstance().getCEPService();
         try {
             cepServiceInterface.addBucket(backEndBucket, getAxisConfig());
@@ -90,9 +98,15 @@ public class CEPAdminService extends AbstractAdmin {
 
             QueryDTO[] queryDTOs = bucketDTO.getQueries();
             InputDTO[] inputDTOs = bucketDTO.getInputs();
+            LoadbalancerDTO[] loadbalancerDTOs = bucketDTO.getLoadbalancerDTOs();
             if (inputDTOs != null) {
                 for (InputDTO inputDTO : inputDTOs) {
                     backendInputList.add(CEPAdminUtils.adaptInput(inputDTO));
+                }
+            }
+            if (loadbalancerDTOs != null) {
+                for (LoadbalancerDTO loadbalancerDTO : loadbalancerDTOs) {
+                    backEndBucket.addLoadbalancerNode(CEPAdminUtils.adaptLoadbalancer(loadbalancerDTO));
                 }
             }
 
@@ -224,7 +238,8 @@ public class CEPAdminService extends AbstractAdmin {
         bucketDTO.setEngineProviderConfigProperty(CEPAdminUtils.adaptEngineProviderConfigs(backEndBucket.getProviderConfigurationProperties()));
         bucketDTO.setInputs(CEPAdminUtils.adaptInput(backEndBucket.getInputs()));
         bucketDTO.setQueries(CEPAdminUtils.adaptQueries(backEndBucket.getQueries()));
-
+        bucketDTO.setLoadbalancerDTOs(CEPAdminUtils.adaptLoadbalancers(backEndBucket.getLoadbalancerList()));
+        bucketDTO.setLoadbalancerDTOs(CEPAdminUtils.adaptLoadbalancers(backEndBucket.getLoadbalancerList()));
         return bucketDTO;
     }
 

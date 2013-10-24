@@ -5,6 +5,7 @@
 <%@ page import="org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPAdminException" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.LoadbalancerDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderConfigPropertyDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
@@ -30,6 +31,7 @@
     BucketDTO bucket = new BucketDTO();
     LinkedList<InputDTO> inputs = (LinkedList<InputDTO>) session.getAttribute("inputs");
     LinkedList<QueryDTO> queries = (LinkedList<QueryDTO>) session.getAttribute("queries");
+    LinkedList<LoadbalancerDTO> loadbalancers = (LinkedList<LoadbalancerDTO>) session.getAttribute("loadbalancers");
     String bucketName = request.getParameter("bucketName");
     String bucketDescription = request.getParameter("bucketDescription");
     String engineProvider = request.getParameter("engineProvider");
@@ -67,13 +69,17 @@
     if (queries != null){
         bucket.setQueries(queries.toArray(new QueryDTO[queries.size()]));
     }
+      if (loadbalancers != null){
+            bucket.setLoadbalancerDTOs(loadbalancers.toArray(new LoadbalancerDTO[loadbalancers.size()]));
 
+        }
     try {
         stub.addBucket(bucket);
         message = "Bucket Added Successfully";
         session.removeAttribute("editingBucket");
         session.removeAttribute("inputs");
         session.removeAttribute("queries");
+         session.removeAttribute("loadbalancers");
         session.removeAttribute("tempBucketInformation");
     } catch (CEPAdminServiceCEPAdminException e) {
         message = "Error in adding bucket :" + e.getFaultMessage().

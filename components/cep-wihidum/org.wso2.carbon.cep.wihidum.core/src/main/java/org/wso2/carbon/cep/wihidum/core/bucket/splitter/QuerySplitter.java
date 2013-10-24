@@ -17,6 +17,7 @@ import org.wso2.carbon.cep.core.mapping.output.property.MapOutputProperty;
 import org.wso2.carbon.cep.core.mapping.output.property.TupleOutputProperty;
 import org.wso2.carbon.cep.wihidum.core.broker.BrokerConfiguration;
 import org.wso2.carbon.cep.wihidum.core.broker.BrokerProvider;
+import org.wso2.carbon.cep.wihidum.core.broker.RemoteBrokerDeployer;
 import org.wso2.carbon.cep.wihidum.core.cluster.ClusterManager;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class QuerySplitter {
         subQueryOutput.setOutputMapping(output.getOutputMapping());
         subQueryOutput.setTopic(output.getTopic());
 
-        subQueryOutput.setBrokerName(getOutputBroker(bucket, query.getOutputStream()));
+        subQueryOutput.setBrokerName(getOutputBroker(bucket, query));
 
         subQuery.setOutput(subQueryOutput);
         streamDefinitionMap.put(query.getOutputStream(), output);
@@ -135,12 +136,12 @@ public class QuerySplitter {
     }
 
 
-    private String getOutputBroker(Bucket bucket, String outputStream) {
+    private String getOutputBroker(Bucket bucket, Query queryB) {
         List<String> outputBrokerip = new ArrayList<String>();
         for (Query query : bucket.getQueries()) {
 
             for (String inputStream : query.getInputStreams()) {
-                if (outputStream.equalsIgnoreCase(inputStream)) {
+                if (queryB.getOutputStream().equalsIgnoreCase(inputStream)) {
                     for (String ip : query.getIpList()) {
                         outputBrokerip.add(ip);
                     }
@@ -150,10 +151,17 @@ public class QuerySplitter {
             }
 
         }
-        if (outputBrokerip.size() > 0)
+        if (outputBrokerip.size() > 0)  {
             return outputBrokerip.get(0);
-        else
-            return "externalAgentBroker";
+        }
+        else  {
+            RemoteBrokerDeployer remoteBucketDeployer = RemoteBrokerDeployer.getInstance();
+            for(String ip : queryB.getIpList())    {
+                remoteBucketDeployer.deploy(queryB.getOutput().getBrokerName(), ip);
+            }
+            return queryB.getOutput().getBrokerName();
+            //return "externalAgentBroker";
+        }
     }
 
 

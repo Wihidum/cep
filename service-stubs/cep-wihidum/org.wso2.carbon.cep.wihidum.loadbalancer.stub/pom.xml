@@ -11,8 +11,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.cep.wihidum.loadbalancer.admin.stub</groupId>
-    <artifactId>org.wso2.carbon.cep.wihidum.loadbalancer.admin.stub</artifactId>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.cep.wihidum.loadbalancer.stub</artifactId>
     <version>1.0.0</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Wihidum Loadbalancer Stub</name>

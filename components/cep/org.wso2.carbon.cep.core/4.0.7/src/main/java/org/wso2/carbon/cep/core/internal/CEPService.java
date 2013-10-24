@@ -29,6 +29,8 @@ import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
 import org.wso2.carbon.cep.core.distributing.DistributingWihidumValueHolder;
 import org.wso2.carbon.cep.core.distributing.RemoteBucketHelper;
 import org.wso2.carbon.cep.core.distributing.WihidumValueHolder;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.internal.persistance.CEPResourcePersister;
@@ -36,6 +38,8 @@ import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.internal.util.NotDeployedBucket;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
+import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.cep.wihidum.loadbalancer.persistance.LBResourcePersistance;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 
@@ -89,7 +93,7 @@ public class CEPService implements CEPServiceInterface {
             throws CEPConfigurationException {
         if(bucket.getProviderConfigurationProperties().getProperty(CEPConstants.DISTRIBUTED_PROCESSING).equals("true")){
             deployBucket(bucket,axisConfiguration,createCEPBucketDirectories(bucket, axisConfiguration));
-        }
+        }else{
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
         Map<String, CEPBucket> buckets = this.tenantSpecificCEPBuckets.get(tenantId);
         if (buckets != null && buckets.containsKey(bucket.getName())) {
@@ -97,9 +101,34 @@ public class CEPService implements CEPServiceInterface {
         }
         String bucketPath = createCEPBucketDirectories(bucket, axisConfiguration);
         try {
+            if(bucket.getLoadbalancerList().size()==0){
             CEPResourcePersister.save(bucket, bucketPath);
+            }else if(bucket.getLoadbalancerList().size()>0){
+              String distributed =   bucket.getProviderConfigurationProperties().getProperty("siddhi.enable.distributed.processing");
+              if(distributed.equals("true")){
+               bucket.setMaster(true);
+               CEPResourcePersister.save(bucket, bucketPath);
+              }
+
+            }
+            if(bucket.isMaster()){
+                DistributingBucketProvider.getInstance().addBucket(bucket);
+                DistributingBucketProvider.getInstance().setUpdate(true);
+                RemoteBucketHelper.executeRemoteBucketDeploy();
+            }
+             if(bucket.getLoadbalancerList().size()>0 && ! bucket.isMaster()){
+                LoadBalancerConfiguration loadBalancerConfiguration =    LoadBalancerConfiguration.getInstance();
+                loadBalancerConfiguration.setLoadbalanceron(true);
+                Loadbalancer lb = bucket.getLoadbalancerList().get(0);
+                loadBalancerConfiguration.clearOutputNodes();
+                for(LBOutputNode lbOutputNode:lb.getOutputNodeList()){
+                    loadBalancerConfiguration.addOutputNode(lbOutputNode.getIp(),lbOutputNode.getPort());
+                }
+                LBResourcePersistance.save(loadBalancerConfiguration);
+            }
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
+        }
         }
     }
 
@@ -168,8 +197,10 @@ public class CEPService implements CEPServiceInterface {
             DistributingBucketProvider.getInstance().addBucket(bucket);
             DistributingBucketProvider.getInstance().setUpdate(true);
             RemoteBucketHelper.executeRemoteBucketDeploy();
-            return true;
-        }else{
+        }
+        if(bucket.getLoadbalancerList().size()==0){
+
+
         CEPEngineProvider cepEngineProvider;
         this.axisConfiguration = axisConfiguration;
         if (bucket.getEngineProvider() == null) {
@@ -187,7 +218,21 @@ public class CEPService implements CEPServiceInterface {
         }
 
         return deployBucket(bucket, cepEngineProvider, axisConfiguration, bucketPath);
+
+        } else if(bucket.getLoadbalancerList().size()>0 && ! bucket.isMaster()){
+            // update loadbalancer configuration
+        LoadBalancerConfiguration loadBalancerConfiguration =    LoadBalancerConfiguration.getInstance();
+            loadBalancerConfiguration.setLoadbalanceron(true);
+          Loadbalancer lb = bucket.getLoadbalancerList().get(0);
+            for(LBOutputNode lbOutputNode:lb.getOutputNodeList()){
+                loadBalancerConfiguration.addOutputNode(lbOutputNode.getIp(),lbOutputNode.getPort());
+            }
+            LBResourcePersistance.save(loadBalancerConfiguration);
+
         }
+        return true;
+
+
     }
 
     private boolean deployBucket(Bucket bucket, CEPEngineProvider cepEngineProvider,
