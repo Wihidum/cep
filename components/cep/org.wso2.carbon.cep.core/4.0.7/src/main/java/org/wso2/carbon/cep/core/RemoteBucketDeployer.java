@@ -19,6 +19,8 @@ package org.wso2.carbon.cep.core;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.wso2.carbon.automation.api.clients.utils.AuthenticateStub;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.internal.client.AuthenticationAdminServiceClient;
 import org.wso2.carbon.cep.core.internal.util.ProductConstants;
 import org.wso2.carbon.cep.core.mapping.input.Input;
@@ -90,13 +92,30 @@ public class RemoteBucketDeployer {
             logger.info(e.getMessage());
             throw new CEPAdminServiceCEPAdminException("CEPAdminServiceCEPAdminException", e);
         }
-
-
     }
 
 
     public static BucketDTO getBucket(Bucket bucket){
 
+        if(bucket.getLoadbalancerList().size()>0){
+           BucketDTO bucketDTO = new BucketDTO();
+            bucketDTO.setName(bucket.getName());
+            List<Loadbalancer> loadbalancerList = bucket.getLoadbalancerList();
+            for(Loadbalancer loadbalancer: loadbalancerList){
+
+                LoadbalancerDTO loadbalancerDTO = new LoadbalancerDTO();
+                List<LBOutputNode> lbOutputNodeDTOList = loadbalancer.getOutputNodeList();
+                for(LBOutputNode lbOutputNode:lbOutputNodeDTOList){
+                    LBOutputNodeDTO lbOutputNodeDTO = new LBOutputNodeDTO();
+                    lbOutputNodeDTO.setIp(lbOutputNode.getIp());
+                    lbOutputNodeDTO.setPort(lbOutputNode.getPort());
+                    loadbalancerDTO.addLbOutputNodeDTOs(lbOutputNodeDTO);
+                }
+               bucketDTO.addLoadbalancerDTOs(loadbalancerDTO);
+            }
+           return bucketDTO;
+
+        }else if(bucket.getLoadbalancerList().size()==0){
         BucketDTO bucketDTO = new BucketDTO();
         bucketDTO.setName(bucket.getName());
         bucketDTO.setDescription(bucket.getDescription());
@@ -196,7 +215,8 @@ public class RemoteBucketDeployer {
 
 
         return bucketDTO;
-
+        }
+        return null;
     }
 
 

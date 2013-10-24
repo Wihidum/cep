@@ -8,6 +8,7 @@
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderInfoDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.InputDTO" %>
 <%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO" %>
+<%@ page import="org.wso2.carbon.cep.stub.admin.internal.xsd.LoadbalancerDTO" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.LinkedList" %>
@@ -32,7 +33,6 @@
 
     function resetInputVars() {
         allInputsSelected = false;
-
         var isSelected = false;
         if (document.inputsForm.inputs != null) {
             if (document.inputsForm.inputs[0] != null) { // there is more than 1 sg
@@ -41,24 +41,25 @@
                         isSelected = true;
                     }
                 }
-            } else if (document.inputsForm.inputs[0] != null) { // only 1 sg
+            }else if (document.inputsForm.inputs[0] != null) { // only 1 sg
                 if (document.inputsForm.inputs[0].checked) {
                     isSelected = true;
                 }
             }
         }
-
         return false;
     }
+
     function selectAllInputsInAllPages() {
         selectAllInputsInThisPage(true);
         allInputsSelected = true;
         return false;
     }
+
     function selectAllInputsInThisPage(isSelected) {
         allInputsSelected = false;
-        if (document.inputsForm.inputs != null &&
-            document.inputsForm.inputs[0] != null) { // there is more than 1 sg
+        if(document.inputsForm.inputs != null &&
+            document.inputsForm.inputs[0] != null){ // there is more than 1 sg
             if (isSelected) {
                 for (var j = 0; j < document.inputsForm.inputs.length; j++) {
                     document.inputsForm.inputs[j].checked = true;
@@ -71,10 +72,10 @@
         } else if (document.inputsForm.inputs != null) { // only 1 sg
             document.inputsForm.inputs.checked = isSelected;
         }
-
         return false;
     }
-    function deleteInputs() {
+
+    function deleteInputs(){
         var selected = false;
         if (document.inputsForm.inputs != null) {
             if (document.inputsForm.inputs[0] != null) { // there is more than 1 sg
@@ -86,7 +87,6 @@
                 selected = document.inputsForm.inputs.checked;
             }
         }
-
         if (!selected) {
             CARBON.showInfoDialog('<fmt:message key="select.inputs.to.be.deleted"/>');
             return;
@@ -103,6 +103,7 @@
     }
 
     var allqueriesSelected = false;
+    var alllbsSelected=false;
 
     function resetVars() {
         allqueriesSelected = false;
@@ -121,7 +122,6 @@
                 }
             }
         }
-
         return false;
     }
     function selectAllInAllPages() {
@@ -149,6 +149,55 @@
         }
         return false;
     }
+      function resetLBVars() {
+              alllbsSelected = false;
+
+              var isSelected = false;
+              if (document.LBForm.newLBs != null) {
+                  if (document.LBForm.newLBs[0] != null) { // there is more than 1 sg
+                      for (var j = 0; j < document.LBForm.newLBs.length; j++) {
+                          if (document.LBForm.newLBs[j].checked) {
+                              isSelected = true;
+                          }
+                      }
+                  } else if (document.LBForm.newLBs != null) { // only 1 sg
+                      if (document.LBForm.newLBs.checked) {
+                          isSelected = true;
+                      }
+                  }
+              }
+
+              return false;
+          }
+
+    function selectAllLBsInAllPages() {
+            selectAllLBsInThisPage(true) ;
+            alllbsSelected = true;
+            return false;
+        }
+
+function selectAllLBsInThisPage(isSelected) {
+        alllbsSelected = false;
+        if (document.LBForm.newLBs != null) {
+            if (document.LBForm.newLBs != null &&
+                document.LBForm.newLBs[0] != null) { // there is more than 1 sg
+                if (isSelected) {
+                    for (var j = 0; j < document.LBForm.newLBs.length; j++) {
+                        document.LBForm.newLBs[j].checked = true;
+                    }
+                } else {
+                    for (j = 0; j < document.LBForm.newLBs.length; j++) {
+                        document.LBForm.newLBs[j].checked = false;
+                    }
+                }
+            } else if (document.LBForm.newLBs != null) { // only 1 sg
+                document.LBForm.newLBs.checked = isSelected;
+            }
+        }
+        return false;
+ }
+
+
     function deleteQueries() {
         var selected = false;
         if (document.queriesForm.queries != null) {
@@ -175,6 +224,34 @@
             });
         }
     }
+
+
+   function deleteLBs() {
+           var selected = false;
+           if (document.LBForm.newLBs != null) {
+               if (document.LBForm.newLBs[0] != null) { // there is more than 1 sg
+                   for (var j = 0; j < document.LBForm.newLBs.length; j++) {
+                       selected = document.LBForm.newLBs[j].checked;
+                       if (selected) break;
+                   }
+               } else if (document.LBForm.newLBs != null) { // only 1 sg
+                   selected = document.LBForm.newLBs.checked;
+               }
+           }
+           if (!selected) {
+               CARBON.showInfoDialog('<fmt:message key="select.lbs.to.be.deleted"/>');
+               return;
+           }
+           if (alllbsSelected) {
+               CARBON.showConfirmationDialog("<fmt:message key="delete.all.lbs.prompt"/>", function () {
+                   location.href = 'cep_delete_lb.jsp?deleteAlllbs=true';
+               });
+           } else {
+               CARBON.showConfirmationDialog("<fmt:message key="delete.lbs.on.page.prompt"/>", function () {
+                   document.LBForm.submit();
+               });
+           }
+       }
 
 </script>
 <%
@@ -206,6 +283,7 @@
             session.removeAttribute("editingBucket");
             session.removeAttribute("inputs");
             session.removeAttribute("queries");
+            session.removeAttribute("loadbalancers");
             session.removeAttribute("bucketInformation");
             isEditing = false;
         }
@@ -214,20 +292,29 @@
     String bucketName = "";
     String description = "";
     String engineProvider = "";
+
     CEPEngineProviderConfigPropertyDTO[] engineProviderConfig = null;
     LinkedList<InputDTO> inputs = null;
     LinkedList<QueryDTO> queries = null;
+    LinkedList<LoadbalancerDTO> loadbalancers = null;
+
     int currentInputPageNo = 0;
     int inputCounts = 0;
     int inputPages = 0;
+
     int currentQueryPageNo = 0;
     int queryCounts = 0;
     int queryPages = 0;
+
+    int currentLBPageNo = 0;
+    int LBCounts = 0;
+    int LBPages = 0;
+
     String parameters = "serviceTypeFilter=" + "&serviceGroupSearchString=";
 
     if (edit) {
         try {
-            if (session.getAttribute("editingBucket") != null) {
+            if (session.getAttribute("editingBucket") != null){
                 BucketDTO editingBucket = (BucketDTO) session.getAttribute("editingBucket");
                 bucketName = editingBucket.getName();
                 description = editingBucket.getDescription();
@@ -237,17 +324,21 @@
                     inputs = new LinkedList<InputDTO>(Arrays.asList(editingBucket.getInputs()));
                     inputCounts = inputs.size();
                 }
-                if (editingBucket.getQueries() != null) {
+                if (editingBucket.getQueries() != null){
                     queries = new LinkedList<QueryDTO>(Arrays.asList(editingBucket.getQueries()));
                     queryCounts = queries.size();
                 }
+                if (editingBucket.getLoadbalancerDTOs() != null){
+                    loadbalancers  = new LinkedList<LoadbalancerDTO>(Arrays.asList(editingBucket.getLoadbalancerDTOs()));
+                    LBCounts = loadbalancers .size();
+                    }
             }
             session.setAttribute("inputs", inputs);
             session.setAttribute("queries", queries);
+            session.setAttribute("loadbalancers", loadbalancers);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     } else {
         if (isEditing) {
             BucketDTO editingBucket = (BucketDTO) session.getAttribute("editingBucket");
@@ -257,6 +348,7 @@
             engineProviderConfig = editingBucket.getEngineProviderConfigProperty();
             inputs = (LinkedList<InputDTO>) session.getAttribute("inputs");
             queries = (LinkedList<QueryDTO>) session.getAttribute("queries");
+            loadbalancers = (LinkedList<LoadbalancerDTO>) session.getAttribute("loadbalancers");
         }
     }
     inputPages = (int) Math.ceil(((float) inputCounts) / 10);
@@ -270,6 +362,13 @@
         queryPages = 1;
     }
 
+     LBPages = (int) Math.ceil(((float) LBCounts ) / 10);
+        if (LBPages <= 0) {
+            //this is to make sure it works with defualt values
+           LBPages = 1;
+        }
+
+
     String pageNumberAsStr = request.getParameter("inputPageNumber");
     if (pageNumberAsStr != null) {
         currentInputPageNo = Integer.parseInt(pageNumberAsStr);
@@ -279,6 +378,10 @@
         currentQueryPageNo = Integer.parseInt(pageNumberAsStr);
     }
 
+    pageNumberAsStr = request.getParameter("lbPageNumber");
+        if (pageNumberAsStr != null) {
+            currentLBPageNo = Integer.parseInt(pageNumberAsStr);
+        }
 
     boolean isAuthorizedForAddInput =
             CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/cep/addInput");
@@ -331,7 +434,6 @@
                                   id="bucketDescription"
                                   cols="60"  <%=!isEditing ? "" : " readonly=\"true\""%>
                                 ><%=description%></textArea>
-
                     </td>
                 </tr>
                 <tr>
@@ -381,7 +483,7 @@
                         <fmt:message
                                 key="siddhi.persistence.snapshot.time.interval.minutes"/>
                         <%
-                        } else if (configName != null && "siddhi.enable.distributed.processing".equals(configName)) {
+                        } else if (configName != null && "siddhi.enable.distributed.processing".equals(configName)){
                         %>
                         <fmt:message
                                 key="siddhi.enable.distributed.processing"/>
@@ -437,6 +539,13 @@
         <%--</tr>--%>
     </tbody>
 </table>
+
+
+
+
+
+
+
 <h3><fmt:message key="inputs"/></h3>
 <%
     if (isAuthorizedForDeleteInput) {
@@ -789,6 +898,7 @@
 </tbody>
 
 </table>
+
 <div style="clear:both"></div>
 <h3><fmt:message key="queries"/></h3>
 
@@ -934,9 +1044,6 @@
 
 
 
-
-
-
 <tr name="ipaddrow">
     <td colspan="2" class="middle-header">
         <fmt:message key="query_ips"/>
@@ -959,27 +1066,12 @@
             <tr>
                 <td class="leftCol-small"><fmt:message key="ip"/><span class="required">*</span></td>
                 <td><input type="text" id="ipaddress"/></td>
-                <td><input type="button" class="button" value="<fmt:message key="add"/>"
-                           onclick="addIP()"/>
-                </td>
+                <td><input type="button" class="button" value="<fmt:message key="add"/>" onclick="addIP()"/></td>
             </tr>
             </tbody>
         </table>
-
     </td>
 </tr>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <tr>
@@ -1234,6 +1326,184 @@
 </tr>
 </tbody>
 </table>
+
+
+
+
+
+
+
+<div style="clear:both"></div>
+<h3><fmt:message key="lb.config"/></h3>
+
+<%
+    if (true) {
+%>
+<carbon:paginator pageNumber="<%=currentLBPageNo%>" numberOfPages="<%=LBPages%>"
+                  page="cep_buckets.jsp" pageNumberParameterName="pageNumber"
+                  resourceBundle="org.wso2.carbon.cep.ui.i18n.Resources"
+                  prevKey="prev" nextKey="next"
+                  parameters="<%=parameters%>"/>
+<%
+    if (true){
+%>
+<carbon:itemGroupSelector selectAllInPageFunction="selectAllLBsInThisPage(true)"
+                          selectAllFunction="selectAllLBsInAllPages()"
+                          selectNoneFunction="selectAllLBsInThisPage(false)"
+                          addRemoveFunction="deleteLBs()"
+                          addRemoveButtonId="delete2"
+                          resourceBundle="org.wso2.carbon.cep.ui.i18n.Resources"
+                          selectAllInPageKey="selectAllInPage"
+                          selectAllKey="selectAll"
+                          selectNoneKey="selectNone"
+                          addRemoveKey="delete"
+                          numberOfPages="<%=LBPages%>"/>
+<%
+        }
+    }
+
+%>
+<div id="noLBDiv" class="noDataDiv" <%if (loadbalancers != null ) {%>style="display:none"<%}%>>
+    No LB Config Defined
+</div>
+
+<form name="LBForm" action="cep_delete_lb.jsp" method="post">
+    <input type="hidden" name="pageNumber" value="<%= currentLBPageNo%>"/>
+    <input type="hidden" name="bucketName" value="<%= bucketName%>"/>
+    <table class="styledLeft noBorders spacer-bot" <% if (loadbalancers == null  )
+    { %>style="display:none"<% } %>
+           id="LBTable">
+        <thead>
+        <tr>
+            <th><fmt:message key="lb.ip"/></th>
+                <%--<th>Action</th>--%>
+        </tr>
+        </thead>
+        <tbody>
+        <%
+            int lbIndex = 0;
+            if (loadbalancers != null) {
+                int position = 0;
+                for (LoadbalancerDTO lb : loadbalancers) {
+                    String bgColor = ((position % 2) == 1) ? "#EEEFFB" : "white";
+                    position++;
+        %>
+        <tr bgcolor="<%= bgColor%>">
+            <td><input type="checkbox" name="newLBs"
+                                   value="<%=lbIndex%>"
+                                   onclick="resetLBVars()" class="chkBox"/>
+                            <a href="cep_lb.jsp?index=<%=lbIndex%>"><%=lb.getIp()%>
+                            </a>
+                        </td>
+                <%--<td>--%>
+                <%--&lt;%&ndash; <a class="icon-link" style="background-image:url(../admin/images/delete.gif)"--%>
+                <%--onclick="removeLB(this)">Delete</a>&ndash;%&gt;--%>
+                <%--<a class="icon-link" style="background-image:url(../admin/images/edit.gif)"--%>
+                <%--onclick="editQuery(this)">Edit</a>--%>
+                <%--</td>--%>
+        </tr>
+        <%
+                    lbIndex++;
+                }
+            }
+        %>
+
+        </tbody>
+    </table>
+</form>
+
+<%
+    if (true) {
+        if (true) {
+
+%>
+<carbon:itemGroupSelector selectAllInPageFunction="selectAllLBsInThisPage(true)"
+                          selectAllFunction="selectAllLBsInAllPages()"
+                          selectNoneFunction="selectAllLBsInThisPage(false)"
+                          addRemoveFunction="deleteLBs()"
+                          addRemoveButtonId="delete2"
+                          resourceBundle="org.wso2.carbon.cep.ui.i18n.Resources"
+                          selectAllInPageKey="selectAllInPage"
+                          selectAllKey="selectAll"
+                          selectNoneKey="selectNone"
+                          addRemoveKey="delete"
+                          numberOfPages="<%=LBPages%>"/>
+<%
+    }
+%>
+<carbon:paginator pageNumber="<%=currentLBPageNo%>" numberOfPages="<%=LBPages%>"
+                  page="cep_buckets.jsp" pageNumberParameterName="pageNumber"
+                  resourceBundle="org.wso2.carbon.cep.ui.i18n.Resources"
+                  prevKey="prev" nextKey="next"
+                  parameters="<%=parameters%>"/>
+
+<%
+    }
+    if (true) {
+%>
+<a style="background-image: url(../admin/images/add.gif);"
+   class="icon-link spacer-bot" onclick="showAddLBConf()"><fmt:message key="add.lb"/></a>
+<%
+    }
+%>
+
+<table id="addlbTable" class="styledLeft noBorders spacer-bot" style="width:100%; display:none;">
+<thead>
+<tr>
+    <th colspan="2"><fmt:message key="lb"/></th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+    <td class="leftCol-small"><fmt:message key="lb.ip"/><span class="required">*</span></td>
+    <td><input type="text" id="lbip"></td>
+</tr>
+
+
+<tr name="outputaddrow">
+    <td colspan="2" class="middle-header">
+        <fmt:message key="lb.ouput"/>
+    </td>
+</tr>
+<tr name="outputaddrow">
+    <td colspan="2">
+        <table class="styledLeft" id="lboutputtable" style="width:100%;display:none">
+           <div id="nooutputdefine" class="noDataDiv-plain">
+                      No Output Nodes Defined
+                  </div>
+            <thead>
+            <th class="leftCol-med"><fmt:message key="ip"/></th>
+            <th class="leftCol-med"><fmt:message key="port"/></th>
+            <th><fmt:message key="actions"/></th>
+            </thead>
+        </table>
+
+        <table id="addoutputlbtable" class="normal">
+            <tbody>
+            <tr>
+                <td class="leftCol-small"><fmt:message key="ip"/><span class="required">*</span></td>
+                <td><input type="text" id="ipaddressout"/></td>
+                <td class="leftCol-small"><fmt:message key="port"/><span class="required">*</span></td>
+                <td><input type="text" id="portadd"/></td>
+                <td><input type="button" class="button" value="<fmt:message key="add"/>" onclick="addOutPutNode()"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+
+<tr>
+    <td class="buttonRow" style="margin-bottom:20px;" colspan="2">
+        <input type="button" onclick="addNewLBsToList()" value="<fmt:message key="add.lb"/>"
+               class="button">
+ </td>
+</tr>
+</tbody>
+</table>
+
+
+
 <table class="styledLeft">
     <tbody>
     <tr>

@@ -35,6 +35,20 @@ public class BucketDTO {
     private QueryDTO[] queryDTOs;
 
 
+
+    private LoadbalancerDTO[] loadbalancerDTOs;
+
+
+    public LoadbalancerDTO[] getLoadbalancerDTOs() {
+        return loadbalancerDTOs;
+    }
+
+    public void setLoadbalancerDTOs(LoadbalancerDTO[] loadbalancerDTOs) {
+        this.loadbalancerDTOs = loadbalancerDTOs;
+    }
+
+
+
     /**
      * Inputs for this bucket
      * */

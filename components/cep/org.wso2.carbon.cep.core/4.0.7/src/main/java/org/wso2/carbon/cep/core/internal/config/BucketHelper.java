@@ -23,6 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.LoadbalancerHelper;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.internal.config.input.InputHelper;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
@@ -97,6 +99,14 @@ public class BucketHelper {
         }
 
 
+        OMElement lbOmElement = null;
+        for (Iterator iterator = bucketElement.getChildrenWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_LOADBALANCER)); iterator.hasNext(); ) {
+            lbOmElement = (OMElement) iterator.next();
+            Loadbalancer lb = LoadbalancerHelper.fromOM(lbOmElement);
+            bucket.addLoadbalancerNode(lb);
+        }
+
         return bucket;
 
     }
@@ -107,6 +117,7 @@ public class BucketHelper {
         String bucketDescription = bucket.getDescription();
         List<Input> inputList = bucket.getInputs();
         List<Query> queryList = bucket.getQueries();
+        List<Loadbalancer> loadbalancerList = bucket.getLoadbalancerList();
         OMFactory factory = OMAbstractFactory.getOMFactory();
         OMElement bucketItem = factory.createOMElement(new QName(
                 CEPConstants.CEP_CONF_NAMESPACE,
@@ -139,6 +150,13 @@ public class BucketHelper {
             OMElement queryChild = QueryHelper.queryToOM(query);
             bucketItem.addChild(queryChild);
         }
+
+        for(Loadbalancer loadbalancer :loadbalancerList){
+            OMElement element = LoadbalancerHelper.getOM(loadbalancer);
+            bucketItem.addChild(element);
+        }
+
+
         return bucketItem;
     }
 
