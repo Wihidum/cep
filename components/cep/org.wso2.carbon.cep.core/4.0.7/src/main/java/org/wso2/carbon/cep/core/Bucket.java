@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.cep.core;
 
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 
 import java.util.ArrayList;
@@ -73,13 +74,27 @@ public class Bucket {
     private Properties providerConfigurationProperties = null;
 
 
+
+    private List<Loadbalancer> loadbalancerList;
+
+
     public Bucket() {
         this.queries = new ConcurrentHashMap<Integer, Query>();
         this.inputs = new ArrayList<Input>();
+        this.loadbalancerList = new ArrayList<Loadbalancer>();
     }
 
     public void addQuery(Query query) {
         this.queries.put(query.getQueryIndex(), query);
+    }
+
+
+    public void addLoadbalancerNode(Loadbalancer loadbalancer){
+         loadbalancerList.add(loadbalancer);
+    }
+
+    public List<Loadbalancer> getLoadbalancerList(){
+        return loadbalancerList;
     }
 
     public String getName() {

@@ -294,6 +294,21 @@ function showAddQuery() {
     }
 }
 
+function showAddLBConf() {
+    var addPropertyTable = document.getElementById("addlbTable");
+    if (addPropertyTable.style.display == "none") {
+        addPropertyTable.style.display = "";
+    } else {
+        addPropertyTable.style.display = "none";
+    }
+}
+
+
+
+
+
+
+
 
 function addOutputTupleProperty(dataType) {
     var propName = document.getElementById("output" + dataType + "DataPropName");
@@ -408,12 +423,10 @@ function addOutputMapProperty() {
 }
 
 
-
 function addIP(){
     var ipAddress = document.getElementById("ipaddress");
     var noIPDefine = document.getElementById("noipdefine");
     var ipTable = document.getElementById("iptable");
-
     var error = "";
 
     if (ipAddress.value == "") {
@@ -447,13 +460,81 @@ function addIP(){
 
 
     var newCel2 = newTableRow.insertCell(1);
-    newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeIP(this,\'' + 'ip' + '\')">Delete</a>';
+    newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeIP(this,\'' + 'istream' + '\')">Delete</a>';
 
     ipAddress.value = "";
     noIPDefine.style.display = "none";
     //    propType.value = "";
     //    showAddProperty();
 }
+
+
+
+function addOutPutNode(){
+    var ipAddress = document.getElementById("ipaddressout");
+    var port = document.getElementById("portadd");
+    var nooutDefine = document.getElementById("nooutputdefine");
+    var ipTable = document.getElementById("lboutputtable");
+
+    var error = "";
+
+    if (ipAddress.value == "") {
+        error = "IP field is empty.\n";
+    }
+    if (port .value == "") {
+            error = "Port field is empty.\n";
+        }
+
+    if (error != "") {
+        CARBON.showErrorDialog(error);
+        return;
+    }
+   ipTable.style.display = "";
+
+//    Check for duplications
+//    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("ip-names");
+//    var foundDuplication = false;
+//    for (var i = 0; i < topicNamesArr.length; i++) {
+//        if (topicNamesArr[i].innerHTML == propName.value) {
+//            foundDuplication = true;
+//            CARBON.showErrorDialog("Duplicated Entry");
+//            return;
+//        }
+//    }
+
+
+   addOputputNodeToSession(ipAddress.value,port.value);
+    //add new row
+    var newTableRow = ipTable.insertRow(ipTable.rows.length);
+   var newCell0 = newTableRow.insertCell(0);
+   newCell0.innerHTML = ipAddress.value;
+   YAHOO.util.Dom.addClass(newCell0, "ip-names");
+
+var newCell1 = newTableRow.insertCell(1);
+   newCell1.innerHTML = port.value;
+   YAHOO.util.Dom.addClass(newCell1, "port-add");
+
+
+    var newCel2 = newTableRow.insertCell(2);
+    newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeOutputNode(this,\'' + 'lb' + '\')">Delete</a>';
+
+    ipAddress.value = "";
+    port.value = "";
+   nooutDefine.style.display = "none";
+    //    propType.value = "";
+    //    showAddProperty();
+}
+
+
+ function removeOutputNode(link, format) {
+     var rowToRemove = link.parentNode.parentNode;
+     var ip = rowToRemove.cells[0].innerHTML.trim();
+     var port = rowToRemove.cells[1].innerHTML.trim();
+    removeOutputNodeFromSession(ip,port);
+     rowToRemove.parentNode.removeChild(rowToRemove);
+     CARBON.showInfoDialog("Output Node  remove Succesfully!!");
+     return;
+ }
 
 
  function removeIP(link, format) {
@@ -464,52 +545,6 @@ function addIP(){
      CARBON.showInfoDialog("IP Remove Succesfully!!");
      return;
  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -711,12 +746,39 @@ function addNewQueriesToList() {
     showAddQuery();
 }
 
-function addOldToList(index) {
+
+function addNewLBsToList() {
+
+    var lbsTable = document.getElementById("LBTable");
+    var lbName = document.getElementById("lbip");
+
+   addLBToList(lbsTable.rows.length - 1,false);
+
+    document.getElementById("noLBDiv").style.display = "none";
+    lbsTable.style.display = "";
+
+    var newTableRow = lbsTable.insertRow(lbsTable.rows.length);
+    var newQueryNameCell = newTableRow.insertCell(0);
+    newQueryNameCell.innerHTML = '<input type="checkbox" name="newLBs"' +
+                        'value="' + lbName.value + '"' +
+                        'onclick="resetLBVars()" class="chkBox"/>' +
+                        '<a href="cep_lb.jsp?index=' + (lbsTable.rows.length - 2) + '">' + lbName.value + '</a>';
+
+    YAHOO.util.Dom.addClass(newQueryNameCell, "lb-name");
+    clearLBFields();
+    showAddLBConf();
+}
+
+
+function addOldQueriesToList(index) {
     if(!addQueryToList(index,true)){
         return;
     }
     clearOutputFields();
 }
+
+
+
 
 function addQueryToList(index,edit) {
     if (!document.getElementById("outputBrokerName").length > 0) {
@@ -760,6 +822,29 @@ function addQueryToList(index,edit) {
     return true;
 }
 
+ function addOldLBsToList(index) {
+     if(!addLBToList(index,true)){
+         return;
+     }
+     clearLBFields();
+ }
+
+
+function addLBToList(index,edit) {
+//    if (document.getElementById("lbip").value == "") {
+//        CARBON.showErrorDialog(LB IP cannot be empty);
+//        return false;
+//    }
+    var lbip = document.getElementById("lbip");
+
+    /*if (topicName.value == "") {
+     CARBON.showErrorDialog("Topic is empty");
+     return;
+     }*/
+  addLBToSession(lbip.value,index,edit);
+  //  return true;
+}
+
 function clearOutputFields() {
     document.getElementById("queryName").value = "";
     document.getElementById("newTopic").value = "";
@@ -775,6 +860,20 @@ function clearOutputFields() {
     document.getElementById("noOutputCorrelationData").style.display = "";
     document.getElementById("noOutputPayloadData").style.display = "";
 }
+
+
+function clearLBFields() {
+
+    document.getElementById("lbip").value = "";
+    clearDataInTable("lboutputtable");
+    document.getElementById("noOutput").style.display = "";
+
+}
+
+
+
+
+
 
 function finishAddBucketWizard() {
     var bucketName = document.getElementById("bucketName");
@@ -965,11 +1064,22 @@ function addOutputMapDataPropertyToSession(propName,valueOf) {
  }
 
 
+function addOputputNodeToSession(ipAddress,port){
+   var callback =
+   {
+      success:function (o) {
+                 if (o.responseText !== undefined) {
 
-
-
-
-
+                 }
+             },
+             failure:function (o) {
+                 if (o.responseText !== undefined) {
+                     alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+                 }
+             }
+   };
+   var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_lb_output.jsp", callback, "ipadd=" + ipAddress + "&portadd=" + port);
+ }
 
 
 
@@ -1046,6 +1156,54 @@ function addQueryToSession(type, queryName, sourceText, outputTopic, brokerName,
 
     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_query.jsp", callback, "type=" + type + "&queryName=" + queryName + "&sourceText=" + sourceText + "&outputTopic=" + outputTopic + "&brokerName=" + brokerName + "&xmlMappingText=" + xmlMappingText + "&textMappingText=" + textMappingText + "&tableIndex=" + tableIndex + "&outputMapping=" + outputMapping);
 }
+
+
+ function addLBToSession(lbip,tableIndex, edit) {
+     var callback =
+     {
+         success:function (o) {
+             if (edit) {
+                 location.href = 'cep_buckets.jsp';
+             }
+         },
+         failure:function (o) {
+             if (o.responseText !== undefined) {
+                 alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+             }
+         }
+     };
+
+
+     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_lb.jsp", callback, "lbip=" + lbip  + "&tableIndex=" + tableIndex);
+ }
+
+
+ function removeOutputNodeFromSession(ip,port) {
+     var callback =
+     {
+         success:function (o) {
+             if (o.responseText !== undefined) {
+             }
+         },
+         failure:function (o) {
+             if (o.responseText !== undefined) {
+                 alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+             }
+         }
+     };
+     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_delete_lb_output.jsp", callback, "ip=" +ip + "&port=" + port);
+
+ }
+
+
+
+
+
+
+
+
+
+
 
 
 function removePropertyFromSession(property, format, type) {
