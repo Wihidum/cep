@@ -35,7 +35,7 @@
       </dependency>
       <dependency>
           <groupId>org.wso2.carbon</groupId>
-          <artifactId>org.wso2.carbon.cep.core</artifactId>
+          <artifactId>org.wso2.carbon.databridge.core</artifactId>
           <version>4.0.7</version>
       </dependency>
       <dependency>
@@ -58,6 +58,8 @@
           <artifactId>org.wso2.carbon.databridge.commons</artifactId>
           <version>4.0.7</version>
       </dependency>
+
+
   </dependencies>
     <build>
         <plugins>
