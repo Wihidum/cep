@@ -26,7 +26,7 @@ public class FaultHandler {
         this.clusterManager = ClusterManager.getInstant();
     }
 
-    public FaultHandler getInstance(){
+    public static FaultHandler getInstance(){
         if(faultHandler == null){
             faultHandler = new FaultHandler();
         }

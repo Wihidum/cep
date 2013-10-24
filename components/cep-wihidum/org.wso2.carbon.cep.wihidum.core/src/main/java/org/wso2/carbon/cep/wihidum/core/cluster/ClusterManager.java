@@ -50,7 +50,7 @@ public class ClusterManager {
 
             public void memberRemoved(MembershipEvent membersipEvent) {
                 memberList.remove(membersipEvent.getMember());
-                //TODO
+                FaultHandler.getInstance().handle(getStringInetAddress(membersipEvent.getMember().getInetSocketAddress()));
             }
         });
 
