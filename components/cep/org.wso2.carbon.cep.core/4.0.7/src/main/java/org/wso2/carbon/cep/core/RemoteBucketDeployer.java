@@ -73,6 +73,7 @@ public class RemoteBucketDeployer {
             throw new RuntimeException("could not login to the back-end server");
         }
 
+
 //        CEPAdminServiceClient cepAdminServiceClient =  new CEPAdminServiceClient(cepAdminServiceURL,adminCookie);
 //        cepAdminServiceClient.addBucket(bucket);
         CEPAdminServiceStub cepAdminServiceStub = new CEPAdminServiceStub(cepAdminServiceURL+"CEPAdminService");
@@ -92,6 +93,7 @@ public class RemoteBucketDeployer {
             logger.info(e.getMessage());
             throw new CEPAdminServiceCEPAdminException("CEPAdminServiceCEPAdminException", e);
         }
+
     }
 
 
@@ -157,20 +159,24 @@ public class RemoteBucketDeployer {
                         XMLOutputMapping xmlOutputMapping = (XMLOutputMapping) outputMapping;
                         OutputXMLMappingDTO outputXmlMappingDTO = adaptOutputMapping(xmlOutputMapping);
                         outputDTO.setOutputXmlMapping(outputXmlMappingDTO);
+
                     }
 
                     if(outputMapping instanceof TupleOutputMapping){
                         TupleOutputMapping tupleOutputMapping = (TupleOutputMapping) outputMapping;
                         OutputTupleMappingDTO outputTupleMappingDTO =  adaptOutputMapping(tupleOutputMapping);
                         outputDTO.setOutputTupleMapping(outputTupleMappingDTO);
+
                     }
 
                     if(outputMapping instanceof MapOutputMapping){
                         MapOutputMapping mapOutputMapping = (MapOutputMapping) outputMapping;
                         OutputMapMappingDTO outputMapMappingDTO =adaptOutputMapping(mapOutputMapping);
                         outputDTO.setOutputMapMapping(outputMapMappingDTO);
+
                     }
 
+                    queryDTO.setOutput(outputDTO);
                 }
 
             }

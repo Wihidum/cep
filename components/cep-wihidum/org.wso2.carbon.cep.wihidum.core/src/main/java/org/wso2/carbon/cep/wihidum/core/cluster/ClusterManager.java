@@ -10,6 +10,7 @@ import org.wso2.carbon.brokermanager.core.exception.BMConfigurationException;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
 import org.wso2.carbon.context.CarbonContext;
 
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 
@@ -60,7 +61,7 @@ public class ClusterManager {
 
     private synchronized void configureBrokers(Member member) {
         memberList.add(member);
-        String brokerName = member.getInetSocketAddress().getAddress().toString().substring(1);
+        String brokerName = getStringInetAddress(member.getInetSocketAddress());
         BrokerConfiguration brokerConfiguration = new BrokerConfiguration();
         brokerConfiguration.setName(brokerName);
         brokerConfiguration.setType(Constants.AGENT_BROKER_TYPE);
@@ -87,6 +88,10 @@ public class ClusterManager {
         }
 
 
+    }
+
+    private String getStringInetAddress(InetSocketAddress inetSocketAddress){
+       return inetSocketAddress.getAddress().toString().substring(1);
     }
     //Return string list of all members in the cluster except local member
     public ArrayList<String> getMemberList(){

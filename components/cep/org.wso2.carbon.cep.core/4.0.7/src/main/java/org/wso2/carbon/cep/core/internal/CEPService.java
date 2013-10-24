@@ -59,7 +59,6 @@ public class CEPService implements CEPServiceInterface {
 
     private Map<String, CEPEngineProvider> cepEngineProviderMap;
 
-
     /**
      * if the corresponding cep engine provider is not available when the
      * buckets are added then we keep such buckets to deploy when the corresponding
@@ -92,6 +91,9 @@ public class CEPService implements CEPServiceInterface {
 
     public void addBucket(Bucket bucket, AxisConfiguration axisConfiguration)
             throws CEPConfigurationException {
+        if(bucket.getProviderConfigurationProperties().getProperty(CEPConstants.DISTRIBUTED_PROCESSING).equals("true")){
+            deployBucket(bucket,axisConfiguration,createCEPBucketDirectories(bucket, axisConfiguration));
+        }else{
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
         Map<String, CEPBucket> buckets = this.tenantSpecificCEPBuckets.get(tenantId);
         if (buckets != null && buckets.containsKey(bucket.getName())) {
@@ -126,6 +128,7 @@ public class CEPService implements CEPServiceInterface {
             }
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
+        }
         }
     }
 
@@ -190,12 +193,14 @@ public class CEPService implements CEPServiceInterface {
     public boolean deployBucket(Bucket bucket,
                                 AxisConfiguration axisConfiguration, String bucketPath)
             throws CEPConfigurationException {
-        if(bucket.isMaster()){
+        if(bucket.getProviderConfigurationProperties().getProperty(CEPConstants.DISTRIBUTED_PROCESSING).equals("true")){
             DistributingBucketProvider.getInstance().addBucket(bucket);
             DistributingBucketProvider.getInstance().setUpdate(true);
             RemoteBucketHelper.executeRemoteBucketDeploy();
         }
         if(bucket.getLoadbalancerList().size()==0){
+
+
         CEPEngineProvider cepEngineProvider;
         this.axisConfiguration = axisConfiguration;
         if (bucket.getEngineProvider() == null) {
@@ -211,7 +216,9 @@ public class CEPService implements CEPServiceInterface {
                 return false;
             }
         }
+
         return deployBucket(bucket, cepEngineProvider, axisConfiguration, bucketPath);
+
         } else if(bucket.getLoadbalancerList().size()>0 && ! bucket.isMaster()){
             // update loadbalancer configuration
         LoadBalancerConfiguration loadBalancerConfiguration =    LoadBalancerConfiguration.getInstance();
@@ -224,6 +231,8 @@ public class CEPService implements CEPServiceInterface {
 
         }
         return true;
+
+
     }
 
     private boolean deployBucket(Bucket bucket, CEPEngineProvider cepEngineProvider,
