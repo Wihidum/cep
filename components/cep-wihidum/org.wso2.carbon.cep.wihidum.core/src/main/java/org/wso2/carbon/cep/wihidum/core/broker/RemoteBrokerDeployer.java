@@ -77,7 +77,7 @@ public class RemoteBrokerDeployer {
             option.setTimeOutInMilliSeconds(5 * 60 * 1000);
             option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, adminCookie);
 
-            brokerManagerAdminServiceStub.addBrokerConfiguration("TishanTesting", "agent", brokerProperty);
+            brokerManagerAdminServiceStub.addBrokerConfiguration(brokerName, "agent", brokerProperty);
             logger.info("Successfully deployed broker "+brokerName);
 
 
