@@ -92,6 +92,12 @@ public class CEPService implements CEPServiceInterface {
     public void addBucket(Bucket bucket, AxisConfiguration axisConfiguration)
             throws CEPConfigurationException {
         if(bucket.getProviderConfigurationProperties().getProperty(CEPConstants.DISTRIBUTED_PROCESSING).equals("true")){
+            if(bucket.getLoadbalancerList().size()>0){
+                String distributed =   bucket.getProviderConfigurationProperties().getProperty("siddhi.enable.distributed.processing");
+                if(distributed.equals("true")){
+                    bucket.setMaster(true);
+                }
+            }
             deployBucket(bucket,axisConfiguration,createCEPBucketDirectories(bucket, axisConfiguration));
         }else{
         int tenantId = CarbonContext.getCurrentContext().getTenantId();
@@ -130,7 +136,7 @@ public class CEPService implements CEPServiceInterface {
             log.error(e.getMessage(), e);
         }
         }
-    }
+        }
 
     private String createCEPBucketDirectories(Bucket bucket, AxisConfiguration axisConfiguration)
             throws CEPConfigurationException {

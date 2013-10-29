@@ -8,8 +8,10 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.cep.core.internal.util.ProductConstants;
 
+import java.rmi.RemoteException;
 
 
 public class AuthenticationAdminServiceClient {
@@ -37,6 +39,20 @@ public class AuthenticationAdminServiceClient {
         String sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
         return sessionCookie;
     }
+
+
+    public static void logout() throws RemoteException, LogoutAuthenticationExceptionException {
+
+        authenticationAdminStub.logout();
+
+    }
+
+
+
+
+
+
+
 
     public static void setSystemProperties(String keyStorePath,String keyStoreType, String keyStorePassword ){
 
