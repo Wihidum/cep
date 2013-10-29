@@ -3,7 +3,6 @@ package org.wso2.carbon.cep.wihidum.core.bucket.splitter;
 import com.hazelcast.core.HazelcastInstance;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
-import org.wso2.carbon.cep.core.RemoteBucketDeployer;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
@@ -98,7 +97,9 @@ public class QuerySplitter {
         subQueryOutput.setOutputMapping(output.getOutputMapping());
         subQueryOutput.setTopic(output.getTopic());
 
+        if(getOutputBroker(bucket, query) != null){
         subQueryOutput.setBrokerName(getOutputBroker(bucket, query));
+        }
 
         subQuery.setOutput(subQueryOutput);
         streamDefinitionMap.put(query.getOutputStream(), output);
@@ -154,7 +155,8 @@ public class QuerySplitter {
         if (outputBrokerip.size() > 0)  {
             return outputBrokerip.get(0);
         }
-        else  {
+
+        else  if(queryB.getOutput().getBrokerName()!=null){
             RemoteBrokerDeployer remoteBucketDeployer = RemoteBrokerDeployer.getInstance();
             for(String ip : queryB.getIpList())    {
                 remoteBucketDeployer.deploy(queryB.getOutput().getBrokerName(), ip);
@@ -162,6 +164,7 @@ public class QuerySplitter {
             return queryB.getOutput().getBrokerName();
             //return "externalAgentBroker";
         }
+        return null;
     }
 
 
