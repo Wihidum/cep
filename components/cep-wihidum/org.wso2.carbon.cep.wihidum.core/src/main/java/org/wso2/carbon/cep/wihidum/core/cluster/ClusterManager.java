@@ -122,7 +122,7 @@ public class ClusterManager {
     @nodeAddress: ip address of the node
     @bucket: Bucket configuration of the node.
      */
-    public void setBucketConfigurations(String nodeAddress,Object bucket){
+    public void setClusterConfigurations(String nodeAddress, Object bucket){
        Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
        bucketConfigurations.put(nodeAddress,bucket);
     }

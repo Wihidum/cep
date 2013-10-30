@@ -1,7 +1,6 @@
 package org.wso2.carbon.cep.wihidum.core.cluster;
 
 
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.core.Bucket;
@@ -9,7 +8,6 @@ import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.RemoteBucketDeployer;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
-import org.wso2.carbon.core.AbstractAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +40,7 @@ public class FaultHandler {
             Bucket bucket;
             if(manager.equals(localIP)){
                if(ipAddress.equals(deputyManager)){
-                  clusterManager.setBucketConfigurations(Constants.DEPUTY_MANAGER,nominator.nominateDeputyManager());
+                  clusterManager.setClusterConfigurations(Constants.DEPUTY_MANAGER, nominator.nominateDeputyManager());
                }
                 bucket = (Bucket)clusterManager.getBucketConfigurations().get(Constants.MASTER_BUCKET);
                 reconfigureBucket(bucket,ipAddress);
@@ -82,7 +80,7 @@ public class FaultHandler {
            }
            index ++;
         }
-        clusterManager.setBucketConfigurations(Constants.MASTER_BUCKET,bucket);
+        clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, bucket);
         deployBucket(bucket);
     }
 
