@@ -83,6 +83,11 @@
           <artifactId>org.wso2.carbon.cep.admin</artifactId>
           <version>4.0.5</version>
       </dependency>
+      <dependency>
+          <groupId>org.wso2.carbon</groupId>
+          <artifactId>org.wso2.carbon.brokermanager.stub</artifactId>
+          <version>4.0.0</version>
+      </dependency>
   </dependencies>
 
     <distributionManagement>

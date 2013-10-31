@@ -26,8 +26,8 @@
 	<url>http://wso2.org</url>
 
 	<modules>
-		<module>org.wso2.carbon.cep.wihidum.core/1.0.0</module>
-		<module>org.wso2.carbon.cep.wihidum.loadbalancer/1.0.0</module>
+		<module>org.wso2.carbon.cep.wihidum.core</module>
+		<!--module>org.wso2.carbon.cep.wihidum.loadbalancer/1.0.0</module-->
 	</modules>
 
 
