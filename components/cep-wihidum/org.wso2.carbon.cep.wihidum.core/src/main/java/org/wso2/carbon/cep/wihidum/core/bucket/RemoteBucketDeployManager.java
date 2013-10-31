@@ -13,16 +13,18 @@ import org.wso2.carbon.cep.wihidum.core.cluster.ClusterManager;
 import org.wso2.carbon.cep.wihidum.core.cluster.Constants;
 import org.wso2.carbon.cep.wihidum.core.cluster.NodeNominator;
 
+
 public class RemoteBucketDeployManager implements DistributingWihidumValueHolder {
 
    private static Logger logger = Logger.getLogger(RemoteBucketDeployManager.class);
    private DistributingBucketProvider distributingBucketProvider = DistributingBucketProvider.getInstance();
    private BucketSplitter bucketSplitter;
-
+    private CEPAdminRemoteBucketDeployer remoteBucketDeployer;
 
 
     public RemoteBucketDeployManager(){
          bucketSplitter = new BucketSplitter();
+        remoteBucketDeployer = CEPAdminRemoteBucketDeployer.getInstance();
 
      }
 
@@ -38,7 +40,7 @@ public class RemoteBucketDeployManager implements DistributingWihidumValueHolder
                   logger.info("Map Size" +map.size());
                  for(String key : map.keySet()){
                      try {
-                         RemoteBucketDeployer.deploy(key,map.get(key));
+                         remoteBucketDeployer.deploy(key,map.get(key));
                          logger.info("run deploy in affter spilitting buckets  bucket is " +map.get(key).getName());
                      } catch (Exception e){
                          logger.info(e.getMessage());

@@ -248,8 +248,10 @@ public class CEPAdminUtils {
 
         backEndExpression.setText(queryDTO.getExpression().getText());
 
+        if(queryDTO.getIpList() != null){
         for(String ip:queryDTO.getIpList()){
             backEndQuery.addIP(ip);
+        }
         }
         backEndQuery.setName(queryDTO.getName());
         backEndQuery.setQueryIndex(queryDTO.getQueryIndex());
