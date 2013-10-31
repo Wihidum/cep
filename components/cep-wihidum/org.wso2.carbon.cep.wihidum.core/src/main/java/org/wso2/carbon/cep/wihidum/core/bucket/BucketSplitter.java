@@ -2,14 +2,31 @@ package org.wso2.carbon.cep.wihidum.core.bucket;
 
 
 import org.wso2.carbon.cep.core.Bucket;
-import org.wso2.carbon.cep.wihidum.core.bucket.splitter.QuerySplitter;
+import org.wso2.carbon.cep.core.Query;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
+import org.wso2.carbon.cep.core.mapping.input.Input;
+import org.wso2.carbon.cep.core.mapping.output.Output;
+import org.wso2.carbon.cep.wihidum.core.broker.BrokerConfiguration;
+import org.wso2.carbon.cep.wihidum.core.broker.BrokerProvider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import org.wso2.carbon.cep.wihidum.core.bucket.splitter.QuerySplitter;
 import java.util.Map;
 
 public class BucketSplitter {
 
     public Map<String, Bucket> getBucketList(Bucket bucket){
-        return new QuerySplitter().getBucketList(bucket);
+        Map<String, Bucket> bucketMap = new QuerySplitter().getBucketList(bucket);
+        List<Loadbalancer> loadbalancerList = bucket.getLoadbalancerList();
+            if(loadbalancerList.size()>0){
+                for(Loadbalancer loadbalancer:loadbalancerList){
+                    Bucket bucketlb =  createBucketForLB(loadbalancer);
+                    bucketMap.put(loadbalancer.getIp(),bucketlb);
+                }
+            }
+        return bucketMap;
     }
 
 
@@ -45,13 +62,12 @@ public class BucketSplitter {
 
 
 
-
-
-
-
-
-
-
+    private Bucket createBucketForLB(Loadbalancer loadbalancer){
+        Bucket bucket = new Bucket();
+        bucket.addLoadbalancerNode(loadbalancer);
+        bucket.setName("loadbalancer");
+        return bucket;
+    }
 
 
 }

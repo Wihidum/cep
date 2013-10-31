@@ -1,6 +1,5 @@
 package org.wso2.carbon.cep.wihidum.loadbalancer;
 
-
 import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.wihidum.loadbalancer.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.cep.wihidum.loadbalancer.eventpublisher.util.StreamDefinitionProvider;
@@ -50,5 +49,4 @@ public class SiddhiLBManager {
     public void addStreamDefinition(StreamDefinition streamDefinition) {
         StreamDefinitionProvider.addStreamDefinition(streamDefinition);
     }
-
 }

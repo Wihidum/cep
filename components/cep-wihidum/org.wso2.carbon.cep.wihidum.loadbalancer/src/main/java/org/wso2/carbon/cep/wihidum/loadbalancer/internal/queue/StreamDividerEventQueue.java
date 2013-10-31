@@ -17,8 +17,7 @@ public class StreamDividerEventQueue {
     private ExecutorService executorService;
     private List<Node> endPoints;
 
-    public StreamDividerEventQueue(List<Node> endPoints) {
-        this.endPoints = endPoints;
+    public StreamDividerEventQueue() {
         eventQueue = new ArrayBlockingQueue<EventComposite>(LoadBalancerConfiguration.getInstance().getBlockingQueueCapacity());
         executorService = Executors.newFixedThreadPool(LoadBalancerConfiguration.getInstance().getQueueWorkerThreads());
     }

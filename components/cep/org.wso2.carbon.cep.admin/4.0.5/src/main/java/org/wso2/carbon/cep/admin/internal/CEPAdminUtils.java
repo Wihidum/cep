@@ -23,6 +23,8 @@ import org.wso2.carbon.cep.admin.internal.exception.CEPAdminException;
 import org.wso2.carbon.cep.core.Expression;
 import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.XpathDefinition;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.*;
@@ -74,6 +76,30 @@ public class CEPAdminUtils {
 
         return backendInput;
     }
+
+    public static Loadbalancer adaptLoadbalancer(LoadbalancerDTO loadbalancerDTO) throws CEPAdminException {
+
+
+        Loadbalancer loadbalancer = new Loadbalancer();
+        loadbalancer.setIp(loadbalancerDTO.getIp());
+        LBOutputNodeDTO[] lbOutputNodeDTOs = loadbalancerDTO.getLbOutputNodeDTOs();
+        for(LBOutputNodeDTO lbOutputNodeDTO :lbOutputNodeDTOs){
+            LBOutputNode lbOutputNode =adaptOutputNode(lbOutputNodeDTO);
+            loadbalancer.addOutputNode(lbOutputNode);
+        }
+        return loadbalancer;
+    }
+
+    public static LBOutputNode adaptOutputNode(LBOutputNodeDTO lbOutputNodeDTO) throws CEPAdminException {
+         LBOutputNode lbOutputNode = new LBOutputNode();
+        String ip = lbOutputNodeDTO.getIp();
+        String port = lbOutputNodeDTO.getPort();
+        lbOutputNode.setIp(ip);
+        lbOutputNode.setPort(port);
+        return  lbOutputNode;
+    }
+
+
 
 
     /**
@@ -222,8 +248,10 @@ public class CEPAdminUtils {
 
         backEndExpression.setText(queryDTO.getExpression().getText());
 
+        if(queryDTO.getIpList() != null){
         for(String ip:queryDTO.getIpList()){
             backEndQuery.addIP(ip);
+        }
         }
         backEndQuery.setName(queryDTO.getName());
         backEndQuery.setQueryIndex(queryDTO.getQueryIndex());
@@ -489,6 +517,48 @@ public class CEPAdminUtils {
         }
         return queryDTOs;
     }
+
+    public static LoadbalancerDTO[] adaptLoadbalancers(List<Loadbalancer> backEndLoadbalancerList) {
+        LoadbalancerDTO[] loadbalancerDTOs = new LoadbalancerDTO[backEndLoadbalancerList.size()];
+           int index=0;
+        for (Loadbalancer loadbalancer : backEndLoadbalancerList) {
+            LoadbalancerDTO loadbalancerDTO = new LoadbalancerDTO();
+           loadbalancerDTO.setIp(loadbalancer.getIp());
+            loadbalancerDTO.setLbOutputNodeDTOs(adaptOutputNodes(loadbalancer.getOutputNodeList()));
+            loadbalancerDTOs[index] = loadbalancerDTO;
+            index++;
+        }
+        return loadbalancerDTOs;
+    }
+
+    public static LBOutputNodeDTO[] adaptOutputNodes(List<LBOutputNode> backEndLoadbalancerList) {
+        LBOutputNodeDTO[] loadbalancerDTOs = new LBOutputNodeDTO[backEndLoadbalancerList.size()];
+        int index=0;
+        for (LBOutputNode loadbalancer : backEndLoadbalancerList) {
+            LBOutputNodeDTO lbOutputNodeDTO = new LBOutputNodeDTO();
+            lbOutputNodeDTO.setIp(loadbalancer.getIp());
+            lbOutputNodeDTO.setPort(loadbalancer.getPort());
+            loadbalancerDTOs[index]= lbOutputNodeDTO;
+            index++;
+        }
+        return loadbalancerDTOs;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * This method maps CEP Core module OutputDTO in to CEP Admin module OutputDTO Topic

@@ -22,35 +22,41 @@ public class EventRRDivider implements Divider,eventSender {
     List<String> nodeIdList;
     private int eventCount;
     private int nodeCount;
-    private EventQueue eventQueue;
+    private static volatile EventQueue eventQueue = null;
     private List<Event> outputEventList = new ArrayList<Event>();
-    private LoadBalancerConfiguration loadBalancerConfiguration = LoadBalancerConfiguration.getInstance();
 
 
     public EventRRDivider() {
-        nodelist = loadBalancerConfiguration.getNodeList();
-        eventQueue = new EventQueue(nodelist);
+//        nodelist = loadBalancerConfiguration.getNodeList();
+//        eventQueue = new EventQueue(nodelist);
+    }
+
+    public EventRRDivider(List<String> nodeIdList){
+        this.nodeIdList = nodeIdList;
     }
 
     @Override
     public synchronized void divide(List<Event> eventList) {
-        outputEventList.addAll(eventList);
-        eventCount = eventCount + eventList.size();
-        if (eventCount >= loadBalancerConfiguration.getEventDivideCount()) {
-            EventComposite eventComposite = new EventComposite(outputEventList, nodeCount);
+//        outputEventList.addAll(eventList);
+//        eventCount = eventCount + eventList.size();
+//        if (eventCount >= loadBalancerConfiguration.getEventDivideCount()) {
+        if (eventQueue == null){
+            eventQueue = new EventQueue(nodeIdList);
+        }
+            EventComposite eventComposite = new EventComposite(eventList, nodeCount);
             nodeCount++;
-            outputEventList.clear();
-            eventCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
-            if (nodeCount == nodelist.size()) {
+//            outputEventList.clear();
+//            eventCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
+            if (nodeCount == nodeIdList.size()) {
                 nodeCount = LoadBalancerConstants.COUNTER_BEGIN_VALUE;
             }
             eventQueue.addEventBundle(eventComposite);
-        }
+//        }
 
     }
 
     @Override
     public void sendEvents(List<Event> eventList) throws EventPublishException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.divide(eventList);
     }
 }

@@ -50,7 +50,7 @@ public class ClusterManager {
 
             public void memberRemoved(MembershipEvent membersipEvent) {
                 memberList.remove(membersipEvent.getMember());
-                //TODO
+                FaultHandler.getInstance().handle(getStringInetAddress(membersipEvent.getMember().getInetSocketAddress()));
             }
         });
 
@@ -81,7 +81,7 @@ public class ClusterManager {
         }
         // add broker configuration
         try {
-            WihidumCoreValueHolder.getInstance().getBrokerManagerService().addBrokerConfiguration(brokerConfiguration, -1234);
+            WihidumCoreValueHolder.getInstance().getBrokerManagerService().addBrokerConfiguration(brokerConfiguration, Constants.SUPER_TENANT);
             //testBrokerConfiguration(brokerName);
         } catch (BMConfigurationException e) {
             log.error("Cannot add broker for CEP node on " + member.getInetSocketAddress());

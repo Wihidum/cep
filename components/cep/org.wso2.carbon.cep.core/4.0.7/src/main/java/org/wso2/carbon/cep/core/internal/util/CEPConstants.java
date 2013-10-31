@@ -70,6 +70,15 @@ public interface CEPConstants {
     String CEP_CONF_TYPE_MAP = "Map";
     String CEP_CONF_CEP_NAME_SPACE_PREFIX="cep";
 
+
+    String CEP_CONF_LOADBALANCER ="loadbalancer";
+    String CEP_CONF_OUTPUTNODE="outputnode";
+    String CEP_CONF_PORT="port";
+
+
+
+
+
     String CEP_CONF_TUPLE_DATA_TYPE_META ="metaData" ;
     String CEP_CONF_TUPLE_DATA_TYPE_CORRELATION ="correlationData" ;
     String CEP_CONF_TUPLE_DATA_TYPE_PAYLOAD ="payloadData" ;

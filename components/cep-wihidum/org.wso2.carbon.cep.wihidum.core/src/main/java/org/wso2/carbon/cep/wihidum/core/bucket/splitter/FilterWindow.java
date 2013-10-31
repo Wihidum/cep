@@ -3,7 +3,7 @@ package org.wso2.carbon.cep.wihidum.core.bucket.splitter;
 import com.hazelcast.core.HazelcastInstance;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
-import org.wso2.carbon.cep.core.RemoteBucketDeployer;
+
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;

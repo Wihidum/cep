@@ -1,10 +1,17 @@
 package org.wso2.carbon.cep.wihidum.loadbalancer.conf;
 
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+
+import org.apache.axiom.om.OMFactory;
+import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
+
+import javax.xml.namespace.QName;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class LoadBalancerConfigHelper {
     public static LoadBalancerConfiguration fromOM(OMElement omElement) {
@@ -12,7 +19,7 @@ public class LoadBalancerConfigHelper {
         Iterator iterator = omElement.getChildElements();
         for (; iterator.hasNext(); ) {
             OMElement omElementChild = (OMElement) iterator.next();
-            if (omElementChild.getLocalName().equals("start")) {//TODO change this to "ENABLED"
+            if (omElementChild.getLocalName().equals("enabled")) {
                 if (omElementChild.getText().equals("true")) {
                     loadBalancerConfiguration.setLoadbalanceron(true);
                 } else {
@@ -31,7 +38,12 @@ public class LoadBalancerConfigHelper {
                     if (obj instanceof OMElement) {
                         OMElement omElementOne = (OMElement) obj;
                         if (omElementOne.getLocalName().equals("roundrobin")) {
-                            loadBalancerConfiguration.setRoundRobin(Boolean.parseBoolean(omElementOne.getText().trim()));
+                            boolean isRoundRobin = Boolean.parseBoolean(omElementOne.getText().trim());
+                            loadBalancerConfiguration.setRoundRobin(isRoundRobin);
+                            if (isRoundRobin){
+                                String useRRDid = ((OMElement) omElementOne).getAttribute(new QName("id")).getAttributeValue();
+                                loadBalancerConfiguration.setRoundRobinID(useRRDid);
+                            }
                         }
                         if (omElementOne.getLocalName().equals("eventstream")) {
                             loadBalancerConfiguration.setEventStream(Boolean.parseBoolean(omElementOne.getText().trim()));
@@ -45,7 +57,7 @@ public class LoadBalancerConfigHelper {
 
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("outputnode")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
-                        String nodeId = ((OMElement) obj).getAttribute(new QName("id")).toString();
+                        String nodeId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
                         /*TODO need a way to store this node id
                           this was designed to calculate node id using host and port strings
                           may have to change it later*/
@@ -54,7 +66,7 @@ public class LoadBalancerConfigHelper {
 
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("ip")) {
                                     ip = ((OMElement) obj1).getText().trim();
                                 } else if (((OMElement) obj1).getLocalName().equals("port")) {
@@ -74,17 +86,37 @@ public class LoadBalancerConfigHelper {
 
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("RRD")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
-                        String RRDId = ((OMElement) obj).getAttribute(new QName("id")).toString();
+                        String RRDId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
                         ArrayList<String> nodeIdList = new ArrayList<String>();
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode")) {
-                                    nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).toString());
+                                    nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
                                 }
                             }
                         }
                         loadBalancerConfiguration.addRRDconfig(RRDId, nodeIdList);//TODO add error handling to storing mech
+                    }
+                }
+            } else if (omElementChild.getLocalName().equals("joins")) {
+                Iterator iteratorOne = omElementChild.getChildren();
+                for (; iteratorOne.hasNext(); ) {
+                    Object obj = iteratorOne.next();
+
+                    if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("join")) {
+                        Iterator iteratorTwo = ((OMElement) obj).getChildren();
+                        String JoinId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
+                        ArrayList<String> nodeIdList = new ArrayList<String>();
+                        for (; iteratorTwo.hasNext(); ) {
+                            Object obj1 = iteratorTwo.next();
+                            if (obj1 instanceof OMElement) {
+                                if (((OMElement) obj1).getLocalName().equals("outputnode")) {
+                                    nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
+                                }
+                            }
+                        }
+                        loadBalancerConfiguration.addJoinconfig(JoinId, nodeIdList);//TODO add error handling to storing mech
                     }
                 }
             } else if (omElementChild.getLocalName().equals("ESD")) {
@@ -94,14 +126,14 @@ public class LoadBalancerConfigHelper {
 
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("stream")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
-                        String streamId = ((OMElement) obj).getAttribute(new QName("id")).toString();
+                        String streamId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
                         ArrayList<String> senderIdList = new ArrayList<String>();
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode") ||
                                         ((OMElement) obj1).getLocalName().equals("RRD")) {
-                                    senderIdList.add(((OMElement) obj1).getAttribute(new QName("id")).toString());
+                                    senderIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
                                 }
                             }
                         }
@@ -117,4 +149,64 @@ public class LoadBalancerConfigHelper {
         }
         return loadBalancerConfiguration;
     }
+
+    public static OMElement toOM(LoadBalancerConfiguration loadBalancerConfiguration){
+        OMFactory factory = OMAbstractFactory.getOMFactory();
+        OMElement loadbalncer = factory.createOMElement(new QName("","loadbalancer"));
+        OMElement enable = factory.createOMElement(new QName("","enabled"));
+        if(loadBalancerConfiguration.isLoadbalanceron()){
+            enable.setText("true");
+        }else{
+            enable.setText("false");
+        }
+        OMElement port = factory.createOMElement(new QName("","port"));
+        port.setText(String.valueOf(loadBalancerConfiguration.getPort()));
+        OMElement reciverbundlesize = factory.createOMElement(new QName("","reciverbundlesize"));
+        reciverbundlesize.setText(String.valueOf(loadBalancerConfiguration.getReciverbundlesize()));
+        OMElement eventdividecount = factory.createOMElement(new QName("","eventdividecount"));
+        eventdividecount.setText(String.valueOf(loadBalancerConfiguration.getEventDivideCount()));
+        OMElement blockingqueuecapacity = factory.createOMElement(new QName("","blockingqueuecapacity"));
+        blockingqueuecapacity.setText(String.valueOf(loadBalancerConfiguration.getBlockingQueueCapacity()));
+        OMElement workerthreads = factory.createOMElement(new QName("","workerthreads"));
+        workerthreads.setText(String.valueOf(loadBalancerConfiguration.getQueueWorkerThreads()));
+        OMElement method = factory.createOMElement(new QName("","method"));
+        OMElement roundrobin = factory.createOMElement(new QName("","roundrobin"));
+        OMElement eventstream = factory.createOMElement(new QName("","eventstream"));
+
+        if(loadBalancerConfiguration.isRoundRobin()){
+            roundrobin.setText("true");
+            eventstream.setText("false");
+        }else if(loadBalancerConfiguration.isStreamDivide()){
+            roundrobin.setText("true");
+            eventstream.setText("false");
+
+        }
+          method.addChild(roundrobin);
+          method.addChild(eventstream);
+        loadbalncer.addChild(enable);
+        loadbalncer.addChild(port);
+        loadbalncer.addChild(reciverbundlesize);
+        loadbalncer.addChild(eventdividecount);
+        loadbalncer.addChild(blockingqueuecapacity);
+        loadbalncer.addChild(workerthreads);
+        loadbalncer.addChild(method);
+        List<Node> nodeList =loadBalancerConfiguration.getNodeList();
+        for(Node node : nodeList){
+            OMElement outputNode = factory.createOMElement(new QName("","output"));
+            OMElement ip = factory.createOMElement(new QName("","ip"));
+            ip.setText(node.getHostname());
+            OMElement portout = factory.createOMElement(new QName("","port"));
+            portout.setText(node.getPort());
+            outputNode.addChild(ip);
+            outputNode.addChild(portout);
+            loadbalncer.addChild(outputNode);
+
+        }
+
+        return  loadbalncer;
+    }
+
+
+
+
 }
