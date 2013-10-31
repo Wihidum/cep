@@ -3,9 +3,9 @@ package org.wso2.carbon.cep.wihidum.core.cluster;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.cep.admin.internal.CEPAdminRemoteBucketDeployer;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
-import org.wso2.carbon.cep.core.RemoteBucketDeployer;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
 
@@ -86,7 +86,7 @@ public class FaultHandler {
 
     private void deployBucket(Bucket bucket) {
         try {
-            RemoteBucketDeployer.deploy(localIP,bucket);
+            CEPAdminRemoteBucketDeployer.getInstance().deploy(localIP, bucket);
         } catch (Exception e) {
             log.error("Error when adding bucket "+bucket.getName(),e);
         }

@@ -1,10 +1,8 @@
 package org.wso2.carbon.cep.wihidum.core.bucket;
 
+import org.wso2.carbon.cep.admin.internal.CEPAdminRemoteBucketDeployer;
 import org.wso2.carbon.cep.core.Bucket;
-import org.wso2.carbon.cep.core.RemoteBucketDeployer;
 import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
-
-import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.core.distributing.DistributingWihidumValueHolder;
