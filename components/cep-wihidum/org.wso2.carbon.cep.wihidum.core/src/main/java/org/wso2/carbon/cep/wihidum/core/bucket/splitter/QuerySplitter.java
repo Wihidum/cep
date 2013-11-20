@@ -1,6 +1,7 @@
 package org.wso2.carbon.cep.wihidum.core.bucket.splitter;
 
 import com.hazelcast.core.HazelcastInstance;
+import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
@@ -38,6 +39,8 @@ import java.util.Map;
  * Split a complex query which contains a filter and a window
  */
 public class QuerySplitter {
+
+    private static Logger logger = Logger.getLogger(QuerySplitter.class);
 
     private static final String DISTRIBUTED_PROCESSING = "siddhi.enable.distributed.processing";
 
