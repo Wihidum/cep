@@ -7,8 +7,34 @@ import java.util.List;
 public class Loadbalancer {
 
     private String ip;
+    private String type;
     private List<LBOutputNode>  outputNodeList = new ArrayList<LBOutputNode>();
+    private  List<Stream> streamList = new ArrayList<Stream>();
+    private  List<InnerOutputNode> innerOutputNodeList = new ArrayList<InnerOutputNode>();
 
+    public List<InnerOutputNode> getInnerOutputNodeList() {
+        return innerOutputNodeList;
+    }
+
+    public void addInnerOutputNode(InnerOutputNode innerOutputNode) {
+        this.innerOutputNodeList.add(innerOutputNode);
+    }
+
+    public List<Stream> getStreamList() {
+        return streamList;
+    }
+
+    public void addStream(Stream stream) {
+        this.streamList.add(stream);
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     public String getIp() {
         return ip;
     }

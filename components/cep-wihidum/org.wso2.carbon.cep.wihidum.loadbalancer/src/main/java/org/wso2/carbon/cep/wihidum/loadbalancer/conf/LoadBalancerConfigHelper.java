@@ -3,11 +3,10 @@ package org.wso2.carbon.cep.wihidum.loadbalancer.conf;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
-
 import org.apache.axiom.om.OMFactory;
+import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.InnerLB;
+import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.LBStream;
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
-
-import javax.xml.namespace.QName;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +60,7 @@ public class LoadBalancerConfigHelper {
 
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("ip")) {
                                     ip = ((OMElement) obj1).getText().trim();
                                 } else if (((OMElement) obj1).getLocalName().equals("port")) {
@@ -85,7 +84,7 @@ public class LoadBalancerConfigHelper {
                         ArrayList<String> nodeIdList = new ArrayList<String>();
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode")) {
                                     nodeIdList.add(((OMElement) obj1).getAttribute(new QName("id")).toString());
                                 }
@@ -105,7 +104,7 @@ public class LoadBalancerConfigHelper {
                         ArrayList<String> senderIdList = new ArrayList<String>();
                         for (; iteratorTwo.hasNext(); ) {
                             Object obj1 = iteratorTwo.next();
-                            if (obj instanceof OMElement) {
+                            if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode") ||
                                         ((OMElement) obj1).getLocalName().equals("RRD")) {
                                     senderIdList.add(((OMElement) obj1).getAttribute(new QName("id")).toString());
@@ -150,6 +149,10 @@ public class LoadBalancerConfigHelper {
 
         if(loadBalancerConfiguration.isRoundRobin()){
             roundrobin.setText("true");
+            List<InnerLB> rrdList  = loadBalancerConfiguration.getRRDList();
+            if(rrdList.size()>0){
+            roundrobin.addAttribute("id",rrdList.get(0).getId(),factory.createOMNamespace("",""));
+            }
             eventstream.setText("false");
         }else if(loadBalancerConfiguration.isStreamDivide()){
             roundrobin.setText("true");
@@ -166,22 +169,79 @@ public class LoadBalancerConfigHelper {
         loadbalncer.addChild(workerthreads);
         loadbalncer.addChild(method);
         List<Node> nodeList =loadBalancerConfiguration.getNodeList();
+        OMElement outputNodes = factory.createOMElement(new QName("","outputnodes"));
         for(Node node : nodeList){
-            OMElement outputNode = factory.createOMElement(new QName("","output"));
+            OMElement outputNode = factory.createOMElement(new QName("","outputnode"));
+            String id = node.getHostname()+":"+node.getPort();
+            outputNode.addAttribute("id",id,factory.createOMNamespace("",""));
             OMElement ip = factory.createOMElement(new QName("","ip"));
             ip.setText(node.getHostname());
             OMElement portout = factory.createOMElement(new QName("","port"));
             portout.setText(node.getPort());
             outputNode.addChild(ip);
             outputNode.addChild(portout);
-            loadbalncer.addChild(outputNode);
+            outputNodes.addChild(outputNode);
 
         }
+        loadbalncer.addChild(outputNodes);
+        OMElement RRDs = factory.createOMElement(new QName("","RRDs"));
+        List<InnerLB> rrdList  = loadBalancerConfiguration.getRRDList();
+        for(InnerLB innerLB:rrdList){
+            OMElement rrd = factory.createOMElement(new QName("","RRD"));
+            String id = innerLB.getId();
+            rrd.addAttribute("id",id,factory.createOMNamespace("",""));
+            List<String> outputnodelist = innerLB.getOutputNodeIdList();
+            for(String outlist:outputnodelist){
+                OMElement output = factory.createOMElement(new QName("","outputnode"));
+                output.addAttribute("id",outlist,factory.createOMNamespace("","")) ;
+                rrd.addChild(output);
+            }
+            RRDs.addChild(rrd);
+        }
+      loadbalncer.addChild(RRDs);
+        OMElement joins = factory.createOMElement(new QName("","joins"));
+        List<InnerLB> joinList  = loadBalancerConfiguration.getJoinList();
+        for(InnerLB innerLB:joinList){
+            OMElement rrd = factory.createOMElement(new QName("","join"));
+            String id = innerLB.getId();
+            rrd.addAttribute("id",id,factory.createOMNamespace("",""));
+            List<String> outputnodelist = innerLB.getOutputNodeIdList();
+            for(String outlist:outputnodelist){
+                OMElement output = factory.createOMElement(new QName("","outputnode"));
+                output.addAttribute("id",outlist,factory.createOMNamespace("","")) ;
+                rrd.addChild(output);
+            }
+            joins.addChild(rrd);
 
+        }
+          loadbalncer.addChild(joins);
+        OMElement ESDs = factory.createOMElement(new QName("","ESD"));
+        List<LBStream> streamList  = loadBalancerConfiguration.getLbStreamList();
+        for(LBStream innerLB:streamList){
+            OMElement rrd = factory.createOMElement(new QName("","stream"));
+            String id = innerLB.getId();
+            rrd.addAttribute("id",id,factory.createOMNamespace("",""));
+            List<String> outputnodelist = innerLB.getDirectList();
+            for(String outlist:outputnodelist){
+                OMElement output = factory.createOMElement(new QName("","outputnode"));
+                output.addAttribute("id",outlist,factory.createOMNamespace("",""));
+                rrd.addChild(output);
+            }
+            List<String> rrdlist = innerLB.getRrdList();
+            for(String outlist:rrdlist ){
+                OMElement output = factory.createOMElement(new QName("","RRD"));
+                output.addAttribute("id",outlist,factory.createOMNamespace("",""));
+                rrd.addChild(output);
+            }
+            List<String> joinlist = innerLB.getJoinList();
+            for(String outlist:joinlist ){
+                OMElement output = factory.createOMElement(new QName("","join"));
+                output.addAttribute("id",outlist,factory.createOMNamespace("",""));
+                rrd.addChild(output);
+            }
+            ESDs.addChild(rrd);
+        }
+         loadbalncer.addChild(ESDs);
         return  loadbalncer;
     }
-
-
-
-
 }

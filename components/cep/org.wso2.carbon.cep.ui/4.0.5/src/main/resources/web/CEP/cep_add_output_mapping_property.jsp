@@ -12,7 +12,7 @@
     if (type.equals("map")){
         String valueOf = request.getParameter("valueOf");
         List list = (List) session.getAttribute("outputMapPropertyList");
-        if (list == null) {
+        if (list == null){
             list = new ArrayList();
             session.setAttribute("outputMapPropertyList", list);
         }

@@ -422,6 +422,336 @@ function addOutputMapProperty() {
     //    showAddProperty();
 }
 
+ function addoutputnoderrdjoin(){
+        var id = document.getElementById("rrdid");
+        var propertyTable = document.getElementById("rrdoutputtable");
+        var noPropertyDiv = document.getElementById("norrd");
+
+        var error = "";
+
+        if (id.value == "") {
+            error = "ID field is empty.\n";
+        }
+
+
+
+        if (error != "") {
+            CARBON.showErrorDialog(error);
+            return;
+        }
+        propertyTable.style.display = "";
+
+        //Check for duplications
+    //    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+    //    var foundDuplication = false;
+    //    for (var i = 0; i < topicNamesArr.length; i++) {
+    //        if (topicNamesArr[i].innerHTML == propName.value) {
+    //            foundDuplication = true;
+    //            CARBON.showErrorDialog("Duplicated Entry");
+    //            return;
+    //        }
+    //    }
+
+
+       addOutputNodeRRDJOINToSession(id.value);
+        //add new row
+        var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+        var newCell0 = newTableRow.insertCell(0);
+        newCell0.innerHTML = id.value;
+        YAHOO.util.Dom.addClass(newCell0, "property-names");
+
+
+        var newCel2 = newTableRow.insertCell(1);
+        newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removeoutputrrdjoin(this,\'' + 'map' + '\')">Delete</a>';
+
+        id.value = "";
+        noPropertyDiv.style.display = "none";
+        //    propType.value = "";
+        //    showAddProperty();
+
+ }
+  function removeoutputrrdjoin(link, format) {
+           var rowToRemove = link.parentNode.parentNode;
+           var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
+          // removePropertyFromSession(propertyToERemove, format, 'output');
+           rowToRemove.parentNode.removeChild(rowToRemove);
+           CARBON.showInfoDialog("Remove Succesfully!!");
+           return;
+       }
+
+
+
+function addrrdorjoin(){
+        var lbid = document.getElementById("lbtypeid");
+        var lbtyperrd = document.getElementById("lbtypevalue")[document.getElementById("lbtypevalue").selectedIndex];
+        var noPropertyDiv = document.getElementById("noInnerLB");
+        var propertyTable = document.getElementById("rrdjointable");
+        var propertyTableout = document.getElementById("rrdoutputtable");
+         var noPropertyDivout = document.getElementById("norrd");
+        var error = "";
+
+        if (lbid.value == "") {
+            error = "LB ID field is empty.\n";
+        }
+
+
+
+        if (error != "") {
+            CARBON.showErrorDialog(error);
+            return;
+        }
+        propertyTable.style.display = "";
+
+        //Check for duplications
+    //    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+    //    var foundDuplication = false;
+    //    for (var i = 0; i < topicNamesArr.length; i++) {
+    //        if (topicNamesArr[i].innerHTML == propName.value) {
+    //            foundDuplication = true;
+    //            CARBON.showErrorDialog("Duplicated Entry");
+    //            return;
+    //        }
+    //    }
+
+
+       addrrdorjoinToSession(lbid.value, lbtyperrd.value);
+        //add new row
+        var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+        var newCell0 = newTableRow.insertCell(0);
+        newCell0.innerHTML = lbid.value;
+        YAHOO.util.Dom.addClass(newCell0, "property-names");
+
+    var newCell1 = newTableRow.insertCell(1);
+    newCell1.innerHTML = lbtype.value;
+
+
+        var newCel2 = newTableRow.insertCell(2);
+        newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removerrdorjoin(this,\'' + 'map' + '\')">Delete</a>';
+
+        lbid.value = "";
+        noPropertyDiv.style.display = "none";
+        propertyTableout.style.display="none";
+        noPropertyDivout.style.display = "";
+        clearDataInTable("rrdoutputtable");
+
+        //    propType.value = "";
+        //    showAddProperty();
+
+ }
+
+  function removerrdorjoin(link, format) {
+         var rowToRemove = link.parentNode.parentNode;
+         var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
+        // removePropertyFromSession(propertyToERemove, format, 'output');
+         rowToRemove.parentNode.removeChild(rowToRemove);
+         CARBON.showInfoDialog(" Remove Succesfully!!");
+         return;
+     }
+
+
+
+  function addstream(){
+
+              var steamID =  document.getElementById("streamid");
+              var noPropertyDiv = document.getElementById("noStreamID");
+              var propertyTable = document.getElementById("streamtable");
+              var propertyTableout = document.getElementById("rrdjointable");
+               var noPropertyDivout = document.getElementById("noInnerLB");
+              var error = "";
+
+              if (steamID.value == "") {
+                  error = "Stream ID field is empty.\n";
+              }
+
+
+
+              if (error != "") {
+                  CARBON.showErrorDialog(error);
+                  return;
+              }
+              propertyTable.style.display = "";
+
+              //Check for duplications
+          //    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+          //    var foundDuplication = false;
+          //    for (var i = 0; i < topicNamesArr.length; i++) {
+          //        if (topicNamesArr[i].innerHTML == propName.value) {
+          //            foundDuplication = true;
+          //            CARBON.showErrorDialog("Duplicated Entry");
+          //            return;
+          //        }
+          //    }
+
+
+             addStreamToSession(steamID.value);
+              //add new row
+              var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+              var newCell0 = newTableRow.insertCell(0);
+              newCell0.innerHTML = steamID.value;
+              YAHOO.util.Dom.addClass(newCell0, "property-names");
+
+
+
+              var newCel2 = newTableRow.insertCell(1);
+              newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removestream(this,\'' + 'map' + '\')">Delete</a>';
+
+              steamID.value = "";
+              noPropertyDiv.style.display = "none";
+              propertyTableout.style.display="none";
+              noPropertyDivout.style.display = "";
+              clearDataInTable("rrdjointable");
+
+              //    propType.value = "";
+              //    showAddProperty();
+  }
+
+ function removestream(link, format) {
+        var rowToRemove = link.parentNode.parentNode;
+        var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
+       // removePropertyFromSession(propertyToERemove, format, 'output');
+        rowToRemove.parentNode.removeChild(rowToRemove);
+        CARBON.showInfoDialog("RRD Remove Succesfully!!");
+        return;
+    }
+
+
+
+
+
+ function addrrdid(){
+
+                  var rrdID =  document.getElementById("rrdidout");
+                  var noPropertyDiv = document.getElementById("norrdout");
+                  var propertyTable = document.getElementById("rrdoutputtableout");
+
+                  var error = "";
+
+                  if (rrdID.value == "") {
+                      error = "RRD ID field is empty.\n";
+                  }
+                  if (error != "") {
+                      CARBON.showErrorDialog(error);
+                      return;
+                  }
+                  propertyTable.style.display = "";
+
+                  //Check for duplications
+              //    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+              //    var foundDuplication = false;
+              //    for (var i = 0; i < topicNamesArr.length; i++) {
+              //        if (topicNamesArr[i].innerHTML == propName.value) {
+              //            foundDuplication = true;
+              //            CARBON.showErrorDialog("Duplicated Entry");
+              //            return;
+              //        }
+              //    }
+
+
+                 addOutputNodeRRDJOINToSession(rrdID.value);
+                  //add new row
+                  var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+                  var newCell0 = newTableRow.insertCell(0);
+                  newCell0.innerHTML = rrdID.value;
+                  YAHOO.util.Dom.addClass(newCell0, "property-names");
+
+                  var newCel2 = newTableRow.insertCell(1);
+                  newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removerrdid(this,\'' + 'map' + '\')">Delete</a>';
+
+                  rrdID.value = "";
+                  noPropertyDiv.style.display = "none";
+
+                  //    propType.value = "";
+                  //    showAddProperty();
+ }
+
+   function removerrdid(link, format) {
+        var rowToRemove = link.parentNode.parentNode;
+        var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
+       // removePropertyFromSession(propertyToERemove, format, 'output');
+        rowToRemove.parentNode.removeChild(rowToRemove);
+        CARBON.showInfoDialog("RRD Remove Succesfully!!");
+        return;
+    }
+
+
+
+
+
+
+       function   addrrd(){
+               var rrdID =  document.getElementById("rrdidrrd");
+               var typerrdinrrd = "rrd";
+               var noPropertyDiv = document.getElementById("norrd");
+               var propertyTable = document.getElementById("rrdtable");
+               var propertyTableout = document.getElementById("rrdoutputtableout");
+                var noPropertyDivout = document.getElementById("norrdout");
+               var error = "";
+
+               if ( rrdID.value == "") {
+                   error = "RRD ID field is empty.\n";
+               }
+
+               if (error != "") {
+                   CARBON.showErrorDialog(error);
+                   return;
+               }
+               propertyTable.style.display = "";
+
+               //Check for duplications
+           //    var topicNamesArr = YAHOO.util.Dom.getElementsByClassName("property-names");
+           //    var foundDuplication = false;
+           //    for (var i = 0; i < topicNamesArr.length; i++) {
+           //        if (topicNamesArr[i].innerHTML == propName.value) {
+           //            foundDuplication = true;
+           //            CARBON.showErrorDialog("Duplicated Entry");
+           //            return;
+           //        }
+           //    }
+
+
+                addrrdorjoinToSession(rrdID.value, "rrd");
+               //add new row
+               var newTableRow = propertyTable.insertRow(propertyTable.rows.length);
+               var newCell0 = newTableRow.insertCell(0);
+               newCell0.innerHTML =  rrdID.value;
+               YAHOO.util.Dom.addClass(newCell0, "property-names");
+
+
+
+               var newCel2 = newTableRow.insertCell(1);
+               newCel2.innerHTML = ' <a class="icon-link" style="background-image:url(../admin/images/delete.gif)" onclick="removerrd(this,\'' + 'map' + '\')">Delete</a>';
+
+                rrdID.value = "";
+               noPropertyDiv.style.display = "none";
+               propertyTableout.style.display="none";
+               noPropertyDivout.style.display = "";
+               clearDataInTable("rrdoutputtableout");
+
+               //    propType.value = "";
+               //    showAddProperty();
+
+}
+
+function removerrd(link, format) {
+     var rowToRemove = link.parentNode.parentNode;
+     var propertyToERemove = rowToRemove.cells[0].innerHTML.trim();
+    // removePropertyFromSession(propertyToERemove, format, 'output');
+     rowToRemove.parentNode.removeChild(rowToRemove);
+     CARBON.showInfoDialog("RRD Remove Succesfully!!");
+     return;
+ }
+
+
+
+
+
+
+
+
+
+
+
+
 
 function addIP(){
     var ipAddress = document.getElementById("ipaddress");
@@ -836,12 +1166,14 @@ function addLBToList(index,edit) {
 //        return false;
 //    }
     var lbip = document.getElementById("lbip");
+   var outputMappingElement = document.getElementById("lbtypesdrrd");
+       var selectedType = outputMappingElement[outputMappingElement.selectedIndex].value;
 
     /*if (topicName.value == "") {
      CARBON.showErrorDialog("Topic is empty");
      return;
      }*/
-  addLBToSession(lbip.value,index,edit);
+  addLBToSession(lbip.value,selectedType,index,edit);
   //  return true;
 }
 
@@ -1046,6 +1378,86 @@ function addOutputMapDataPropertyToSession(propName,valueOf) {
     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_output_mapping_property.jsp", callback, "propName=" + propName + "&valueOf=" + valueOf + "&format=map");
 
 }
+
+function addOutputNodeRRDJOINToSession(id) {
+    var callback =
+    {
+        success:function (o) {
+            if (o.responseText !== undefined) {
+
+            }
+        },
+        failure:function (o) {
+            if (o.responseText !== undefined) {
+                alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+            }
+        }
+    };
+    var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_output_node_rrd_join.jsp", callback, "id=" + id+ "&valueOf=value");
+
+}
+
+    function  addrrdorjoinToSession(lbid,lbtype){
+       var callback =
+          {
+              success:function (o) {
+                  if (o.responseText !== undefined) {
+
+                  }
+              },
+              failure:function (o) {
+                  if (o.responseText !== undefined) {
+                      alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+                  }
+              }
+          };
+          var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_rrd_or_join.jsp", callback, "lbid=" + lbid + "&lbtype=" + lbtype);
+
+
+
+    }
+
+     function   addStreamToSession(steamID){
+
+        var callback =
+                  {
+                      success:function (o) {
+                          if (o.responseText !== undefined) {
+
+                          }
+                      },
+                      failure:function (o) {
+                          if (o.responseText !== undefined) {
+                              alert("Error " + o.status + "\n Following is the message from the server.\n" + o.responseText);
+                          }
+                      }
+                  };
+                  var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_stream.jsp", callback, "streamid=" + steamID );
+
+
+
+     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  function  addIPListToSession(ipAddress){
    var callback =
    {
@@ -1158,7 +1570,7 @@ function addQueryToSession(type, queryName, sourceText, outputTopic, brokerName,
 }
 
 
- function addLBToSession(lbip,tableIndex, edit) {
+ function addLBToSession(lbip,typeped,tableIndex, edit) {
      var callback =
      {
          success:function (o) {
@@ -1174,7 +1586,7 @@ function addQueryToSession(type, queryName, sourceText, outputTopic, brokerName,
      };
 
 
-     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_lb.jsp", callback, "lbip=" + lbip  + "&tableIndex=" + tableIndex);
+     var request = YAHOO.util.Connect.asyncRequest('POST', "cep_add_lb.jsp", callback, "lbip=" + lbip  +"&typeped=" + typeped+ "&tableIndex=" + tableIndex);
  }
 
 
@@ -1316,14 +1728,30 @@ function setOutputMapping() {
         populateElementDisplay(document.getElementsByName("outputXMLMapping"), "");
     } else if (selectedType == "text") {
         populateElementDisplay(document.getElementsByName("outputTextMapping"), "");
-    } else if (selectedType == "element") {
+    } else if (selectedType == "element"){
         populateElementDisplay(document.getElementsByName("outputElementMapping"), "");
-    } else if (selectedType == "tuple") {
+    } else if (selectedType == "tuple"){
         populateElementDisplay(document.getElementsByName("outputTupleMapping"), "");
     } else if (selectedType == "map") {
         populateElementDisplay(document.getElementsByName("outputMapMapping"), "");
     }
 }
+
+function setLBType(){
+    var outputMappingElement = document.getElementById("lbtypesdrrd");
+    var selectedType = outputMappingElement[outputMappingElement.selectedIndex].value;
+    populateElementDisplay(document.getElementsByName("loadbalanceresdddetails"), "none");
+    populateElementDisplay(document.getElementsByName("lbrrddetails"), "none");
+    if (selectedType == "esd"){
+        populateElementDisplay(document.getElementsByName("loadbalanceresdddetails"), "");
+    } else if (selectedType == "rrd") {
+        populateElementDisplay(document.getElementsByName("lbrrddetails"), "");
+    }
+}
+
+
+
+
 
 function populateElementDisplay(elements, display) {
     for (var i = 0; i < elements.length; i++) {

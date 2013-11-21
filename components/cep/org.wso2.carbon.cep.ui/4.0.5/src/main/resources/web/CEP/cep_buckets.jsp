@@ -129,6 +129,8 @@
         allqueriesSelected = true;
         return false;
     }
+
+
     function selectAllInThisPage(isSelected) {
         allqueriesSelected = false;
         if (document.queriesForm.queries != null) {
@@ -149,6 +151,7 @@
         }
         return false;
     }
+
       function resetLBVars() {
               alllbsSelected = false;
 
@@ -1490,6 +1493,173 @@ function selectAllLBsInThisPage(isSelected) {
             </tr>
             </tbody>
         </table>
+    </td>
+</tr>
+<tr>
+    <td class="middle-header" colspan="2">
+        <fmt:message key="lb.details"/>
+    </td>
+</tr>
+<tr>
+    <td class="leftCol-small"><fmt:message key="lb.type"/></td>
+    <td><select name="lbtype" id="lbtypesdrrd" onchange="setLBType()">
+        <option value="esd"><fmt:message key="esd.type"/></option>
+        <option value="rrd"><fmt:message key="rrd.type"/></option>
+    </select>
+    </td>
+</tr>
+
+
+ <tr name="loadbalanceresdddetails" >
+     <td colspan="2" class="middle-header">
+         <fmt:message key="esd.type"/>
+     </td>
+ </tr>
+
+ <tr name="loadbalanceresdddetails" >
+     <td colspan="2">
+
+         <h4><fmt:message key="stream.details"/></h4>
+         <table class="styledLeft" id="streamtable" style="display:none">
+             <thead>
+             <th class="leftCol-med"><fmt:message key="stream.id"/></th>
+             <th><fmt:message key="actions"/></th>
+             </thead>
+         </table>
+
+         <div class="noDataDiv-plain" id="noStreamID">
+             No Streams Defined.
+         </div>
+
+          <tr name="loadbalanceresdddetails">
+          <td class="col-small"><fmt:message key="stream.id"/> :</td>
+          <td>
+          <input type="text" id="streamid"/>
+          </td>
+          </tr>
+
+ </tr>
+
+<tr name="loadbalanceresdddetails" >
+     <td colspan="2" class="middle-header">
+         <fmt:message key="inner.lb"/>
+     </td>
+ </tr>
+
+
+ <tr name= "loadbalanceresdddetails" >
+    <td colspan ="2">
+           <table class="styledLeft" id="rrdjointable" style="display:none">
+                       <thead>
+                       <th class="leftCol-med"><fmt:message key="id"/></th>
+                        <th class="leftCol-med"><fmt:message key="lb.type"/></th>
+                       <th><fmt:message key="actions"/></th>
+                       </thead>
+                   </table>
+
+                   <div class="noDataDiv-plain" id="noInnerLB">
+                       No RRD ot Join LBs added
+                   </div>
+                    <table id="addRRDJOIN" class="normal">
+                               <tbody>
+                               <tr>
+                                   <td class="col-small"><fmt:message key="id"/> :</td>
+                                   <td>
+                                       <input type="text" id="lbtypeid"/>
+                                   </td>
+                                   <td><fmt:message key="lb.type"/>:
+                                       <select id="lbtypevalue">
+                                           <option value="rrd">RRD</option>
+                                           <option value="join">Join</option>
+                                           <option value="direct">Direct</option>
+                                       </select>
+                                   </td>
+                               </tr>
+                             <h4><fmt:message key="output.id"/></h4>
+                                               <table  class="styledLeft" id="rrdoutputtable" style="display:none">
+                                                                   <thead>
+                                                                   <th class="leftCol-med"><fmt:message key="id"/></th>
+                                                                   <th><fmt:message key="actions"/></th>
+                                                                   </thead>
+                                                               </table>
+                                               <div class="noDataDiv-plain" id="norrd">
+                                                           No Output Nodes Defined.
+                                               </div>
+
+                                               <table name="loadbalanceresdddetails" class="styledLeft" id="rrdprop>
+                                                                <tbody>
+                                                                 <tr name="lbrrddetails">
+                                                                 <td class="col-small"><fmt:message key="id"/> :</td>
+                                                                 <td>
+                                                                 <input type="text" id="rrdid"/>
+                                                                 </td>
+                                                    <td><input type="button" class="button" value="<fmt:message key="add.out"/>" onclick="addoutputnoderrdjoin()"/></td>
+                                                                 </tr>
+                                                                 </tbody>
+                                               </tr>
+                                               <td><input type="button" class="button" value="<fmt:message key="add"/>" onclick="addrrdorjoin()"/></td>
+                                               </tbody>
+                                               </table>
+
+     </td>
+ </tr>
+ <tr name= "loadbalanceresdddetails">
+ <td><input type="button" class="button" value="<fmt:message key="add.stream"/>" onclick="addstream()"/></td>
+ </tr>
+
+
+<tr name="lbrrddetails" style="display:none">
+    <td colspan="2" class="middle-header">
+        <fmt:message key="rrd.type"/>
+    </td>
+</tr>
+
+<tr name="lbrrddetails" style="display:none">
+    <td colspan="2">
+                <h4><fmt:message key="stream.details"/></h4>
+                <table  class="styledLeft" id="rrdtable" style="display:none">
+                    <thead>
+                    <th class="leftCol-med"><fmt:message key="id"/></th>
+                    <th><fmt:message key="actions"/></th>
+                    </thead>
+                </table>
+
+                <div class="noDataDiv-plain" id="norrd">
+                    No IDs Defined.
+                </div>
+                <table name="lbrrddetails" class="styledLeft" id="rrdprop" style="display:none">
+                <tbody>
+                 <tr name="lbrrddetails">
+                 <td class="col-small"><fmt:message key="id"/> :</td>
+                 <td>
+                 <input type="text" id="rrdidrrd"/>
+                 </td>
+                 </tr>
+                 <h4><fmt:message key="output.id"/></h4>
+                  <table  class="styledLeft" id="rrdoutputtableout" style="display:none">
+                                      <thead>
+                                      <th class="leftCol-med"><fmt:message key="id"/></th>
+                                      <th><fmt:message key="actions"/></th>
+                                      </thead>
+                                  </table>
+                              <div class="noDataDiv-plain" id="norrdout">
+                                                 No Output Nodes Defined.
+                                             </div>
+
+                    <table name="lbrrddetails" class="styledLeft" id="rrdprop" style="display:none">
+                                   <tbody>
+                                    <tr name="lbrrddetails">
+                                    <td class="col-small"><fmt:message key="id"/> :</td>
+                                    <td>
+                                    <input type="text" id="rrdidout"/>
+                                    </td>
+                       <td><input type="button" class="button" value="<fmt:message key="add"/>" onclick="addrrdid()"/></td>
+                                    </tr>
+                                    </tbody>
+                 </tr>
+                 <td><input type="button" class="button" value="<fmt:message key="add"/>" onclick="addrrd()"/></td>
+                 </tbody>
+                 </table>
     </td>
 </tr>
 
