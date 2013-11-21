@@ -12,8 +12,10 @@ import org.wso2.carbon.cep.admin.internal.util.ProductConstants;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.XpathDefinition;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.InnerOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Stream;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.MapInputMapping;
@@ -31,7 +33,6 @@ import org.wso2.carbon.cep.core.mapping.output.property.MapOutputProperty;
 import org.wso2.carbon.cep.core.mapping.output.property.TupleOutputProperty;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceCEPAdminException;
 import org.wso2.carbon.cep.stub.admin.CEPAdminServiceStub;
-import org.wso2.carbon.cep.stub.admin.internal.xsd.*;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.CEPEngineProviderConfigPropertyDTO;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.ExpressionDTO;
@@ -51,7 +52,8 @@ import org.wso2.carbon.cep.stub.admin.internal.xsd.OutputTuplePropertyDTO;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.OutputXMLMappingDTO;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.QueryDTO;
 import org.wso2.carbon.cep.stub.admin.internal.xsd.XpathDefinitionDTO;
-
+import  org.wso2.carbon.cep.stub.admin.internal.xsd.InnerOutputNodesDTO;
+import  org.wso2.carbon.cep.stub.admin.internal.xsd.StreamDTO;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Properties;
@@ -163,6 +165,50 @@ public class CEPAdminRemoteBucketDeployer  {
                     loadbalancerDTO.addLbOutputNodeDTOs(lbOutputNodeDTO);
                 }
 
+                loadbalancerDTO.setType(loadbalancer.getType());
+                if(loadbalancer.getType().equals("esd")){
+                  List<Stream> streams = loadbalancer.getStreamList();
+                   for(Stream stream:streams){
+                        StreamDTO streamDTO = new StreamDTO();
+                        streamDTO.setId(stream.getId());
+                        List<InnerOutputNode> innerOutputNodeList = stream.getInnerOutputNodeList();
+                          for(InnerOutputNode innerOutputNode:innerOutputNodeList){
+                             InnerOutputNodesDTO innerOutputNodesDTO = new InnerOutputNodesDTO();
+                             innerOutputNodesDTO.setId(innerOutputNode.getId());
+                              innerOutputNodesDTO.setType(innerOutputNode.getType());
+                              List<LBOutputNode> lbOutputNodeList = innerOutputNode.getLbOutputNodeList();
+                              for(LBOutputNode lbOutputNode:lbOutputNodeList){
+                                  LBOutputNodeDTO lbOutputNodeDTO = new LBOutputNodeDTO();
+                                  lbOutputNodeDTO.setId(lbOutputNode.getId());
+                                  lbOutputNodeDTO.setIp(lbOutputNode.getIp());
+                                  lbOutputNodeDTO.setPort(lbOutputNode.getPort());
+                                  innerOutputNodesDTO.addLbOutputNodeDTOs(lbOutputNodeDTO);
+
+                              }
+                             streamDTO.addInnerOutputNodesDTOs(innerOutputNodesDTO);
+                          }
+                        loadbalancerDTO.addStreamDTOs(streamDTO);
+
+                   }
+                }else if(loadbalancer.getType().equals("rrd")){
+                    List<InnerOutputNode> innerOutputNodeList = loadbalancer.getInnerOutputNodeList();
+                    for(InnerOutputNode innerOutputNode:innerOutputNodeList){
+                        InnerOutputNodesDTO innerOutputNodesDTO = new InnerOutputNodesDTO();
+                        innerOutputNodesDTO.setId(innerOutputNode.getId());
+                        innerOutputNodesDTO.setType(innerOutputNode.getType());
+                        List<LBOutputNode> lbOutputNodeList = innerOutputNode.getLbOutputNodeList();
+                        for(LBOutputNode lbOutputNode:lbOutputNodeList){
+                            LBOutputNodeDTO lbOutputNodeDTO = new LBOutputNodeDTO();
+                            lbOutputNodeDTO.setId(lbOutputNode.getId());
+                            lbOutputNodeDTO.setIp(lbOutputNode.getIp());
+                            lbOutputNodeDTO.setPort(lbOutputNode.getPort());
+                            innerOutputNodesDTO.addLbOutputNodeDTOs(lbOutputNodeDTO);
+
+                        }
+
+                      loadbalancerDTO.addInnerOutputNodesDTOs(innerOutputNodesDTO);
+                    }
+                }
                 Properties properties = new Properties();
                 properties.setProperty(ProductConstants.DISTRIBUTED_PROCESSING,"false");
                 Set<String> namesSet= properties.stringPropertyNames();
@@ -176,6 +222,7 @@ public class CEPAdminRemoteBucketDeployer  {
                 bucketDTO.addLoadbalancerDTOs(loadbalancerDTO);
             }
             return bucketDTO;
+
 
         }else if(bucket.getLoadbalancerList().size()==0){
             org.wso2.carbon.cep.stub.admin.internal.xsd.BucketDTO bucketDTO = new BucketDTO();
@@ -278,8 +325,6 @@ public class CEPAdminRemoteBucketDeployer  {
 
 
             //  bucketDTO.setInputs(CEPAdminUtils.adaptInput(bucket.getInputs()));
-
-
             return bucketDTO;
         }
         return null;

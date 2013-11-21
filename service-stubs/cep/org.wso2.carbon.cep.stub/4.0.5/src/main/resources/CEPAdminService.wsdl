@@ -225,14 +225,31 @@
             </xs:complexType>
             <xs:complexType name="LoadbalancerDTO">
                 <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="innerOutputNodesDTOs" nillable="true" type="ax217:InnerOutputNodesDTO"/>
                     <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string"/>
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="lbOutputNodeDTOs" nillable="true" type="ax217:LBOutputNodeDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="streamDTOs" nillable="true" type="ax217:StreamDTO"/>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="InnerOutputNodesDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="lbOutputNodeDTOs" nillable="true" type="ax217:LBOutputNodeDTO"/>
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="LBOutputNodeDTO">
                 <xs:sequence>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="port" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="StreamDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="innerOutputNodesDTOs" nillable="true" type="ax217:InnerOutputNodesDTO"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="QueryDTO">
@@ -730,13 +747,13 @@
     </wsdl:binding>
     <wsdl:service name="CEPAdminService">
         <wsdl:port name="CEPAdminServiceHttpsSoap11Endpoint" binding="tns:CEPAdminServiceSoap11Binding">
-            <soap:address location="https://10.216.246.91:9444/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://10.216.227.6:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsSoap12Endpoint" binding="tns:CEPAdminServiceSoap12Binding">
-            <soap12:address location="https://10.216.246.91:9444/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://10.216.227.6:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsEndpoint" binding="tns:CEPAdminServiceHttpBinding">
-            <http:address location="https://10.216.246.91:9444/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
+            <http:address location="https://10.216.227.6:9443/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

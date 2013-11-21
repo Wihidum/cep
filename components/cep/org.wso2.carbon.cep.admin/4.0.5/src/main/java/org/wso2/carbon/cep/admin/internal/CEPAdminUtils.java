@@ -23,8 +23,10 @@ import org.wso2.carbon.cep.admin.internal.exception.CEPAdminException;
 import org.wso2.carbon.cep.core.Expression;
 import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.core.XpathDefinition;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.InnerOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
+import org.wso2.carbon.cep.core.distributing.loadbalancer.Stream;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.cep.core.mapping.input.mapping.*;
@@ -78,28 +80,61 @@ public class CEPAdminUtils {
     }
 
     public static Loadbalancer adaptLoadbalancer(LoadbalancerDTO loadbalancerDTO) throws CEPAdminException {
-
-
         Loadbalancer loadbalancer = new Loadbalancer();
         loadbalancer.setIp(loadbalancerDTO.getIp());
+        loadbalancer.setType(loadbalancerDTO.getType());
         LBOutputNodeDTO[] lbOutputNodeDTOs = loadbalancerDTO.getLbOutputNodeDTOs();
         for(LBOutputNodeDTO lbOutputNodeDTO :lbOutputNodeDTOs){
             LBOutputNode lbOutputNode =adaptOutputNode(lbOutputNodeDTO);
             loadbalancer.addOutputNode(lbOutputNode);
         }
+        if(loadbalancerDTO.getType().equals("rrd")){
+            InnerOutputNodesDTO[] innerOutputNodesDTO = loadbalancerDTO.getInnerOutputNodesDTOs();
+             for(InnerOutputNodesDTO innerOutputNodesDTO1:innerOutputNodesDTO){
+                 InnerOutputNode innerOutputNode = adaptInnerOutputNode(innerOutputNodesDTO1);
+                 loadbalancer.addInnerOutputNode(innerOutputNode);
+             }
+        }else if(loadbalancerDTO.getType().equals("esd")){
+            StreamDTO[] streamDTOs = loadbalancerDTO.getStreamDTOs();
+            for(StreamDTO streamDTO:streamDTOs){
+                Stream stream = adaptStream(streamDTO);
+                loadbalancer.addStream(stream);
+            }
+        }
         return loadbalancer;
     }
 
     public static LBOutputNode adaptOutputNode(LBOutputNodeDTO lbOutputNodeDTO) throws CEPAdminException {
-         LBOutputNode lbOutputNode = new LBOutputNode();
+        LBOutputNode lbOutputNode = new LBOutputNode();
         String ip = lbOutputNodeDTO.getIp();
         String port = lbOutputNodeDTO.getPort();
         lbOutputNode.setIp(ip);
         lbOutputNode.setPort(port);
+        lbOutputNode.setId(lbOutputNodeDTO.getId());
         return  lbOutputNode;
     }
+    public static InnerOutputNode adaptInnerOutputNode(InnerOutputNodesDTO innerOutputNodesDTO) throws CEPAdminException {
+        InnerOutputNode innerOutputNode = new InnerOutputNode();
+        innerOutputNode.setId(innerOutputNodesDTO.getId());
+        innerOutputNode.setType(innerOutputNodesDTO.getType());
+        LBOutputNodeDTO[] lbOutputNodeDTOs =  innerOutputNodesDTO.getLbOutputNodeDTOs();
+        for(LBOutputNodeDTO lbOutputNodeDTO:lbOutputNodeDTOs){
+            LBOutputNode lbOutputNode =adaptOutputNode(lbOutputNodeDTO);
+            innerOutputNode.addLbOutputNode(lbOutputNode);
+        }
 
-
+        return  innerOutputNode;
+    }
+    public static Stream adaptStream(StreamDTO stream) throws CEPAdminException {
+       Stream streamOne = new Stream();
+       streamOne.setId(stream.getId());
+       InnerOutputNodesDTO[] innerOutputNodesDTOs = stream.getInnerOutputNodesDTOs();
+        for(InnerOutputNodesDTO innerOutputNodesDTO:innerOutputNodesDTOs){
+            InnerOutputNode innerOutputNode = adaptInnerOutputNode(innerOutputNodesDTO);
+            streamOne.addInnerOutputNode(innerOutputNode);
+        }
+      return streamOne;
+    }
 
 
     /**
