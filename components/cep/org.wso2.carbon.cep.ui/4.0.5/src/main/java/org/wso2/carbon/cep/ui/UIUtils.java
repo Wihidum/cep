@@ -20,6 +20,7 @@ public class UIUtils {
                 session) + "CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint";
         CEPAdminServiceStub stub = new CEPAdminServiceStub(configContext, serverURL);
         return stub;
+
     }
 }
 

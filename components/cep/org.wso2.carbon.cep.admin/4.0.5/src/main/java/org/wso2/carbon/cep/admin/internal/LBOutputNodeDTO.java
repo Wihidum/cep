@@ -4,7 +4,15 @@ package org.wso2.carbon.cep.admin.internal;
 public class LBOutputNodeDTO {
 
     private String ip;
+    private String id;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     private  String port;
 

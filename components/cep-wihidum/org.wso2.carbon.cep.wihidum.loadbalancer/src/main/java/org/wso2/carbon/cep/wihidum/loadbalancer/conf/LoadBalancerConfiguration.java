@@ -7,8 +7,9 @@ import org.wso2.carbon.cep.wihidum.loadbalancer.eventdivider.impl.EventRRDivider
 import org.wso2.carbon.cep.wihidum.loadbalancer.exception.LoadBalancerConfigException;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConfBuilder;
 import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConstants;
+import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.InnerLB;
+import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.LBStream;
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -29,6 +30,35 @@ public class LoadBalancerConfiguration {
     private int reciverbundlesize;
     private int eventDivideCount;
     private List<Node> nodeList = new ArrayList<Node>();
+    private  List<InnerLB> RRDList = new ArrayList<InnerLB>();
+    private  List<InnerLB> joinList = new ArrayList<InnerLB>();
+    private  List<LBStream> lbStreamList = new ArrayList<LBStream>();
+
+
+    public List<InnerLB> getRRDList() {
+        return RRDList;
+    }
+
+    public void addRRDList(InnerLB innerLB) {
+        RRDList.add(innerLB);
+    }
+
+    public List<InnerLB> getJoinList() {
+        return joinList;
+    }
+
+    public void addJoinList(InnerLB innerLB) {
+        joinList.add(innerLB);
+    }
+
+    public List<LBStream> getLbStreamList() {
+        return lbStreamList;
+    }
+
+    public void addLbStreamList(LBStream lbStream) {
+        lbStreamList.add(lbStream);
+    }
+
     //node map implementation explanation can be located at
     //http://howtodoinjava.com/2013/05/27/best-practices-for-using-concurrenthashmap/
     //senderMap will hold both node and RRD objects
@@ -174,10 +204,15 @@ public class LoadBalancerConfiguration {
 
     public void clearOutputNodes(){
         nodeList.clear();
+        RRDList.clear();
+        joinList.clear();
+        lbStreamList.clear();
+        senderMap.clear();
+        ESDConfig.clear();
     }
 
     public static LoadBalancerConfiguration getInstance() {
-        if (loadBalancerConfiguration == null) {
+        if (loadBalancerConfiguration == null){
             OMElement omElement = null;
             try {
                 omElement = LoadBalancerConfBuilder.loadConfigXML();
