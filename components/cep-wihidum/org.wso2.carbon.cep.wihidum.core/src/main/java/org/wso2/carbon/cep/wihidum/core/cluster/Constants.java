@@ -14,6 +14,7 @@ public class Constants {
     public static final String MASTER_BUCKET = "master";
     public static final String MANAGER = "manager";
     public static final String DEPUTY_MANAGER = "deputyManager";
+    public static final String LOADBALANCER_LIST = "load-balancerList";
     public static final int SUPER_TENANT = -1234;
     //public static final String AUTHENTICATOR_URL = "authenticatorURL";
 
