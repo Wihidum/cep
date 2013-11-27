@@ -24,7 +24,6 @@ public class JoinSplitter {
     public Map<String, Bucket> getBucketList(Bucket bucket) {
         logger.info("Distributing join operator");
         return splitJoinQuery(bucket);
-
     }
 
 
@@ -54,11 +53,17 @@ public class JoinSplitter {
 
         for (String ip : bucket.getQueries().get(0).getIpList()){
                 logger.info("Adding join bucket to each IP address");
+            if(originalQuery.getOutput().getBrokerName()!=null)
+            {
                 remoteBucketDeployer.deploy(originalQuery.getOutput().getBrokerName(),ip);
-                bucketMap.put(ip,subBucket);
+            }
+            bucketMap.put(ip,subBucket);
         }
         return  bucketMap;
     }
 
 
-    }
+
+
+
+   }

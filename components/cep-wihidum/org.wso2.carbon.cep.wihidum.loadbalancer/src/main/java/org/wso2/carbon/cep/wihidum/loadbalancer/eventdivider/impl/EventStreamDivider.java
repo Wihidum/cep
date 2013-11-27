@@ -7,8 +7,7 @@ import org.wso2.carbon.cep.wihidum.loadbalancer.internal.util.LoadBalancerConsta
 import org.wso2.carbon.cep.wihidum.loadbalancer.nodemanager.Node;
 import org.wso2.carbon.cep.wihidum.loadbalancer.utils.EventComposite;
 import org.wso2.carbon.databridge.commons.Event;
-import org.wso2.siddhi.query.api.QueryFactory;
-import org.wso2.siddhi.query.api.query.Query;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class EventStreamDivider implements Divider {
-    final static Query query = QueryFactory.createQuery();
+    
     private static List<Node> nodelist;
     private int eventCount;
     private int nodeCount;
