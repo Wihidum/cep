@@ -50,11 +50,17 @@ public class JoinSplitter {
         RemoteBrokerDeployer remoteBucketDeployer = RemoteBrokerDeployer.getInstance();
 
         for (String ip : bucket.getQueries().get(0).getIpList()){
+            if(originalQuery.getOutput().getBrokerName()!=null)
+            {
                 remoteBucketDeployer.deploy(originalQuery.getOutput().getBrokerName(),ip);
-                bucketMap.put(ip,subBucket);
+            }
+            bucketMap.put(ip,subBucket);
         }
         return  bucketMap;
     }
 
 
-    }
+
+
+
+   }

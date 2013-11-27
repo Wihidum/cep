@@ -185,7 +185,10 @@ public class PatternSplitter {
         patternBucket.addQuery(finalQuery);
 
         RemoteBrokerDeployer remoteBucketDeployer = RemoteBrokerDeployer.getInstance();
-        remoteBucketDeployer.deploy(output.getBrokerName(),ipList.get(ipList.size() - 1));
+        if(output.getBrokerName()!=null)
+        {
+            remoteBucketDeployer.deploy(output.getBrokerName(),ipList.get(ipList.size() - 1));
+        }
 
         bucketMap.put(ipList.get(ipList.size() - 1), patternBucket);
         return bucketMap;
