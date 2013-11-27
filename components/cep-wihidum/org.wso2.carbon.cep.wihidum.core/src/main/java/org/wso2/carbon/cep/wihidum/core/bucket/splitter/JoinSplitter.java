@@ -24,7 +24,6 @@ public class JoinSplitter {
     public Map<String, Bucket> getBucketList(Bucket bucket) {
         logger.info("Distributing join operator");
         return splitJoinQuery(bucket);
-
     }
 
 
