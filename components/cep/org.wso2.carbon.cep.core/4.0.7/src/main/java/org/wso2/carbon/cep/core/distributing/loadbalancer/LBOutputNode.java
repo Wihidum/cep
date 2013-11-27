@@ -5,7 +5,15 @@ public class LBOutputNode {
 
   private  String ip;
   private String port;
+  private String id;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getIp() {
         return ip;

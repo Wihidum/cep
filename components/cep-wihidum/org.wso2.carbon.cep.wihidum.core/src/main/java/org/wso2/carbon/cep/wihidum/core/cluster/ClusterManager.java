@@ -12,7 +12,6 @@ import org.wso2.carbon.context.CarbonContext;
 
 import java.net.InetSocketAddress;
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ClusterManager {
 
@@ -118,13 +117,19 @@ public class ClusterManager {
     }
 
     /*
-    Set bucket configuration in Hazelcast
-    @nodeAddress: ip address of the node
-    @bucket: Bucket configuration of the node.
+    Set cluster configuration in Hazelcast
      */
-    public void setBucketConfigurations(String nodeAddress,Object bucket){
-       Map<String,Object> bucketConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
-       bucketConfigurations.put(nodeAddress,bucket);
+    public void setClusterConfigurations(String key, Object value){
+       Map<String,Object> clusterConfigs = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+       clusterConfigs.put(key, value);
     }
+
+    public Object getClusterConfigurations(String key){
+        Map<String,Object> clusterConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
+        Object config;
+        config = clusterConfigurations.get(key);
+        return config;
+    }
+
 
 }

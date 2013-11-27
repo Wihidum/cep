@@ -1,5 +1,6 @@
 package org.wso2.carbon.cep.wihidum.core.bucket.splitter;
 
+import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Expression;
 import org.wso2.carbon.cep.core.Query;
@@ -27,8 +28,8 @@ import java.util.Map;
  */
 public class PatternSplitter {
 
+    private static Logger logger = Logger.getLogger(PatternSplitter.class);
     private static final String DISTRIBUTED_PROCESSING = "siddhi.enable.distributed.processing";
-
 
     //from e1 = cseEventStream [ price >= 50 and volume > 100 ] -> e2 = cseEventStream [price <= 40 ] <:5>
     // -> e3 = cseEventStream [volume <= 70 ] insert into StockQuote e1.symbol as symbol1,e2[0].symbol as symbol2,e3.symbol as symbol3 ;
@@ -40,6 +41,7 @@ public class PatternSplitter {
     //a1.action as action, b1.price as price
 
     public Map<String, Bucket> getBucketList(Bucket bucket) {
+        logger.info("Distributing pattern operator");
         return splitPatternQuery(bucket, bucket.getQueries().get(0));
 
     }
@@ -50,11 +52,15 @@ public class PatternSplitter {
 
         List<String> ipList = patternQuery.getIpList();
         String queryText = patternQuery.getExpression().getText();
+
+        //identifying conditions defined in the pattern query
         String[] conditions = queryText.split("->");
         int i;
+
+        //creating a separate bucket for each condition
         for (i = 0; i < conditions.length; i++) {
 
-
+            logger.info("Adding query for "+i+1+" condition of the pattern query");
             Query subQuery = new Query();
             String expression;
             String inputStreamWithCondition = conditions[i].substring(conditions[i].indexOf("=") + 1, conditions[i].indexOf("]") + 1);
@@ -106,7 +112,7 @@ public class PatternSplitter {
 
             List<TupleOutputProperty> outputProperties = new ArrayList<TupleOutputProperty>();
 
-
+            //adding input mappings
             TupleInputMapping tupleInputMapping = (TupleInputMapping) subQueryInput.getInputMapping();
 
             for (TupleInputProperty inputProperty : tupleInputMapping.getProperties()) {
@@ -144,7 +150,6 @@ public class PatternSplitter {
         patternBucket.setDescription(bucket.getDescription());
         patternBucket.setEngineProvider(bucket.getEngineProvider());
 
-        //List<Input> patternBucketInput = new ArrayList<Input>();
         for (Input input : bucket.getInputs()) {
             Input patternInput = new Input();
             patternInput.setBrokerName("localAgentBroker");

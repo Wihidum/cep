@@ -61,17 +61,16 @@
     bucket.setDescription(bucketDescription);
     bucket.setEngineProvider(engineProvider.trim());
 
-    String message = "";
+    String message = "execute 2";
     if (inputs != null){
-        bucket.setInputs(inputs.toArray(new InputDTO[inputs.size()]));
+            bucket.setInputs(inputs.toArray(new InputDTO[inputs.size()]));
     }
 
     if (queries != null){
-        bucket.setQueries(queries.toArray(new QueryDTO[queries.size()]));
+            bucket.setQueries(queries.toArray(new QueryDTO[queries.size()]));
     }
       if (loadbalancers != null){
             bucket.setLoadbalancerDTOs(loadbalancers.toArray(new LoadbalancerDTO[loadbalancers.size()]));
-
         }
     try {
         stub.addBucket(bucket);
@@ -79,7 +78,7 @@
         session.removeAttribute("editingBucket");
         session.removeAttribute("inputs");
         session.removeAttribute("queries");
-         session.removeAttribute("loadbalancers");
+        session.removeAttribute("loadbalancers");
         session.removeAttribute("tempBucketInformation");
     } catch (CEPAdminServiceCEPAdminException e) {
         message = "Error in adding bucket :" + e.getFaultMessage().

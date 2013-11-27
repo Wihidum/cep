@@ -1,5 +1,6 @@
 package org.wso2.carbon.cep.wihidum.core.bucket.splitter;
 
+import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
 import org.wso2.carbon.cep.wihidum.core.broker.RemoteBrokerDeployer;
@@ -16,10 +17,12 @@ import java.util.Map;
  */
 public class JoinSplitter {
 
+    private static Logger logger = Logger.getLogger(JoinSplitter.class);
     private static final String DISTRIBUTED_PROCESSING = "siddhi.enable.distributed.processing";
 
 
-        public Map<String, Bucket> getBucketList(Bucket bucket) {
+    public Map<String, Bucket> getBucketList(Bucket bucket) {
+        logger.info("Distributing join operator");
         return splitJoinQuery(bucket);
 
     }
@@ -50,6 +53,7 @@ public class JoinSplitter {
         RemoteBrokerDeployer remoteBucketDeployer = RemoteBrokerDeployer.getInstance();
 
         for (String ip : bucket.getQueries().get(0).getIpList()){
+                logger.info("Adding join bucket to each IP address");
             if(originalQuery.getOutput().getBrokerName()!=null)
             {
                 remoteBucketDeployer.deploy(originalQuery.getOutput().getBrokerName(),ip);
