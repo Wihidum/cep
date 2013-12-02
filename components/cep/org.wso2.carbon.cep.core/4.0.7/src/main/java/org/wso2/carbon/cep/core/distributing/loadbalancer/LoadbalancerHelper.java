@@ -28,10 +28,31 @@ public class LoadbalancerHelper {
         ip.setText(loadbalancer.getIp());
         loadbalancerOM.addChild(ip);
 
+        OMElement type = factory.createOMElement(new QName(
+                CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_ATTR_TYPE,
+                CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+        type.setText(loadbalancer.getIp());
+        loadbalancerOM.addChild(type);
+
         List<LBOutputNode> lbOutputNodes = loadbalancer.getOutputNodeList();
-        if (lbOutputNodes.size() > 0) {
-            for (LBOutputNode lbOutputNode : lbOutputNodes) {
+        if (lbOutputNodes.size() > 0){
+            for (LBOutputNode lbOutputNode : lbOutputNodes){
                 OMElement element = LBOutputNodeHelper.toOM(lbOutputNode);
+                loadbalancerOM.addChild(element);
+            }
+        }
+        List<InnerOutputNode> innerOutputNodeList = loadbalancer.getInnerOutputNodeList();
+        if (innerOutputNodeList .size() > 0){
+            for (InnerOutputNode innerOutputNode : innerOutputNodeList){
+                OMElement element = InnerOutputNodeHelper.toOM(innerOutputNode);
+                loadbalancerOM.addChild(element);
+            }
+        }
+        List<Stream> streamList = loadbalancer.getStreamList();
+        if (streamList  .size() > 0){
+            for (Stream stream : streamList){
+                OMElement element = StreamHelper.toOM(stream);
                 loadbalancerOM.addChild(element);
             }
         }
@@ -49,6 +70,12 @@ public class LoadbalancerHelper {
         if (ip != null) {
             loadbalancer.setIp(ip.getText().trim());
         }
+        OMElement type =
+                lbElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                        CEPConstants.CEP_CONF_ATTR_TYPE));
+        if (type != null) {
+            loadbalancer.setType(type.getText().trim());
+        }
 
         OMElement outputOmElement = null;
 
@@ -60,6 +87,26 @@ public class LoadbalancerHelper {
             loadbalancer.addOutputNode(outputNode);
 
         }
+
+        OMElement streamOmElement = null;
+
+        for (Iterator iterator = lbElement.getChildrenWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_ATTR_STREAM)); iterator.hasNext(); ) {
+            streamOmElement = (OMElement) iterator.next();
+            Stream stream = StreamHelper.fromOM(streamOmElement);
+            loadbalancer.addStream(stream);
+        }
+        OMElement innerOmElement = null;
+
+        for (Iterator iterator = lbElement.getChildrenWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                CEPConstants.CEP_CONF_INNER_OUTPUT)); iterator.hasNext(); ) {
+            innerOmElement = (OMElement) iterator.next();
+            InnerOutputNode   innerOutputNode = InnerOutputNodeHelper.fromOM(innerOmElement);
+
+            loadbalancer.addInnerOutputNode(innerOutputNode);
+
+        }
+
         return loadbalancer;
     }
 

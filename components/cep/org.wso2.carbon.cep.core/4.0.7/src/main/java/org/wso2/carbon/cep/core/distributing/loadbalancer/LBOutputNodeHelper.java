@@ -30,6 +30,15 @@ public class LBOutputNodeHelper {
                CEPConstants.CEP_CONF_PORT,
                CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
        port.setText(lbOutputNode.getPort());
+
+       if(lbOutputNode.getId()!= null){
+           OMElement id = factory.createOMElement(new QName(
+                   CEPConstants.CEP_CONF_NAMESPACE,
+                   CEPConstants.CEP_CONF_LB_ID,
+                   CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
+           id.setText(lbOutputNode.getId());
+           outputNode.addChild(id);
+       }
        outputNode.addChild(ip);
        outputNode.addChild(port);
        return outputNode;
@@ -49,6 +58,12 @@ public class LBOutputNodeHelper {
                         CEPConstants.CEP_CONF_PORT));
         if (port != null) {
             lbOutputNode.setPort(port.getText().trim());
+        }
+        OMElement id =
+                outputElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
+                        CEPConstants.CEP_CONF_LB_ID));
+        if (id != null) {
+            lbOutputNode.setPort(id.getText().trim());
         }
           return lbOutputNode;
     }

@@ -1,6 +1,7 @@
 package org.wso2.carbon.cep.wihidum.core.cluster;
 
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.admin.internal.CEPAdminRemoteBucketDeployer;
@@ -11,6 +12,7 @@ import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Stream;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
+import org.wso2.carbon.cep.core.internal.config.BucketHelper;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
 
 import java.util.ArrayList;
@@ -52,7 +54,8 @@ public class FaultHandler {
             else if(ipAddress.equals(manager) && deputyManager.equals(localIP)){
                 clusterManager.setClusterConfigurations(Constants.MANAGER, localIP);
                 clusterManager.setClusterConfigurations(Constants.DEPUTY_MANAGER, nominator.nominateDeputyManager());
-                bucket = (Bucket)clusterManager.getBucketConfigurations().get(Constants.MASTER_BUCKET);
+                OMElement bucketOM = (OMElement)(clusterManager.getClusterConfigurations(Constants.MASTER_BUCKET));
+                bucket = BucketHelper.fromOM(bucketOM);
                 reconfigureBucket(bucket,ipAddress);
             }
         } catch (CEPConfigurationException e) {

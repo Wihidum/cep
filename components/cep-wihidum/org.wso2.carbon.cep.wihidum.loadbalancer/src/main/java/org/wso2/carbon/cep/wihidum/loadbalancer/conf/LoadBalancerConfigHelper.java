@@ -122,7 +122,6 @@ public class LoadBalancerConfigHelper {
                 Iterator iteratorOne = omElementChild.getChildren();
                 for (; iteratorOne.hasNext(); ) {
                     Object obj = iteratorOne.next();
-
                     if (obj instanceof OMElement && ((OMElement) obj).getLocalName().equals("stream")) {
                         Iterator iteratorTwo = ((OMElement) obj).getChildren();
                         String streamId = ((OMElement) obj).getAttribute(new QName("id")).getAttributeValue();
@@ -131,7 +130,7 @@ public class LoadBalancerConfigHelper {
                             Object obj1 = iteratorTwo.next();
                             if (obj1 instanceof OMElement) {
                                 if (((OMElement) obj1).getLocalName().equals("outputnode") ||
-                                        ((OMElement) obj1).getLocalName().equals("RRD")) {
+                                        ((OMElement) obj1).getLocalName().equals("RRD")){
                                     senderIdList.add(((OMElement) obj1).getAttribute(new QName("id")).getAttributeValue());
                                 }
                             }
@@ -144,7 +143,6 @@ public class LoadBalancerConfigHelper {
             } else if (omElementChild.getLocalName().equals("workerthreads")) {
                 loadBalancerConfiguration.setQueueWorkerThreads(Integer.parseInt(omElementChild.getText().trim()));
             }
-
         }
         return loadBalancerConfiguration;
     }
@@ -215,12 +213,14 @@ public class LoadBalancerConfigHelper {
             OMElement rrd = factory.createOMElement(new QName("","RRD"));
             String id = innerLB.getId();
             rrd.addAttribute("id",id,factory.createOMNamespace("",""));
+            String RRDId = id;
             List<String> outputnodelist = innerLB.getOutputNodeIdList();
             for(String outlist:outputnodelist){
                 OMElement output = factory.createOMElement(new QName("","outputnode"));
                 output.addAttribute("id",outlist,factory.createOMNamespace("","")) ;
                 rrd.addChild(output);
             }
+            loadBalancerConfiguration.addRRDconfig(id,outputnodelist);
             RRDs.addChild(rrd);
         }
       loadbalncer.addChild(RRDs);
@@ -236,6 +236,7 @@ public class LoadBalancerConfigHelper {
                 output.addAttribute("id",outlist,factory.createOMNamespace("","")) ;
                 rrd.addChild(output);
             }
+            loadBalancerConfiguration.addJoinconfig(id,outputnodelist);
             joins.addChild(rrd);
 
         }
@@ -247,24 +248,30 @@ public class LoadBalancerConfigHelper {
             String id = innerLB.getId();
             rrd.addAttribute("id",id,factory.createOMNamespace("",""));
             List<String> outputnodelist = innerLB.getDirectList();
+            String streamId = id;
+            ArrayList<String> senderIdList = new ArrayList<String>();
             for(String outlist:outputnodelist){
                 OMElement output = factory.createOMElement(new QName("","outputnode"));
                 output.addAttribute("id",outlist,factory.createOMNamespace("",""));
+                senderIdList.add(outlist);
                 rrd.addChild(output);
             }
             List<String> rrdlist = innerLB.getRrdList();
             for(String outlist:rrdlist ){
                 OMElement output = factory.createOMElement(new QName("","RRD"));
                 output.addAttribute("id",outlist,factory.createOMNamespace("",""));
+                senderIdList.add(outlist);
                 rrd.addChild(output);
             }
             List<String> joinlist = innerLB.getJoinList();
             for(String outlist:joinlist ){
                 OMElement output = factory.createOMElement(new QName("","join"));
                 output.addAttribute("id",outlist,factory.createOMNamespace("",""));
+                senderIdList.add(outlist);
                 rrd.addChild(output);
             }
             ESDs.addChild(rrd);
+           loadBalancerConfiguration.addESDConfig(streamId,senderIdList);
         }
          loadbalncer.addChild(ESDs);
         return  loadbalncer;
