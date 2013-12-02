@@ -2,6 +2,7 @@
 package org.wso2.carbon.cep.wihidum.core.cluster;
 
 import com.hazelcast.config.Config;
+import com.hazelcast.config.UrlXmlConfig;
 import com.hazelcast.core.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,9 @@ public class ClusterManager {
         Cluster cluster = hazelcastInstance.getCluster();
         localMember = cluster.getLocalMember();
         memberList = new Vector<Member>();
+        /*for(Member member:cluster.getMembers()){
+            memberList.add(member);
+        }*/
         cluster.addMembershipListener(new MembershipListener() {
             public void memberAdded(MembershipEvent membersipEvent) {
                 configureBrokers(membersipEvent.getMember());

@@ -2,6 +2,7 @@ package org.wso2.carbon.cep.wihidum.core.cluster;
 
 
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
+import org.wso2.carbon.cep.core.Bucket;
 
 import java.util.List;
 
@@ -13,13 +14,14 @@ public class NodeNominator {
     }
 
     public String nominateDeputyManager(){
-       if((clusterManager.getClusterConfigurations(Constants.LOADBALANCER_LIST))!= null){
-           List<Loadbalancer> lbList = (List<Loadbalancer>) clusterManager.getClusterConfigurations(Constants.LOADBALANCER_LIST);
-           List<String> memeberList = clusterManager.getMemberList();
+       if(((Bucket)(clusterManager.getClusterConfigurations(Constants.MASTER_BUCKET))).getLoadbalancerList()!= null){
+           List<Loadbalancer> lbList = (List<Loadbalancer>) ((Bucket)(clusterManager.getClusterConfigurations(Constants.MASTER_BUCKET))).getLoadbalancerList();
+           List<String> memberList = clusterManager.getMemberList();
            for (Loadbalancer lb:lbList){
-               memeberList.remove(lb.getIp());
+               memberList.remove(lb.getIp());
            }
-           return memeberList.get(1);
+           memberList.remove(clusterManager.getClusterConfigurations(Constants.MANAGER));
+           return memberList.get(1);
        }
        return clusterManager.getMemberList().get(1);
     }

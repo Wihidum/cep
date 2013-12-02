@@ -12,6 +12,11 @@ public class Stream {
         return id;
     }
 
+
+    public void setInnerOutputNodeList(List<InnerOutputNode> innerOutputNodeList) {
+        this.innerOutputNodeList = innerOutputNodeList;
+    }
+
     public void setId(String id) {
         this.id = id;
     }

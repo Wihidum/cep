@@ -50,4 +50,16 @@ public class Loadbalancer {
     public void addOutputNode(LBOutputNode outputNodeList) {
         this.outputNodeList.add(outputNodeList);
     }
+
+    public void setOutputNodeList(List<LBOutputNode> outputList){
+        this.outputNodeList = outputList;
+    }
+
+    public void setInnerOutputNodeList(List<InnerOutputNode> innerOutputList){
+        this.innerOutputNodeList = innerOutputList;
+    }
+
+    public void setStreamList(List<Stream> streamList){
+        this.streamList = streamList;
+    }
 }
