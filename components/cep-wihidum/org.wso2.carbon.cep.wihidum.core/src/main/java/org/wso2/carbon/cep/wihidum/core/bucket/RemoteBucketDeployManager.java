@@ -61,7 +61,7 @@ public class RemoteBucketDeployManager implements DistributingWihidumValueHolder
 
         clusterManager.setClusterConfigurations(Constants.MANAGER, manger);
         clusterManager.setClusterConfigurations(Constants.DEPUTY_MANAGER, deputyManager);
-        clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, bucket);
-        clusterManager.setClusterConfigurations(Constants.LOADBALANCER_LIST, loadbalancerList);
+        //clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, bucket);
+        //clusterManager.setClusterConfigurations(Constants.LOADBALANCER_LIST, loadbalancerList);
     }
 }
