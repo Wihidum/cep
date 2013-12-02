@@ -1,14 +1,15 @@
 package org.wso2.carbon.cep.wihidum.core.bucket;
 
+import org.apache.axiom.om.OMElement;
 import org.wso2.carbon.cep.admin.internal.CEPAdminRemoteBucketDeployer;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.distributing.DistributingBucketProvider;
-
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.cep.core.distributing.DistributingWihidumValueHolder;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
+import org.wso2.carbon.cep.core.internal.config.BucketHelper;
 import org.wso2.carbon.cep.wihidum.core.cluster.ClusterManager;
 import org.wso2.carbon.cep.wihidum.core.cluster.Constants;
 import org.wso2.carbon.cep.wihidum.core.cluster.NodeNominator;
@@ -56,12 +57,10 @@ public class RemoteBucketDeployManager implements DistributingWihidumValueHolder
         ClusterManager clusterManager = ClusterManager.getInstant();
         String manger = clusterManager.getLocalMemberAddress();
         String deputyManager = nodeNominator.nominateDeputyManager();
-        List<Loadbalancer> loadbalancerList;
-        loadbalancerList = bucket.getLoadbalancerList();
-
+         OMElement bucketOM = BucketHelper.bucketToOM(bucket);
         clusterManager.setClusterConfigurations(Constants.MANAGER, manger);
         clusterManager.setClusterConfigurations(Constants.DEPUTY_MANAGER, deputyManager);
-        //clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, bucket);
-        //clusterManager.setClusterConfigurations(Constants.LOADBALANCER_LIST, loadbalancerList);
+        clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, bucketOM);
+
     }
 }

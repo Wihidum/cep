@@ -50,6 +50,7 @@ public interface CEPConstants {
     String CE_CONF_ELE_XML_FIELD_TYPE = "xmlFieldType";
     String CEP_CONF_ATTR_INPUT_TUPLE_DATA_TYPE ="inputDataType" ;
     String CEP_CONF_QUERY_IP="ip";
+    String CEP_CONF_LB_ID="id";
     String CEP_CONF_MASTER_BUCKET="master";
 
 
@@ -74,7 +75,8 @@ public interface CEPConstants {
     String CEP_CONF_LOADBALANCER ="loadbalancer";
     String CEP_CONF_OUTPUTNODE="outputnode";
     String CEP_CONF_PORT="port";
-
+    String CEP_CONF_INNER_OUTPUT="innernode";
+    String CEP_CONF_STREAM="stream";
 
 
 

@@ -8,7 +8,6 @@ import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.BucketBasicInfo;
 import org.wso2.carbon.cep.core.CEPServiceInterface;
 import org.wso2.carbon.cep.core.Query;
-import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
 import org.wso2.carbon.cep.core.mapping.input.Input;
 import org.wso2.carbon.core.AbstractAdmin;
