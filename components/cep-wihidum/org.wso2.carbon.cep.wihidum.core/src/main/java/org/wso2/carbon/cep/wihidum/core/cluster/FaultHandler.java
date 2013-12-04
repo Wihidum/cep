@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cep.admin.internal.CEPAdminRemoteBucketDeployer;
 import org.wso2.carbon.cep.core.Bucket;
 import org.wso2.carbon.cep.core.Query;
+import org.wso2.carbon.cep.core.distributing.Util;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.InnerOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.LBOutputNode;
 import org.wso2.carbon.cep.core.distributing.loadbalancer.Loadbalancer;
@@ -48,14 +49,14 @@ public class FaultHandler {
                if(ipAddress.equals(deputyManager)){
                   clusterManager.setClusterConfigurations(Constants.DEPUTY_MANAGER, nominator.nominateDeputyManager());
                }
-                bucket = (Bucket)clusterManager.getBucketConfigurations().get(Constants.MASTER_BUCKET);
-                reconfigureBucket(bucket,ipAddress);
+                OMElement omElement = (OMElement)clusterManager.getBucketConfigurations().get(Constants.MASTER_BUCKET);
+                reconfigureBucket( Util.getBucket(omElement), ipAddress);
             }
             else if(ipAddress.equals(manager) && deputyManager.equals(localIP)){
                 clusterManager.setClusterConfigurations(Constants.MANAGER, localIP);
                 clusterManager.setClusterConfigurations(Constants.DEPUTY_MANAGER, nominator.nominateDeputyManager());
                 OMElement bucketOM = (OMElement)(clusterManager.getClusterConfigurations(Constants.MASTER_BUCKET));
-                bucket = BucketHelper.fromOM(bucketOM);
+                bucket = Util.getBucket(bucketOM);
                 reconfigureBucket(bucket,ipAddress);
             }
         } catch (CEPConfigurationException e) {
@@ -91,7 +92,7 @@ public class FaultHandler {
            }
            index ++;
         }
-        clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, bucket);
+        clusterManager.setClusterConfigurations(Constants.MASTER_BUCKET, Util.getOM(bucket));
         deployBucket(bucket);
     }
 

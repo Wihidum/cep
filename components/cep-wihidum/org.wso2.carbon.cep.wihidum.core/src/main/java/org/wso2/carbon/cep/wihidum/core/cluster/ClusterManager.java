@@ -4,6 +4,8 @@ package org.wso2.carbon.cep.wihidum.core.cluster;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.UrlXmlConfig;
 import com.hazelcast.core.*;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.brokermanager.core.BrokerConfiguration;
@@ -11,6 +13,7 @@ import org.wso2.carbon.brokermanager.core.exception.BMConfigurationException;
 import org.wso2.carbon.cep.wihidum.core.internal.WihidumCoreValueHolder;
 import org.wso2.carbon.context.CarbonContext;
 
+import javax.xml.stream.XMLStreamException;
 import java.net.InetSocketAddress;
 import java.util.*;
 
@@ -125,13 +128,22 @@ public class ClusterManager {
      */
     public void setClusterConfigurations(String key, Object value){
        Map<String,Object> clusterConfigs = hazelcastInstance.getMap(Constants.CONFIG_MAP);
-       clusterConfigs.put(key, value);
+        if(value instanceof OMElement){
+       clusterConfigs.put(key, value.toString());
+        }
     }
 
     public Object getClusterConfigurations(String key){
         Map<String,Object> clusterConfigurations = hazelcastInstance.getMap(Constants.CONFIG_MAP);
         Object config;
         config = clusterConfigurations.get(key);
+        if(config instanceof String){
+            try {
+                config = AXIOMUtil.stringToOM((String)config);
+            } catch (XMLStreamException e) {
+                e.printStackTrace();
+            }
+        }
         return config;
     }
 

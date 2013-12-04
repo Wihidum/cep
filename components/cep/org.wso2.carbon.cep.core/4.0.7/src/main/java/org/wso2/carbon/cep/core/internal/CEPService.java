@@ -96,11 +96,13 @@ public class CEPService implements CEPServiceInterface {
 
     public void addBucket(Bucket bucket, AxisConfiguration axisConfiguration)
             throws CEPConfigurationException {
+        String bucketPath = createCEPBucketDirectories(bucket, axisConfiguration);
         if(bucket.getProviderConfigurationProperties().getProperty(CEPConstants.DISTRIBUTED_PROCESSING).equals("true")){
             if(bucket.getLoadbalancerList().size()>0){
                 String distributed =   bucket.getProviderConfigurationProperties().getProperty("siddhi.enable.distributed.processing");
                 if(distributed.equals("true")){
                     bucket.setMaster(true);
+                    CEPResourcePersister.save(bucket, bucketPath);
                 }
             }
             deployBucket(bucket,axisConfiguration,createCEPBucketDirectories(bucket, axisConfiguration));
@@ -110,7 +112,7 @@ public class CEPService implements CEPServiceInterface {
         if (buckets != null && buckets.containsKey(bucket.getName())) {
             throw new CEPConfigurationException("A bucket with name " + bucket.getName() + " already exist!");
         }
-        String bucketPath = createCEPBucketDirectories(bucket, axisConfiguration);
+
         try {
             if(bucket.getLoadbalancerList().size()==0){
             CEPResourcePersister.save(bucket, bucketPath);
