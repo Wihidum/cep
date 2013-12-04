@@ -747,13 +747,13 @@
     </wsdl:binding>
     <wsdl:service name="CEPAdminService">
         <wsdl:port name="CEPAdminServiceHttpsSoap11Endpoint" binding="tns:CEPAdminServiceSoap11Binding">
-            <soap:address location="https://10.216.227.6:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
+            <soap:address location="https://127.0.0.1:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsSoap12Endpoint" binding="tns:CEPAdminServiceSoap12Binding">
-            <soap12:address location="https://10.216.227.6:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
+            <soap12:address location="https://127.0.0.1:9443/services/CEPAdminService.CEPAdminServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="CEPAdminServiceHttpsEndpoint" binding="tns:CEPAdminServiceHttpBinding">
-            <http:address location="https://10.216.227.6:9443/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
+            <http:address location="https://127.0.0.1:9443/services/CEPAdminService.CEPAdminServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
