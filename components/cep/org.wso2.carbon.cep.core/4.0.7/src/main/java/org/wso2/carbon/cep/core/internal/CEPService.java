@@ -308,12 +308,87 @@ public class CEPService implements CEPServiceInterface {
         return deployBucket(bucket, cepEngineProvider, axisConfiguration, bucketPath);
 
         } else if(bucket.getLoadbalancerList().size()>0 && ! bucket.isMaster()){
-            // update loadbalancer configuration
-        LoadBalancerConfiguration loadBalancerConfiguration =    LoadBalancerConfiguration.getInstance();
+            LoadBalancerConfiguration loadBalancerConfiguration =    LoadBalancerConfiguration.getInstance();
             loadBalancerConfiguration.setLoadbalanceron(true);
-          Loadbalancer lb = bucket.getLoadbalancerList().get(0);
+            Loadbalancer lb = bucket.getLoadbalancerList().get(0);
+            loadBalancerConfiguration.clearOutputNodes();
             for(LBOutputNode lbOutputNode:lb.getOutputNodeList()){
                 loadBalancerConfiguration.addOutputNode(lbOutputNode.getIp(),lbOutputNode.getPort());
+            }
+            List<Stream> streamList =   lb.getStreamList();
+            for(Stream stream:streamList){
+                loadBalancerConfiguration.setEventStream(true);
+                loadBalancerConfiguration.setRoundRobin(false);
+                LBStream lbStream = new LBStream();
+                lbStream.setId(stream.getId());
+                List<InnerOutputNode> innerOutputNodeList = stream.getInnerOutputNodeList();
+                for(InnerOutputNode innerOutputNode: innerOutputNodeList){
+                    if(innerOutputNode.getType().equals("rrd")){
+                        List<LBOutputNode> lbOutputNodes =  innerOutputNode.getLbOutputNodeList();
+                        InnerLB innerLB = new InnerLB();
+                        innerLB.setId(innerOutputNode.getId());
+                        innerLB.setType(innerOutputNode.getType());
+                        loadBalancerConfiguration.addRRDList(innerLB);
+                        lbStream.addRrdList(innerOutputNode.getId());
+                        for(LBOutputNode lbOutputNode:lbOutputNodes){
+                            innerLB.addOutputNodeId(lbOutputNode.getId());
+                        }
+                    }
+                    else if(innerOutputNode.getType().equals("join")){
+                        List<LBOutputNode> lbOutputNodes =  innerOutputNode.getLbOutputNodeList();
+                        InnerLB innerLB = new InnerLB();
+                        innerLB.setId(innerOutputNode.getId());
+                        innerLB.setType(innerOutputNode.getType());
+                        loadBalancerConfiguration.addJoinList(innerLB);
+                        lbStream.addJoinList(innerOutputNode.getId());
+                        for(LBOutputNode lbOutputNode:lbOutputNodes){
+
+                            innerLB.addOutputNodeId(lbOutputNode.getId());
+                        }
+                    }
+                    else if(innerOutputNode.getType().equals("direct")){
+                        List<LBOutputNode> lbOutputNodes =  innerOutputNode.getLbOutputNodeList();
+                        for(LBOutputNode lbOutputNode:lbOutputNodes){
+                            lbStream.addDirectList(lbOutputNode.getId());
+                        }
+                    }
+                }
+
+                loadBalancerConfiguration.addLbStreamList(lbStream);
+            }
+            List<InnerOutputNode> innerOutputNodeList =   lb.getInnerOutputNodeList();
+            for(InnerOutputNode innerOutputNode: innerOutputNodeList){
+                loadBalancerConfiguration.setEventStream(false);
+                loadBalancerConfiguration.setRoundRobin(true);
+                if(innerOutputNode.getType().equals("rrd")){
+                    List<LBOutputNode> lbOutputNodes =  innerOutputNode.getLbOutputNodeList();
+                    InnerLB innerLB = new InnerLB();
+                    innerLB.setId(innerOutputNode.getId());
+                    innerLB.setType(innerOutputNode.getType());
+                    loadBalancerConfiguration.addRRDList(innerLB);
+                    for(LBOutputNode lbOutputNode:lbOutputNodes){
+                        innerLB.addOutputNodeId(lbOutputNode.getId());
+                    }
+                }
+                else if(innerOutputNode.getType().equals("join")){
+                    List<LBOutputNode> lbOutputNodes =  innerOutputNode.getLbOutputNodeList();
+                    InnerLB innerLB = new InnerLB();
+                    innerLB.setId(innerOutputNode.getId());
+                    innerLB.setType(innerOutputNode.getType());
+                    loadBalancerConfiguration.addJoinList(innerLB);
+                    for(LBOutputNode lbOutputNode:lbOutputNodes){
+                        innerLB.addOutputNodeId(lbOutputNode.getId());
+                    }
+                }
+                else if(innerOutputNode.getType().equals("direct")){
+                    List<LBOutputNode> lbOutputNodes =  innerOutputNode.getLbOutputNodeList();
+                    InnerLB innerLB = new InnerLB();
+                    innerLB.setId(innerOutputNode.getId());
+                    innerLB.setType(innerOutputNode.getType());
+                    for(LBOutputNode lbOutputNode:lbOutputNodes){
+                        innerLB.addOutputNodeId(lbOutputNode.getId());
+                    }
+                }
             }
             LBResourcePersistance.save(loadBalancerConfiguration);
 

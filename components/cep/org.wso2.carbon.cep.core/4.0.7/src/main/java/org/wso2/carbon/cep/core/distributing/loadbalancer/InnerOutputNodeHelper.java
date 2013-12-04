@@ -28,7 +28,7 @@ public class InnerOutputNodeHelper {
                 CEPConstants.CEP_CONF_NAMESPACE,
                 CEPConstants.CEP_CONF_ATTR_TYPE,
                 CEPConstants.CEP_CONF_CEP_NAME_SPACE_PREFIX));
-        type.setText(innerOutputNode.getId());
+        type.setText(innerOutputNode.getType());
         outputNode.addChild(id);
         outputNode.addChild(type);
          List<LBOutputNode> lbOutputNodeList = innerOutputNode.getLbOutputNodeList();

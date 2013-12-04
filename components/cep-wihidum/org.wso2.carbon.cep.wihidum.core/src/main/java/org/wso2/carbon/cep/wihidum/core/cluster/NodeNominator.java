@@ -32,14 +32,15 @@ public class NodeNominator {
                        memberList.remove(lb.getIp());
                    }
                    memberList.remove(clusterManager.getClusterConfigurations(Constants.MANAGER));
-                   return memberList.get(1);
+                   return memberList.get(memberList.size()-1);
                }
+
            } catch (CEPConfigurationException e) {
                e.printStackTrace();
            }
 
        }
-       return clusterManager.getMemberList().get(1);
+       return null;
     }
 
     public String nominateCEPNode() {
