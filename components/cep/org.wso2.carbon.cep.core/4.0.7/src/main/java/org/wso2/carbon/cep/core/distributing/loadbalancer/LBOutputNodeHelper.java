@@ -63,7 +63,7 @@ public class LBOutputNodeHelper {
                 outputElement.getFirstChildWithName(new QName(CEPConstants.CEP_CONF_NAMESPACE,
                         CEPConstants.CEP_CONF_LB_ID));
         if (id != null) {
-            lbOutputNode.setPort(id.getText().trim());
+            lbOutputNode.setId(id.getText().trim());
         }
           return lbOutputNode;
     }
